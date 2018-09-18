@@ -7,9 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.Callback;
 
@@ -17,12 +15,13 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class DataBaseController implements Initializable {
 
-    private List<String> _practiceSelection = new ArrayList<>();
+    public static List<String> _practiceSelection = new ArrayList<>();
 
     @FXML
     private ListView<String> _creationList;
@@ -34,9 +33,27 @@ public class DataBaseController implements Initializable {
     @FXML
     public void handlePracticeBtn() {
         List<String> selectedItems = _creationList.getSelectionModel().getSelectedItems();
-
-
-        System.out.println(selectedItems);
+        System.out.println(_practiceSelection);
+        if(_practiceSelection.size() > 1) {
+            Alert randomizeAlert = new Alert(Alert.AlertType.INFORMATION, "Would you like" +
+                    " to randomise your selection",ButtonType.NO, ButtonType.YES);
+            randomizeAlert.showAndWait();
+            if(randomizeAlert.getAlertType().equals(ButtonType.YES)) {
+                Collections.shuffle(_practiceSelection);
+                randomizeAlert.close();
+            }
+            else if(randomizeAlert.getAlertType().equals(ButtonType.NO)) {
+                randomizeAlert.close();
+            }
+        }
+        else if(_practiceSelection.size() == 0) {
+            Alert selectionAlert = new Alert(Alert.AlertType.INFORMATION, "Please select" +
+                    "something" ,ButtonType.OK);
+            selectionAlert.showAndWait();
+            if(selectionAlert.getAlertType().equals(ButtonType.OK)) {
+                selectionAlert.close();
+            }
+        }
         Main.changeScenePractice();
     }
 
@@ -73,9 +90,14 @@ public class DataBaseController implements Initializable {
             @Override
             public ObservableValue<Boolean> call(String item) {
                 BooleanProperty itemState = new SimpleBooleanProperty();
-                itemState.addListener((obs, wasSelected, isNowSelected) ->
-                        System.out.println("Check box for "+item+" changed from "+wasSelected+" to "+isNowSelected)
-                );
+                itemState.addListener((obs, wasSelected, isNowSelected) -> {
+                    if (isNowSelected == true) {
+                        _practiceSelection.add(item);
+                    }
+                    else if(isNowSelected == false) {
+                        _practiceSelection.remove(item);
+                    }
+                });
                 return itemState;
             }
         }));
