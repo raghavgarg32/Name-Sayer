@@ -27,6 +27,7 @@ public class RecordView {
                 Platform.runLater(new Runnable() {
                     public void run() {
                         recordingEnd();
+                        Main.changeSceneConfirm();
                     }
                 });            }
 
