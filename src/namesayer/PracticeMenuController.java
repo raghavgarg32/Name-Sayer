@@ -32,6 +32,10 @@ public class PracticeMenuController implements Initializable {
         Main.changeSceneRecord();
     }
 
+    @FXML
+    public void handleCreateButton() throws IOException {
+        Main.changeSceneRecord();
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
