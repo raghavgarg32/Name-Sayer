@@ -5,26 +5,35 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Service;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxListCell;
 import javafx.util.Callback;
 
-import java.io.File;
-import java.io.FilenameFilter;
+import javax.swing.*;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataBaseController implements Initializable {
 
     public static List<String> _practiceSelection = new ArrayList<>();
 
+    private Service<Void> _backgroundThread;
+
+    private ArrayList<String> nameArrayList = new ArrayList<>();
+
     @FXML
     private ListView<String> _creationList;
+
+    private ObservableList<String> list;
 
     @FXML
     private Button practiceBtn;
@@ -104,10 +113,51 @@ public class DataBaseController implements Initializable {
 
 
         // This is just test data for the list
-        ObservableList<String> list = FXCollections.observableArrayList();
+        list = FXCollections.observableArrayList();
         _creationList.setItems(list);
-        list.add("item1");
-        list.add("item2");
-        list.add("item3");
+        gettingRecordings();
     }
+
+    public void gettingRecordings(){
+        //This swingworker gets all of the creations from the NameSayer directory
+        SwingWorker gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
+
+            @Override
+            protected ArrayList<String> doInBackground() throws Exception {
+                ArrayList<String> nameList = new ArrayList<String>();
+
+                try {
+                    ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database; ls -1 *.wav | sed -e 's/\\..*$//'");
+                    Process process = builder.start();
+
+                    InputStream stdout = process.getInputStream();
+                    BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+
+                    String line = null;
+
+                    while ((line = stdoutBuffered.readLine()) != null) {
+                        line = line.substring(line.lastIndexOf('_') + 1);
+                        nameArrayList.add(line);
+
+                        if (list.contains(line)){
+                            System.out.println(line);
+                            int occurrences = Collections.frequency(nameArrayList, line);
+                            System.out.println(occurrences);
+                            line =  line + '-' + occurrences;
+                        }
+                        list.add(line);
+                    }
+                    stdoutBuffered.close();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+                return null;
+            }
+
+        };
+        gettingRecordingsWorker.execute();
+    }
+
+
+
 }
