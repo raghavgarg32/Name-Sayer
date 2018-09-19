@@ -42,7 +42,6 @@ public class PracticeMenuController implements Initializable {
 
     @FXML
     public void handleChangeButton() throws IOException {
-    	DataBaseController._practiceSelection.clear();
     	Main.changeSceneDataBase();
     } 
     
