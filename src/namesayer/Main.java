@@ -18,6 +18,7 @@ public class Main extends Application {
     private static Scene _recordMenu;
     private static Scene _practiceMenu;
     private static Scene _confirmMenu;
+    private static Scene _micTestMenu;
 
 
 
@@ -31,6 +32,7 @@ public class Main extends Application {
         Parent practiceRoot = FXMLLoader.load(getClass().getResource("PracticeMenu.fxml"));
         Parent recordRoot = FXMLLoader.load(getClass().getResource("RecordView.fxml"));
         Parent confirmRoot = FXMLLoader.load(getClass().getResource("ConfirmView.fxml"));
+        Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
 
         //Create the directory to put creations in
         File creationDir = new File(System.getProperty("user.dir")+"/Creations");
@@ -43,6 +45,7 @@ public class Main extends Application {
         _practiceMenu = new Scene(practiceRoot,473,375);
         _recordMenu = new Scene(recordRoot,473,375);
         _confirmMenu = new Scene(confirmRoot,473,375);
+        _micTestMenu = new Scene(micTestRoot,473,375);
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_mainMenu);
@@ -74,6 +77,10 @@ public class Main extends Application {
     }
     public static void changeSceneConfirm() {
         _primaryStage.setScene(_confirmMenu);
+    }
+    
+    public static void changeSceneMicTest() {
+    	_primaryStage.setScene(_micTestMenu);
     }
 
 

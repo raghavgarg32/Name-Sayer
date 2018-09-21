@@ -24,9 +24,8 @@ import java.util.regex.Pattern;
 
 public class DataBaseController implements Initializable {
 
-    public static List<String> _practiceSelection = new ArrayList<>();
+    private static List<String> _practiceSelection = new ArrayList<>();
 
-    private Service<Void> _backgroundThread;
 
     private ArrayList<String> nameArrayList = new ArrayList<>();
 
@@ -41,60 +40,37 @@ public class DataBaseController implements Initializable {
 
     @FXML
     public void handlePracticeBtn() {
-        List<String> selectedItems = _creationList.getSelectionModel().getSelectedItems();
-        System.out.println(_practiceSelection);
         if(_practiceSelection.size() > 1) {
             Alert randomizeAlert = new Alert(Alert.AlertType.INFORMATION, "Would you like" +
                     " to randomise your selection",ButtonType.NO, ButtonType.YES);
             randomizeAlert.showAndWait();
-            if(randomizeAlert.getAlertType().equals(ButtonType.YES)) {
+            if(randomizeAlert.getResult() == ButtonType.YES) {
                 Collections.shuffle(_practiceSelection);
                 randomizeAlert.close();
+                Main.changeScenePractice();
             }
-            else if(randomizeAlert.getAlertType().equals(ButtonType.NO)) {
+            else if(randomizeAlert.getResult() == ButtonType.NO) {
                 randomizeAlert.close();
+                Main.changeScenePractice();
             }
         }
+        else if(_practiceSelection.size() == 1) {
+       	 Main.changeScenePractice();
+       }	
         else if(_practiceSelection.size() == 0) {
-            Alert selectionAlert = new Alert(Alert.AlertType.INFORMATION, "Please select" +
+            Alert selectionAlert = new Alert(Alert.AlertType.INFORMATION, "Please select " +
                     "something" ,ButtonType.OK);
             selectionAlert.showAndWait();
-            if(selectionAlert.getAlertType().equals(ButtonType.OK)) {
+            if(selectionAlert.getResult() == ButtonType.OK) {
                 selectionAlert.close();
             }
         }
-        Main.changeScenePractice();
     }
 
-
-    // Trying to get this method to display .mp4 files in the Creations folder but its not working for some reason?
-    public void listCreations() {
-        File dir = new File("Creations/");
-        List<String> fileList = new ArrayList<>();
-        File[] directoryListing = dir.listFiles();
-        FilenameFilter fileFilter = new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String filename) {
-                return filename.endsWith(".mp4");
-            }
-        };
-        //Loop through files and store .mp4 files in a list
-        if (directoryListing != null) {
-            for (File child : directoryListing) {
-                if(fileFilter.accept(dir, child.getName())) {
-                    fileList.add(child.getName());
-                }
-            }
-        }
-        ObservableList<String> items = FXCollections.observableArrayList(fileList);
-        _creationList.setItems(items);
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        listCreations();
         _creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        //this code gets the check boxes but i dont know how to  work with it
         _creationList.setCellFactory(CheckBoxListCell.forListView(new Callback<String, ObservableValue<Boolean>>() {
             @Override
             public ObservableValue<Boolean> call(String item) {
@@ -110,6 +86,7 @@ public class DataBaseController implements Initializable {
                 return itemState;
             }
         }));
+
 
 
         // This is just test data for the list
@@ -156,6 +133,10 @@ public class DataBaseController implements Initializable {
 
         };
         gettingRecordingsWorker.execute();
+    }
+    
+    public static List<String> getPracticeList() {
+    	return _practiceSelection;
     }
 
 

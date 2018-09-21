@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -9,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeMenuController">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeMenuController">
    <columnConstraints>
       <ColumnConstraints />
    </columnConstraints>
@@ -30,7 +34,7 @@
                </font>
             </Label>
             <Button layoutX="328.0" layoutY="85.0" mnemonicParsing="false" text="Rate" />
-            <Button layoutY="325.0" mnemonicParsing="false" prefHeight="51.0" prefWidth="151.0" text="Change names" />
+            <Button layoutY="325.0" mnemonicParsing="false" onAction="#handleChangeButton" prefHeight="51.0" prefWidth="151.0" text="Change names" />
          </children>
       </Pane>
    </children>

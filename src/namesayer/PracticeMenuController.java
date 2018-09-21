@@ -12,12 +12,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class PracticeMenuController implements Initializable {
 
     private ObservableList<String> items;
-
+  
     @FXML
     private Button playBtn;
 
@@ -36,6 +37,12 @@ public class PracticeMenuController implements Initializable {
     public void handleCreateButton() throws IOException {
         Main.changeSceneRecord();
     }
+    
+    @FXML
+    public void handleChangeButton() throws IOException {
+    	Main.changeSceneDataBase();
+    } 
+    
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
