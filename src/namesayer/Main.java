@@ -20,6 +20,8 @@ public class Main extends Application {
     private static Scene _confirmMenu;
     private static Scene _micTestMenu;
 
+    private static FXMLLoader practiceLoader;
+    private static FXMLLoader recordLoader;
 
 
 
@@ -27,10 +29,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         _primaryStage = primaryStage;
+        practiceLoader = new FXMLLoader();
+        practiceLoader.setLocation(getClass().getResource("PracticeMenu.fxml"));
+        Parent practiceRoot = practiceLoader.load();
+
+        recordLoader = new FXMLLoader();
+        recordLoader.setLocation(getClass().getResource("RecordView.fxml"));
+        Parent recordRoot = recordLoader.load();
+
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
-        Parent practiceRoot = FXMLLoader.load(getClass().getResource("PracticeMenu.fxml"));
-        Parent recordRoot = FXMLLoader.load(getClass().getResource("RecordView.fxml"));
         Parent confirmRoot = FXMLLoader.load(getClass().getResource("ConfirmView.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
 
@@ -67,21 +75,28 @@ public class Main extends Application {
         _primaryStage.setScene(_mainMenu);
     }
     public static void changeScenePractice() {
+        PracticeMenuController controller = practiceLoader.getController();
+        controller.names(DataBaseController.getItemList(),DataBaseController.getNamesWithoutNumbers(),
+                DataBaseController.getNamesWithNumbers());
         _primaryStage.setScene(_practiceMenu);
     }
+
+    public static void changeSceneRecord() {
+        RecordView controller = recordLoader.getController();
+        controller.getNameForRecording(PracticeMenuController.getCurrentName());
+        _primaryStage.setScene(_recordMenu);
+    }
+
     public static void changeSceneDataBase() {
         _primaryStage.setScene(_dataBaseMenu);
-    }
-    public static void changeSceneRecord() {
-        _primaryStage.setScene(_recordMenu);
     }
     public static void changeSceneConfirm() {
         _primaryStage.setScene(_confirmMenu);
     }
-    
     public static void changeSceneMicTest() {
-    	_primaryStage.setScene(_micTestMenu);
+        _primaryStage.setScene(_micTestMenu);
     }
+
 
 
 

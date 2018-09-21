@@ -1,19 +1,14 @@
 package namesayer;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.TargetDataLine;
-import javax.swing.SwingWorker;
-
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+
+import javax.sound.sampled.*;
+import javax.swing.*;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class MicTestController implements Initializable {
 
