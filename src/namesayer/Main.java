@@ -19,6 +19,7 @@ public class Main extends Application {
     private static Scene _practiceMenu;
     private static Scene _confirmMenu;
     private static Scene _micTestMenu;
+    private static Scene _rateMenu;
 
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
@@ -41,6 +42,7 @@ public class Main extends Application {
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
         Parent confirmRoot = FXMLLoader.load(getClass().getResource("ConfirmView.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
+        Parent rateMenuRoot = FXMLLoader.load(getClass().getResource("RateView.fxml"));
 
         //Create the directory to put creations in
         File creationDir = new File(System.getProperty("user.dir")+"/Creations");
@@ -54,6 +56,7 @@ public class Main extends Application {
         _recordMenu = new Scene(recordRoot,473,375);
         _confirmMenu = new Scene(confirmRoot,473,375);
         _micTestMenu = new Scene(micTestRoot,473,375);
+        _rateMenu = new Scene(rateMenuRoot,473,375);	
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_mainMenu);
@@ -74,6 +77,7 @@ public class Main extends Application {
     public static void changeSceneMain() {
         _primaryStage.setScene(_mainMenu);
     }
+    
     public static void changeScenePractice() {
         PracticeMenuController controller = practiceLoader.getController();
         controller.names(DataBaseController.getItemList(),DataBaseController.getNamesWithoutNumbers(),
@@ -90,13 +94,18 @@ public class Main extends Application {
     public static void changeSceneDataBase() {
         _primaryStage.setScene(_dataBaseMenu);
     }
+    
     public static void changeSceneConfirm() {
         _primaryStage.setScene(_confirmMenu);
     }
+    
     public static void changeSceneMicTest() {
         _primaryStage.setScene(_micTestMenu);
     }
 
+    public static void changeSceneRateMenu() {
+    	_primaryStage.setScene(_rateMenu);
+    }
 
 
 

@@ -24,6 +24,7 @@ import java.util.Timer;
  * Controller for the recording scene
  */
 public class RecordView implements Initializable {
+	
 	private Service<Void> _backgroundThread;
 	
 	private static Timer progressTimer = new Timer();
@@ -113,7 +114,6 @@ public class RecordView implements Initializable {
 					//Change scene when recording is finished
 					@Override
 					public void handle(WorkerStateEvent event) {
-						recordingEnd();
 						Main.changeScenePractice();
 
 					}		
@@ -139,10 +139,7 @@ public class RecordView implements Initializable {
 		Main.changeScenePractice();
 	}
     
-    
-    public void recordingEnd(){
-        recordLabel.setText("Record DONE");
-    }
+
 
     public void gettingNumberOfUserRecordings(){
         SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {

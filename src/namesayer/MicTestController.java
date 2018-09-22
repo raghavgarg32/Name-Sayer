@@ -73,7 +73,7 @@ public class MicTestController implements Initializable {
 	@FXML
 	public void handleBackButton() {
 		_micTestWorker.cancel(true);
-		Main.changeScenePractice();
+		Main.changeSceneRecord();
 	}
 	
 }
