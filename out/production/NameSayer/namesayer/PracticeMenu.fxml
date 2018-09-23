@@ -28,7 +28,7 @@
             <ListView fx:id="userCreations" layoutX="223.0" layoutY="151.0" onMouseClicked="#userCreationsListClicked" prefHeight="159.0" prefWidth="185.0" />
             <Button layoutX="257.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleCreateButton" text="Create Recording" />
             <Label layoutX="250.0" layoutY="126.0" text="Select existing recording:" />
-            <Label fx:id="nameLabel" layoutX="257.0" layoutY="6.0" text="Name">
+            <Label fx:id="nameLabel" layoutX="243.0" layoutY="6.0" text="Name">
                <font>
                   <Font size="49.0" />
                </font>
