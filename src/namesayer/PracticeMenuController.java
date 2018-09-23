@@ -112,8 +112,11 @@ public class PracticeMenuController implements Initializable {
 			String name = practiceList.getSelectionModel().getSelectedItem();
 			List<String> databaseList = DataBaseController.getDatabaseList();
 			List<String> nameList = DataBaseController.getNamesWithNumbers();
-			System.out.println(databaseList);
-			name = name.substring(0,name.lastIndexOf('-'));
+			
+			if(name.contains("-")) {
+				name = name.substring(0, name.lastIndexOf("-"));
+			}
+			
 
 			System.out.println("This is a name " + name);
 
