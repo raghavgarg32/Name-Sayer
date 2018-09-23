@@ -42,6 +42,8 @@ public class PracticeMenuController implements Initializable {
 	private static String currentName;
 
 	private ObservableList<String> userRecordingsList;
+	
+	private boolean pracListClicked = true;
 
 	@FXML
 	private Button playBtn;
@@ -92,7 +94,7 @@ public class PracticeMenuController implements Initializable {
 	@FXML
 	public void handleCreateButton() throws IOException {
 		if (practiceList.getSelectionModel().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to review", ButtonType.OK);
+			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection first", ButtonType.OK);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.OK) {
 				alert.close();
@@ -143,6 +145,11 @@ public class PracticeMenuController implements Initializable {
 		userRecordingsList = FXCollections.observableArrayList();
 		currentName = "Name";
 		practiceList.getItems().add("hello");
+		
+//		practiceList.setCellFactory(param -> new ListView<String> {
+//			
+//		});
+		
 		practiceList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -192,6 +199,18 @@ public class PracticeMenuController implements Initializable {
 				userCreations.setItems(userRecordingsList);
 			}
 		});
+	}
+	
+	@FXML
+	public void practiceListClicked() {
+			pracListClicked = true;
+			System.out.println(pracListClicked);
+	}
+	
+	@FXML
+	public void userCreationsListClicked() {
+			pracListClicked = false;
+			System.out.println(pracListClicked);
 	}
 
 	public static String getCurrentName() {

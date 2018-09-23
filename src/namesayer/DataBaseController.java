@@ -28,6 +28,8 @@ public class DataBaseController implements Initializable {
 
 
     private static ArrayList<String> nameArrayList = new ArrayList<>();
+    
+    private static List<String> databaseList = new ArrayList<>();
 
     @FXML
     private ListView<String> _creationList;
@@ -60,7 +62,7 @@ public class DataBaseController implements Initializable {
         }
         else if(_practiceSelection.size() == 0) {
             Alert selectionAlert = new Alert(Alert.AlertType.NONE, "Please select" +
-                    "something" ,ButtonType.OK);
+                    " something" ,ButtonType.OK);
             selectionAlert.showAndWait();
             if(selectionAlert.getResult() == ButtonType.OK) {
                 selectionAlert.close();
@@ -103,8 +105,9 @@ public class DataBaseController implements Initializable {
             public ObservableValue<Boolean> call(String item) {
                 BooleanProperty itemState = new SimpleBooleanProperty();
                 itemState.addListener((obs, wasSelected, isNowSelected) -> {
-                    if (isNowSelected == true) {
+                    if (_practiceSelection.contains(item) || isNowSelected == true ) {
                         _practiceSelection.add(item);
+                        
                     }
                     else if(isNowSelected == false) {
                         _practiceSelection.remove(item);
@@ -150,6 +153,7 @@ public class DataBaseController implements Initializable {
                     String line = null;
 
                     while ((line = stdoutBuffered.readLine()) != null) {
+                    	databaseList.add(line);
                         line = line.substring(line.lastIndexOf('_') + 1);
                         nameArrayList.add(line);
 
@@ -192,5 +196,9 @@ public class DataBaseController implements Initializable {
         System.out.println("Array list  " + list);
 
         return list;
+    }
+    
+    public static List<String> getDatabaseList() {
+    	return databaseList;
     }
 }

@@ -48,7 +48,7 @@ public class RecordView implements Initializable {
 
     private String currentName;
 
-    private String numberOfRecordings;
+    private static String numberOfRecordings;
     
     @FXML
     public void handleMicTestButton() {
@@ -114,7 +114,7 @@ public class RecordView implements Initializable {
 					//Change scene when recording is finished
 					@Override
 					public void handle(WorkerStateEvent event) {
-						Main.changeScenePractice();
+						Main.changeSceneConfirm();
 
 					}		
 				});
@@ -184,6 +184,10 @@ public class RecordView implements Initializable {
         allUserRecordings = new ArrayList<String>();
         currentNameLabel.setText("Name");
 
-
+    }
+    
+    
+    public static String getNumberOfRecordings() {
+    	return numberOfRecordings;
     }
 }
