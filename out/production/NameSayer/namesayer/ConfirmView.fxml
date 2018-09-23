@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ConfirmView">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ConfirmView">
    <children>
-      <Button layoutX="142.0" layoutY="215.0" mnemonicParsing="false" text="Play" />
-      <Button layoutX="318.0" layoutY="215.0" mnemonicParsing="false" text="Play" />
-      <Button layoutX="184.0" layoutY="215.0" mnemonicParsing="false" text="Redo" />
-      <Button layoutX="81.0" layoutY="215.0" mnemonicParsing="false" text="Save" />
-      <Button layoutX="21.0" layoutY="215.0" mnemonicParsing="false" text="Delete" />
+      <Button fx:id="playUser" layoutX="142.0" layoutY="215.0" mnemonicParsing="false" onAction="#handlePlayUserButton" text="Play" />
+      <Button fx:id="playDataBase" layoutX="318.0" layoutY="215.0" mnemonicParsing="false" onAction="#handlePlayDBButton" text="Play" />
+      <Button fx:id="redo" layoutX="184.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleRedoButton" text="Redo" />
+      <Button fx:id="save" layoutX="81.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleSaveButton" text="Save" />
+      <Button fx:id="delete" layoutX="21.0" layoutY="215.0" mnemonicParsing="false" onAction="#handleDeleteButton" text="Delete" />
       <Label layoutX="33.0" layoutY="132.0" text="Your recording">
          <font>
             <Font size="28.0" />
@@ -22,7 +26,7 @@
             <Font size="28.0" />
          </font>
       </Label>
-      <Label layoutX="184.0" layoutY="38.0" text="Name">
+      <Label fx:id="name" layoutX="184.0" layoutY="38.0" text="Name">
          <font>
             <Font size="49.0" />
          </font>
