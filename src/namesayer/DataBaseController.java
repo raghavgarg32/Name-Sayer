@@ -42,31 +42,14 @@ public class DataBaseController implements Initializable {
 
     @FXML
     public void handlePracticeBtn() {
-        System.out.println(_practiceSelection);
-        if(_practiceSelection.size() > 1) {
-            Alert randomizeAlert = new Alert(Alert.AlertType.NONE, "Would you like" +
-                    " to randomise your selection",ButtonType.NO, ButtonType.YES);
-            randomizeAlert.showAndWait();
-            if(randomizeAlert.getResult() == ButtonType.YES) {
-                Collections.shuffle(_practiceSelection);
-                randomizeAlert.close();
-                Main.changeScenePractice();
-            }
-            else if(randomizeAlert.getResult() == ButtonType.NO) {
-                randomizeAlert.close();
-                Main.changeScenePractice();
-            }
-        }
-        else if(_practiceSelection.size() == 1) {
-        	Main.changeScenePractice();
-        }
-        else if(_practiceSelection.size() == 0) {
-            Alert selectionAlert = new Alert(Alert.AlertType.NONE, "Please select" +
-                    " something" ,ButtonType.OK);
+        if (_practiceSelection.size() == 0) {
+            Alert selectionAlert = new Alert(Alert.AlertType.NONE, "Please select" + " something", ButtonType.OK);
             selectionAlert.showAndWait();
-            if(selectionAlert.getResult() == ButtonType.OK) {
+            if (selectionAlert.getResult() == ButtonType.OK) {
                 selectionAlert.close();
             }
+        } else {
+            Main.changeScenePractice();
         }
     }
 
@@ -105,11 +88,12 @@ public class DataBaseController implements Initializable {
             public ObservableValue<Boolean> call(String item) {
                 BooleanProperty itemState = new SimpleBooleanProperty();
                 itemState.addListener((obs, wasSelected, isNowSelected) -> {
-                    if (_practiceSelection.contains(item) || isNowSelected == true ) {
+                    if (!(_practiceSelection.contains(item)) || isNowSelected == true ) {
                         _practiceSelection.add(item);
                         
                     }
                     else if(isNowSelected == false) {
+                        System.out.println("the item has been removed");
                         _practiceSelection.remove(item);
                     }
                 });

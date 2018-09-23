@@ -56,14 +56,14 @@ public class Main extends Application {
             creationDir.mkdir();
         }
 
-        _mainMenu = new Scene(root,473,375);
-        _dataBaseMenu = new Scene(dataBaseRoot,473,375);
-        _practiceMenu = new Scene(practiceRoot,473,375);
-        _recordMenu = new Scene(recordRoot,473,375);
-        _confirmMenu = new Scene(confirmRoot,473,375);
-        _micTestMenu = new Scene(micTestRoot,473,375);
-        _rateMenu = new Scene(rateMenuRoot,473,375);
-        _saveMenu = new Scene(saveRoot,473,375);
+        _mainMenu = new Scene(root,600,400);
+        _dataBaseMenu = new Scene(dataBaseRoot,600,400);
+        _practiceMenu = new Scene(practiceRoot,600,400);
+        _recordMenu = new Scene(recordRoot,600,400);
+        _confirmMenu = new Scene(confirmRoot,600,400);
+        _micTestMenu = new Scene(micTestRoot,600,400);
+        _rateMenu = new Scene(rateMenuRoot,600,400);
+        _saveMenu = new Scene(saveRoot,600,400);
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_mainMenu);

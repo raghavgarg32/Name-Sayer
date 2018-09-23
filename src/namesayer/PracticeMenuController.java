@@ -18,6 +18,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -59,33 +61,107 @@ public class PracticeMenuController implements Initializable {
 
 	@FXML
 	public void handlePlayButton() throws IOException {
-		if (practiceList.getSelectionModel().isEmpty()) {
+		if (practiceList.getSelectionModel().isEmpty() && userCreations.getSelectionModel().isEmpty()) {
 			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.OK) {
 				alert.close();
 			}
-		} else {
-			if (!(userCreations.getSelectionModel().isEmpty())) {
-				String path = userCreations.getSelectionModel().getSelectedItem();
-				System.out.println(path);
-				Media audio = new Media(
-						new File("Database/" + currentName + "/User-Recordings/" + path).toURI().toString());
-				MediaPlayer mediaPlayer = new MediaPlayer(audio);
-				mediaPlayer.setAutoPlay(true);
+		} else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
+			String name = userCreations.getSelectionModel().getSelectedItem();
+
+			String pathToFile = "Database/" + PracticeMenuController.getCurrentName() + "/User-Recordings/" + name;
+
+			AudioInputStream stream;
+			AudioFormat format;
+			DataLine.Info info;
+			SourceDataLine sourceLine;
+
+			try {
+				stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+				format = stream.getFormat();
+
+				info = new DataLine.Info(SourceDataLine.class, format);
+				sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+				sourceLine.open(format);
+
+				sourceLine.start();
+
+				int nBytesRead = 0;
+				int BUFFER_SIZE = 128000;
+				byte[] abData = new byte[BUFFER_SIZE];
+				while (nBytesRead != -1) {
+					try {
+						nBytesRead = stream.read(abData, 0, abData.length);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					if (nBytesRead >= 0) {
+						@SuppressWarnings("unused")
+						int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+					}
+				}
+
+				sourceLine.drain();
+				sourceLine.close();
+
+			} catch (Exception e) {
+
 			}
-			else {
-				String path = practiceList.getSelectionModel().getSelectedItem();
-				// Path here is wrong idk how to get the prefix working i.e. the se206_... part
-				Media audio = new Media(
-						new File("Database/" + currentName + "/Database-Recordings/" + path).toURI().toString());
-				MediaPlayer mediaPlayer = new MediaPlayer(audio);
-				mediaPlayer.setAutoPlay(true);
+		} else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
+			String name = practiceList.getSelectionModel().getSelectedItem();
+			List<String> databaseList = DataBaseController.getDatabaseList();
+			List<String> nameList = DataBaseController.getNamesWithNumbers();
+			System.out.println(databaseList);
+			name = name.substring(0,name.lastIndexOf('-'));
+
+			System.out.println("This is a name " + name);
+
+			String path = databaseList.get(nameList.indexOf(name));
+			System.out.println("This is path " + path);
+
+			String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
+			System.out.println("This is path to file  " + pathToFile);
+
+			AudioInputStream stream;
+			AudioFormat format;
+			DataLine.Info info;
+			SourceDataLine sourceLine;
+
+			try {
+				stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+				format = stream.getFormat();
+
+				info = new DataLine.Info(SourceDataLine.class, format);
+				sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+				sourceLine.open(format);
+
+				sourceLine.start();
+
+				int nBytesRead = 0;
+				int BUFFER_SIZE = 128000;
+				byte[] abData = new byte[BUFFER_SIZE];
+				while (nBytesRead != -1) {
+					try {
+						nBytesRead = stream.read(abData, 0, abData.length);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					if (nBytesRead >= 0) {
+						@SuppressWarnings("unused")
+						int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+					}
+				}
+
+				sourceLine.drain();
+				sourceLine.close();
+
+			} catch (Exception e) {
+
 			}
+
 		}
-
 	}
-
 	@FXML
 	public void handleChangeButton() throws IOException {
 		Main.changeSceneDataBase();
@@ -142,7 +218,7 @@ public class PracticeMenuController implements Initializable {
 				);
 		File folder = new File(System.getProperty("user.dir")+"/Database/"+PracticeMenuController.getCurrentName()+"/User-Recordings");
 		File[] listOfFiles = folder.listFiles();
-
+		System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				items.add(listOfFiles[i].getName());
@@ -219,21 +295,30 @@ public class PracticeMenuController implements Initializable {
 			}
 		});
 	}
-	
+
 	@FXML
 	public void practiceListClicked() {
-			pracListClicked = true;
-			System.out.println(pracListClicked);
+		userCreations.getSelectionModel().clearSelection();
 	}
-	
+
 	@FXML
 	public void userCreationsListClicked() {
-			pracListClicked = false;
-			System.out.println(pracListClicked);
+		practiceList.getSelectionModel().clearSelection();
+	}
+
+	@FXML
+	public void handleShuffleButton() {
+		ObservableList<String> tempList = FXCollections.observableArrayList();
+		List<String> praticeSelection = DataBaseController._practiceSelection;
+		Collections.shuffle(praticeSelection);
+		tempList.addAll(praticeSelection);
+		practiceList.setItems(tempList);
+
 	}
 
 	public static String getCurrentName() {
 		System.out.println("Current name" + currentName);
 		return currentName;
 	}
+
 }
