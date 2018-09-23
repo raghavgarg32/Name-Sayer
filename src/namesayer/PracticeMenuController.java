@@ -214,10 +214,15 @@ public class PracticeMenuController implements Initializable {
 
 
 	public void userListView() {
-		ObservableList<String> items =FXCollections.observableArrayList (
-				);
-		File folder = new File(System.getProperty("user.dir")+"/Database/"+PracticeMenuController.getCurrentName()+"/User-Recordings");
+		String tempName = PracticeMenuController.getCurrentName();
+		if(PracticeMenuController.getCurrentName().contains("-")) {
+			tempName = PracticeMenuController.getCurrentName().substring(0, PracticeMenuController.getCurrentName().lastIndexOf("-"));
+		}
+		
+		ObservableList<String> items =FXCollections.observableArrayList ();
+		File folder = new File(System.getProperty("user.dir")+"/Database/"+tempName+"/User-Recordings");
 		File[] listOfFiles = folder.listFiles();
+		
 		System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
