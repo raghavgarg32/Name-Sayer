@@ -21,17 +21,24 @@ import javafx.scene.control.Label;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
+/**
+ * Gives options to the user to do actions with their recording
+ */
 public class ConfirmView {
 
     @FXML
     private Button delete,save,playUser,redo,playDataBase;
 
     @FXML
-    private Label name;
+    private Label nameLabel;
 
+    /**
+     * This allows user to delete their recording
+     */
     @FXML
     public void handleDeleteButton() {
         String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
         String number = RecordView.getNumberOfRecordings();
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
@@ -45,14 +52,25 @@ public class ConfirmView {
         }
     }
 
+    /**
+     * Allows the user to save recording by going to the save scene
+     */
     @FXML
     public void handleSaveButton() {
         Main.changeSceneSave();
     }
 
+    public void setNameLabel(String name){
+        nameLabel.setText(name);
+    }
+
+    /**
+     * Allows user to play their recording
+     */
     @FXML
     public void handlePlayUserButton() {
         String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
         String number = RecordView.getNumberOfRecordings();
 
 
@@ -97,10 +115,13 @@ public class ConfirmView {
     }
 
 
-
+    /**
+     * Allows user to redo their recording
+     */
     @FXML
     public void handleRedoButton() {
         String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
         String number = RecordView.getNumberOfRecordings();
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
@@ -114,9 +135,13 @@ public class ConfirmView {
         }
     }
 
+    /**
+     * Allows user to play the database recording for comparison
+     */
     @FXML
     public void handlePlayDBButton() {
         String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
         List<String> databaseList = DataBaseController.getDatabaseList();
         List<String> nameList = DataBaseController.getNamesWithNumbers();
 
@@ -160,6 +185,19 @@ public class ConfirmView {
 
         }
 
+    }
+
+    /**
+     * Gets rid of numbers in front of names with numbers
+     * @param nameString
+     * @return
+     */
+    public String gettingRidOfNumbers(String nameString){
+            if(nameString.contains("-")) {
+                nameString = nameString.substring(0, nameString.lastIndexOf("-"));
+                System.out.println("This is the current name " +nameString);
+            }
+            return nameString;
     }
 
 

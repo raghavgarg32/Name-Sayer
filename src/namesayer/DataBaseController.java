@@ -22,24 +22,25 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Sets up the database logic, allows to select to practice
+ */
 public class DataBaseController implements Initializable {
 
     public static List<String> _practiceSelection = new ArrayList<>();
-
-
     private static ArrayList<String> nameArrayList = new ArrayList<>();
-    
     private static List<String> databaseList = new ArrayList<>();
+    private static ObservableList<String> list;
 
     @FXML
     private ListView<String> _creationList;
 
-    private static ObservableList<String> list;
-
     @FXML
     private Button practiceBtn;
 
-
+    /**
+     * handles practice button and makes sure that the user has selected names
+     */
     @FXML
     public void handlePracticeBtn() {
         if (_practiceSelection.size() == 0) {
@@ -53,8 +54,11 @@ public class DataBaseController implements Initializable {
         }
     }
 
-
-
+    /**
+     * Sets up the folder for the database and the checkboxes
+     * @param location
+     * @param resources
+     */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         BashCommandWorker settingUpDatabaseWorker = new BashCommandWorker("cd Database;\n" +
@@ -81,8 +85,7 @@ public class DataBaseController implements Initializable {
                 "done\n");
 
         _creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-       
-        
+
         _creationList.setCellFactory(CheckBoxListCell.forListView(new Callback<String, ObservableValue<Boolean>>() {
             @Override
             public ObservableValue<Boolean> call(String item) {
@@ -100,14 +103,14 @@ public class DataBaseController implements Initializable {
                 return itemState;
             }
         }));
-
-
-        // This is just test data for the list
         list = FXCollections.observableArrayList();
         _creationList.setItems(list);
         gettingRecordings();
     }
 
+    /**
+     * This gets all of the recordings to show them to the user and adds incremental numbers to duplicates
+     */
     public void gettingRecordings(){
         //This swingworker gets all of the creations from the NameSayer directory
         SwingWorker gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
@@ -160,6 +163,10 @@ public class DataBaseController implements Initializable {
         gettingRecordingsWorker.execute();
     }
 
+    /**
+     * Returns the names that have been selected as Observable List
+     * @return
+     */
     public static ObservableList<String> getItemList(){
         ObservableList<String> items =FXCollections.observableArrayList ();
         for (String name : _practiceSelection){
@@ -170,18 +177,30 @@ public class DataBaseController implements Initializable {
         return items;
     }
 
+    /**
+     * Returns the list of all names without numbers
+     * @return
+     */
     public static ArrayList<String> getNamesWithoutNumbers(){
         System.out.println("Array list  " + nameArrayList);
 
         return nameArrayList;
     }
 
+    /**
+     * Returns the list of all names with numbers
+     * @return
+     */
     public static ObservableList<String> getNamesWithNumbers(){
         System.out.println("Array list  " + list);
 
         return list;
     }
-    
+
+    /**
+     * Returns the list of all names with their database recording name
+     * @return
+     */
     public static List<String> getDatabaseList() {
     	return databaseList;
     }

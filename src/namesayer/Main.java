@@ -8,6 +8,10 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
+
+/**
+ * Sets up the initial scene of the application
+ */
 public class Main extends Application {
 
     private static Stage _primaryStage;
@@ -25,9 +29,14 @@ public class Main extends Application {
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
     private static FXMLLoader saveLoader;
+    private static FXMLLoader confirmLoader;
 
 
-
+    /**
+     * This method sets up all of the scenes and allows program to change scene
+     * @param primaryStage
+     * @throws Exception
+     */
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -44,17 +53,14 @@ public class Main extends Application {
         saveLoader.setLocation(getClass().getResource("SaveView.fxml"));
         Parent saveRoot = saveLoader.load();
 
+        confirmLoader = new FXMLLoader();
+        confirmLoader.setLocation(getClass().getResource("ConfirmView.fxml"));
+        Parent confirmRoot = confirmLoader.load();
+
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
-        Parent confirmRoot = FXMLLoader.load(getClass().getResource("ConfirmView.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
         Parent rateMenuRoot = FXMLLoader.load(getClass().getResource("RateView.fxml"));
-
-        //Create the directory to put creations in
-        File creationDir = new File(System.getProperty("user.dir")+"/Creations");
-        if (!creationDir.exists()){
-            creationDir.mkdir();
-        }
 
         _mainMenu = new Scene(root,600,400);
         _dataBaseMenu = new Scene(dataBaseRoot,600,400);
@@ -72,19 +78,24 @@ public class Main extends Application {
 
     }
 
-
+    /**
+     * Launches the application
+     * @param args
+     */
     public static void main(String[] args) {
         launch(args);
     }
 
     /**
-     * Methods to change scene go here
+     * Changes scene to main scene
      */
-
     public static void changeSceneMain() {
         _primaryStage.setScene(_mainMenu);
     }
-    
+
+    /**
+     * Changes scene to practice scene
+     */
     public static void changeScenePractice() {
         PracticeMenuController controller = practiceLoader.getController();
         controller.names(DataBaseController.getItemList(),DataBaseController.getNamesWithoutNumbers(),
@@ -93,33 +104,52 @@ public class Main extends Application {
         _primaryStage.setScene(_practiceMenu);
     }
 
+    /**
+     * Changes scene to record scene
+     */
     public static void changeSceneRecord() {
         RecordView controller = recordLoader.getController();
         controller.getNameForRecording(PracticeMenuController.getCurrentName());
         _primaryStage.setScene(_recordMenu);
     }
 
+    /**
+     * Changes scene to save scene
+     */
     public static void changeSceneSave() {
+        SaveViewController controller = saveLoader.getController();
+        controller.setsPromptText();
         _primaryStage.setScene(_saveMenu);
     }
 
+    /**
+     * Changes scene to Database scene
+     */
     public static void changeSceneDataBase() {
         _primaryStage.setScene(_dataBaseMenu);
     }
-    
+
+    /**
+     * Changes scene to Confirm scene
+     */
     public static void changeSceneConfirm() {
+        ConfirmView controller = confirmLoader.getController();
+        controller.setNameLabel(PracticeMenuController.getCurrentNameWithoutNumber());
         _primaryStage.setScene(_confirmMenu);
     }
-    
+
+    /**
+     * Changes scene to Mic Test scene
+     */
     public static void changeSceneMicTest() {
         _primaryStage.setScene(_micTestMenu);
     }
 
+    /**
+     * Changes scene to Rate Menu scene
+     */
     public static void changeSceneRateMenu() {
     	_primaryStage.setScene(_rateMenu);
     }
-
-
-
 
 }

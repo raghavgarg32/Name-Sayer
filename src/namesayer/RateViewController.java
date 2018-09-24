@@ -15,16 +15,23 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
+/**
+ * Sets up the rating system for the database recordings
+ */
 public class RateViewController implements Initializable  {
-	
+
+	/**
+	 * This method is require to be implemented
+	 * @param location
+	 * @param resources
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-	//	name.setText("Rate " + _selectionName);
 	}
-	
-	
-	
-	//Both methods will override any currently existing text file in case the user changes their mind
+
+	/**
+	 * If the user gives the database recording a bad review this will output it to a text file
+	 */
 	@FXML
 	public void handleBadButton() {			
 		String selectionName = PracticeMenuController.getCurrentName();
@@ -44,7 +51,10 @@ public class RateViewController implements Initializable  {
 		}
 		
 	}
-	
+
+	/**
+	 * If the user gives the database recording a bad review this will output it to a text file
+	 */
 	@FXML
 	public void handleGoodButton() {
 		String selectionName = PracticeMenuController.getCurrentName();
