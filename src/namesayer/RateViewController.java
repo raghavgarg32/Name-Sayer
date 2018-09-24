@@ -79,7 +79,6 @@ public class RateViewController implements Initializable  {
 		finally {
 			SwingWorker creationDirectoryWorker = new BashCommandWorker("sed -i '/"+PracticeMenuController.getCurrentName()+" has a bad recording/d' ./BadRecordingList.txt ");
 			Main.changeScenePractice();
-			Main.changeScenePractice();
 		}
 	}
 

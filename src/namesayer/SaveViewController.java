@@ -31,6 +31,7 @@ public class SaveViewController {
      * Save the user recordoing and does error checking
      */
     public void save(){
+
         gettingAllRecordings();
         String name = PracticeMenuController.getCurrentName();
         name = gettingRidOfNumbers(name);
@@ -54,6 +55,7 @@ public class SaveViewController {
                 catch (Exception e){
 
                 }
+                nameTextField.clear();
                 Main.changeScenePractice();
             } else {
                 Alert alert = new Alert(Alert.AlertType.NONE, "Please enter in a valid name ", ButtonType.OK);

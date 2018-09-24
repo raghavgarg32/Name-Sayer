@@ -285,7 +285,9 @@ public class PracticeMenuController implements Initializable {
 
             @Override
             public void handle(MouseEvent event) {
-                userRecordingsList.clear();
+                System.out.println("Practice list is clicked");
+                userCreations.getSelectionModel().clearSelection();
+
                 if (!(practiceList.getSelectionModel().isEmpty())) {
                     nameLabel.setText(namesWithoutNumbers
                             .get(namesWithNumbers.indexOf(practiceList.getSelectionModel().getSelectedItem())));
@@ -333,13 +335,9 @@ public class PracticeMenuController implements Initializable {
     }
 
     @FXML
-    public void practiceListClicked() {
-        System.out.println("Practice list is clicked");
-        userCreations.getSelectionModel().clearSelection();
-    }
-
-    @FXML
     public void userCreationsListClicked() {
+        System.out.println("User list is clicked");
+
         practiceList.getSelectionModel().clearSelection();
     }
 

@@ -34,9 +34,8 @@ public class ConfirmView {
 
     @FXML
     public void handleDeleteButton() {
-        String name = PracticeMenuController.getCurrentName();
-        name = gettingRidOfNumbers(name);
-        String number = RecordView.getNumberOfRecordings();
+        String name = PracticeMenuController.getCurrentNameWithoutNumber();
+        
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
                     "/Database/" + name + "/User-Recordings/temp.wav"));
@@ -61,8 +60,8 @@ public class ConfirmView {
 
             @Override
             protected Void doInBackground() throws Exception {
-                String name = PracticeMenuController.getCurrentName();
-                name = gettingRidOfNumbers(name);
+                String name = PracticeMenuController.getCurrentNameWithoutNumber();
+                
                 String number = RecordView.getNumberOfRecordings();
 
                 AudioInputStream stream;
@@ -114,8 +113,8 @@ public class ConfirmView {
 
     @FXML
     public void handleRedoButton() {
-        String name = PracticeMenuController.getCurrentName();
-        name = gettingRidOfNumbers(name);
+        String name = PracticeMenuController.getCurrentNameWithoutNumber();
+        
         String number = RecordView.getNumberOfRecordings();
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
@@ -125,6 +124,7 @@ public class ConfirmView {
             e.printStackTrace();
         }
         finally {
+
             Main.changeSceneRecord();
         }
     }
@@ -136,8 +136,8 @@ public class ConfirmView {
 
             @Override
             protected Void doInBackground() throws Exception {
-                String name = PracticeMenuController.getCurrentName();
-                name = gettingRidOfNumbers(name);
+                String name = PracticeMenuController.getCurrentNameWithoutNumber();
+                
                 List<String> databaseList = DataBaseController.getDatabaseList();
                 List<String> nameList = DataBaseController.getNamesWithNumbers();
 
@@ -193,15 +193,6 @@ public class ConfirmView {
     public void setNameLabel(String name){
         nameLabel.setText(name);
     }
-
-
-    public String gettingRidOfNumbers(String nameString){
-        if(nameString.contains("-")) {
-            nameString = nameString.substring(0, nameString.lastIndexOf("-"));
-            System.out.println("This is the current name " +nameString);
-        }
-        return nameString;
-    }
-
+    
 
 }

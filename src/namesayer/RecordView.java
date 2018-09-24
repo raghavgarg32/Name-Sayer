@@ -37,7 +37,11 @@ public class RecordView implements Initializable {
     private Button micTestBtn;
 
     @FXML
-    private Button backBtn;
+    public Button backBtn;
+
+    @FXML
+    public Button backButton;
+
 
     @FXML
     private ProgressBar recordBar;
@@ -58,19 +62,16 @@ public class RecordView implements Initializable {
     }
 
     public void getNameForRecording(String currentNameSelected){
-        if(currentNameSelected.contains("-")) {
-            currentNameSelected = currentNameSelected.substring(0, currentNameSelected.lastIndexOf("-"));
-            System.out.println("This is the current name " +currentNameSelected);
-        }
         currentName = currentNameSelected;
         currentNameLabel.setText(currentName);
     }
 
     @FXML
     public void handleRecordButton() throws IOException {
+        backButton.setVisible(false);
         progressTimer.cancel();
         recordBar.setProgress(0.0);
-        recordLabel.setText("Recording now...");
+        recordLabel.setText("Audio is currently being recorded 5 seconds now");
 
 
         TimerTask timerTask = new TimerTask() {
@@ -97,6 +98,7 @@ public class RecordView implements Initializable {
         _backgroundThread = new Service<Void>() {
             @Override
             protected Task<Void> createTask() {
+
                 return new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
@@ -127,9 +129,17 @@ public class RecordView implements Initializable {
         _backgroundThread.start();
     }
 
+    public void initScene(){
+        recordLabel.setText("Press record to have your voice recorded");
+        backButton.setVisible(true);
+        progressTimer.cancel();
+        recordBar.setProgress(0.0);
+
+    }
 
     @FXML
     public void handleBackBtn() {
+
         if(_backgroundThread == null) {
             recordLabel.setText("Press record to have your voice recorded");
             deleteRecording();
@@ -138,8 +148,8 @@ public class RecordView implements Initializable {
         }
         //Check if a background thread is running
         if(_backgroundThread.isRunning()) {
+
             progressTimer.cancel();
-            recordBar.setProgress(0.0);
             _backgroundThread.cancel();
             deleteRecording();
         }

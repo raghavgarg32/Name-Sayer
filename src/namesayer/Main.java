@@ -109,7 +109,8 @@ public class Main extends Application {
      */
     public static void changeSceneRecord() {
         RecordView controller = recordLoader.getController();
-        controller.getNameForRecording(PracticeMenuController.getCurrentName());
+        controller.getNameForRecording(PracticeMenuController.getCurrentNameWithoutNumber());
+        controller.initScene();
         _primaryStage.setScene(_recordMenu);
     }
 
