@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="namesayer.DataBaseController"
-            prefHeight="400.0" prefWidth="600.0">
-
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.DataBaseController">
+   <children>
+      <ListView fx:id="_creationList" layoutX="200.0" layoutY="67.0" prefHeight="200.0" prefWidth="200.0" />
+      <Text layoutX="183.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select name(s) you wish to practice" />
+      <Button fx:id="practiceBtn" layoutX="264.0" layoutY="302.0" mnemonicParsing="false" onAction="#handlePracticeBtn" text="Practice" />
+      <Button layoutX="59.0" layoutY="327.0" mnemonicParsing="false" onAction="#handleBackButton" text="Back" />
+   </children>
 </AnchorPane>
