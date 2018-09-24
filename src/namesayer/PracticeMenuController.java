@@ -247,26 +247,30 @@ public class PracticeMenuController implements Initializable {
 
 	public void userListView() {
 		String tempName = PracticeMenuController.getCurrentName();
-		if (PracticeMenuController.getCurrentName().contains("-")) {
+		if (!(practiceList.getSelectionModel().isEmpty()) && PracticeMenuController.getCurrentName().contains("-")) {
 			tempName = PracticeMenuController.getCurrentName().substring(0,
 					PracticeMenuController.getCurrentName().lastIndexOf("-"));
 		}
 
+		
 		ObservableList<String> items = FXCollections.observableArrayList();
 		File folder = new File(System.getProperty("user.dir") + "/Database/" + tempName + "/User-Recordings");
-		File[] listOfFiles = folder.listFiles();
+		if(tempName != null) {
+			File[] listOfFiles = folder.listFiles();
 
-		System.out.println("This is the current name " + PracticeMenuController.getCurrentName());
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				items.add(listOfFiles[i].getName());
-				System.out.println("File " + listOfFiles[i].getName());
-			} else if (listOfFiles[i].isDirectory()) {
-				System.out.println("Directory " + listOfFiles[i].getName());
+			System.out.println("This is the current name " + PracticeMenuController.getCurrentName());
+			for (int i = 0; i < listOfFiles.length; i++) {
+				if (listOfFiles[i].isFile()) {
+					items.add(listOfFiles[i].getName());
+					System.out.println("File " + listOfFiles[i].getName());
+				} else if (listOfFiles[i].isDirectory()) {
+					System.out.println("Directory " + listOfFiles[i].getName());
+				}
 			}
-		}
 
-		userCreations.setItems(items);
+			userCreations.setItems(items);
+		}
+		
 	}
 
 	@Override

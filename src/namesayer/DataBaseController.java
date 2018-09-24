@@ -185,4 +185,9 @@ public class DataBaseController implements Initializable {
     public static List<String> getDatabaseList() {
     	return databaseList;
     }
+    
+    @FXML
+    public void handleBackButton() {
+    	Main.changeSceneMain();
+    }
 }

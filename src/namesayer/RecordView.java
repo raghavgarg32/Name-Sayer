@@ -148,16 +148,23 @@ public class RecordView implements Initializable {
 	}
     
 	public void deleteRecording(){
-		currentName = PracticeMenuController.getCurrentNameWithoutNumber();
-		String number = RecordView.getNumberOfRecordings();
-		try {
-			Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-					"/Database/" + currentName + "/User-Recordings/temp.wav"));
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
+			@Override
+			protected Void doInBackground() throws Exception {
+				currentName = PracticeMenuController.getCurrentNameWithoutNumber();
+				String number = RecordView.getNumberOfRecordings();
+				try {
+					Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
+							"/Database/" + currentName + "/User-Recordings/temp.wav"));
+					Thread.sleep(1000);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+		};
+		deleteWorker.execute();
 	}
 
     public void gettingNumberOfUserRecordings(){
