@@ -9,9 +9,9 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.DataBaseController">
    <children>
-      <ListView fx:id="_creationList" layoutX="200.0" layoutY="67.0" prefHeight="200.0" prefWidth="200.0" />
+      <ListView fx:id="_creationList" layoutX="200.0" layoutY="67.0" prefHeight="220.0" prefWidth="200.0" />
       <Text layoutX="183.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Select name(s) you wish to practice" />
       <Button fx:id="practiceBtn" layoutX="264.0" layoutY="302.0" mnemonicParsing="false" onAction="#handlePracticeBtn" text="Practice" />
-      <Button layoutX="59.0" layoutY="327.0" mnemonicParsing="false" onAction="#handleBackButton" text="Back" />
+      <Button layoutX="63.0" layoutY="302.0" mnemonicParsing="false" onAction="#handleBackButton" text="Back" />
    </children>
 </AnchorPane>

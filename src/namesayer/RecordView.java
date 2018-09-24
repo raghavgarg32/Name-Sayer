@@ -56,16 +56,27 @@ public class RecordView implements Initializable {
 
     private static String numberOfRecordings;
 
+    /**
+     * Callback function for the Mic test button, it changes the scene
+     */
     @FXML
     public void handleMicTestButton() {
         Main.changeSceneMicTest();
     }
 
+    /**
+     * getter method for getting the name for the current selected name
+     * @param currentNameSelected
+     */
     public void getNameForRecording(String currentNameSelected){
         currentName = currentNameSelected;
         currentNameLabel.setText(currentName);
     }
 
+    /**
+     * call back function for the record button that starts the recording processes of the application
+     * @throws IOException
+     */
     @FXML
     public void handleRecordButton() throws IOException {
         backButton.setVisible(false);
@@ -73,7 +84,7 @@ public class RecordView implements Initializable {
         recordBar.setProgress(0.0);
         recordLabel.setText("Audio is currently being recorded 5 seconds now");
 
-
+        //Create a timer task for the progress bar
         TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -129,6 +140,9 @@ public class RecordView implements Initializable {
         _backgroundThread.start();
     }
 
+    /**
+     * Helper method for initializing the record view scene
+     */
     public void initScene(){
         recordLabel.setText("Press record to have your voice recorded");
         backButton.setVisible(true);
@@ -136,7 +150,10 @@ public class RecordView implements Initializable {
         recordBar.setProgress(0.0);
 
     }
-
+    
+    /**
+     * Callback function for the back button which changes the scene back to the practice menu
+     */
     @FXML
     public void handleBackBtn() {
 
@@ -157,6 +174,9 @@ public class RecordView implements Initializable {
         Main.changeScenePractice();
     }
 
+    /**
+     * Help method to delete the temp recordings 
+     */
     public void deleteRecording(){
         SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
             @Override
@@ -176,7 +196,10 @@ public class RecordView implements Initializable {
         };
         deleteWorker.execute();
     }
-
+    
+    /**
+     * Helper method to get the number of user recordings for a specific database recording
+     */
     public void gettingNumberOfUserRecordings(){
         SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
@@ -199,7 +222,7 @@ public class RecordView implements Initializable {
 
                     while ((line = stdoutBuffered.readLine()) != null) {
                         numberOfRecordings = line;
-                        System.out.println("This is the number  recording" + numberOfRecordings);
+                        
 
                     }
                     stdoutBuffered.close();
@@ -211,10 +234,11 @@ public class RecordView implements Initializable {
 
         };
         gettingRecordingsNumberWorker.execute();
-        System.out.println("This is the number " + numberOfRecordings);
+        
 
     }
 
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allUserRecordings = new ArrayList<String>();
@@ -222,7 +246,10 @@ public class RecordView implements Initializable {
 
     }
 
-
+    /**
+     * Helper method to get the number of recordings
+     * @return
+     */
     public static String getNumberOfRecordings() {
         return numberOfRecordings;
     }

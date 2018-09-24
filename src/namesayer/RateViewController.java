@@ -40,6 +40,7 @@ public class RateViewController implements Initializable  {
 		String path = "./Database/"+selectionName+"/Ratings/userReview.txt";
 		PrintWriter writer;
 		try {
+			// Create a text file and write to it
 			writer = new PrintWriter(path, "UTF-8");
 			writer.println("The recording is of bad quality");
 			writer.close();
@@ -82,6 +83,9 @@ public class RateViewController implements Initializable  {
 		}
 	}
 
+	/**
+	 * callback function for the back button wihch changes the scene
+	 */
 	@FXML
 	public void handleBackButton() {
 		Main.changeScenePractice();

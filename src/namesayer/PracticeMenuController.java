@@ -59,6 +59,11 @@ public class PracticeMenuController implements Initializable {
     @FXML
     private ListView<String> userCreations; // List of user attempt at recording themeselves saying the name
 
+    /**
+     * Callback function which is called when the play button is pressed. It checks which list is selected
+     * and plays the corresponding item
+     * @throws IOException
+     */
     @FXML
     public void handlePlayButton() throws IOException {
         // Check which if neither list has been selected
@@ -122,6 +127,11 @@ public class PracticeMenuController implements Initializable {
             _playWorker.execute();
 
         }
+        
+        /**
+         * When the user has selected a database recording or a user recording this will allow the user to play the 
+         * recording
+         */
 
         else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
             String name = practiceList.getSelectionModel().getSelectedItem();
@@ -133,21 +143,18 @@ public class PracticeMenuController implements Initializable {
             // If the name contains a number, remove that number to obtain the name
             if(name.contains("-")) {
                 nameWithNumber = name.substring(name.lastIndexOf("-")+1,name.length());
-                System.out.println("name with number " + nameWithNumber);
+                
                 name = name.substring(0, name.lastIndexOf("-"));
-                System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
+          
                 multipleNameIndex = Integer.parseInt(nameWithNumber) -1;
 
             }
 
-            System.out.println("this is the database recordings " + databaseList);
-
-            System.out.println("This is a name " + name);
+  
             String path = databaseList.get(nameList.indexOf(name) + (multipleNameIndex));
-            System.out.println("This is path " + path);
+  
 
             String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
-            System.out.println("This is path to file  " + pathToFile);
 
             // Use a background thread for playing audio
             _playWorker = new SwingWorker<Void, Void>() {
@@ -197,11 +204,20 @@ public class PracticeMenuController implements Initializable {
         }
     }
 
+    /**
+     * Allows the user to change their selected names to practice by changing the scene to Database scene
+     * @throws IOException
+     */
     @FXML
     public void handleChangeButton() throws IOException {
         Main.changeSceneDataBase();
     }
 
+    /**
+     * Allows the user create recordings for a selected name and makes sure that the user has selected a recording
+     * to practice by changing the scene to Record scene
+     * @throws IOException
+     */
     @FXML
     public void handleCreateButton() throws IOException {
         if (practiceList.getSelectionModel().isEmpty()) {
@@ -215,6 +231,11 @@ public class PracticeMenuController implements Initializable {
         }
     }
 
+    /**
+     * Allows the user rate user recordings for a selected name and makes sure that the user has selected a recording
+     * to practice by changing the scene to Rate scene
+     * @throws IOException
+     */
     @FXML
     public void handleRateButton() throws IOException {
         if (practiceList.getSelectionModel().isEmpty()) {
@@ -229,6 +250,13 @@ public class PracticeMenuController implements Initializable {
 
     }
 
+    /**
+	 * Setting up different array lists for the different list views to use
+	 * @param selectedNames
+	 * @param namesWithoutNumbersList
+	 * @param namesWithNumbersList
+	 */
+
     public void names(ObservableList<String> selectedNames, ArrayList<String> namesWithoutNumbersList,
                       ObservableList<String> namesWithNumbersList) {
 
@@ -241,10 +269,13 @@ public class PracticeMenuController implements Initializable {
             namesWithNumbers.add(names);
         }
 
-        System.out.println("this is playing " + namesWithNumbersList);
+        
         practiceList.setItems(items);
     }
 
+	/**
+	 * Places user recordings into the list view
+	 */
     public void userListView() {
         String tempName = PracticeMenuController.getCurrentName();
         if (!(practiceList.getSelectionModel().isEmpty()) && PracticeMenuController.getCurrentName().contains("-")) {
@@ -258,14 +289,11 @@ public class PracticeMenuController implements Initializable {
         if(tempName != null) {
             File[] listOfFiles = folder.listFiles();
 
-            System.out.println("This is the current name " + PracticeMenuController.getCurrentName());
+            
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
                     items.add(listOfFiles[i].getName());
-                    System.out.println("File " + listOfFiles[i].getName());
-                } else if (listOfFiles[i].isDirectory()) {
-                    System.out.println("Directory " + listOfFiles[i].getName());
-                }
+                } 
             }
 
             userCreations.setItems(items);
@@ -273,6 +301,11 @@ public class PracticeMenuController implements Initializable {
 
     }
 
+	/**
+	 * Allows user to click on different names and change name label and user recording array list accordingly
+	 * @param location
+	 * @param resources
+	 */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         practiceList.getSelectionModel().select(0);
@@ -282,19 +315,19 @@ public class PracticeMenuController implements Initializable {
         userRecordingsList = FXCollections.observableArrayList();
         currentName = "Name";
         practiceList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-
+        	//Changes the practice view depending on which was the last selected list
             @Override
             public void handle(MouseEvent event) {
-                System.out.println("Practice list is clicked");
+                
                 userCreations.getSelectionModel().clearSelection();
 
+                // Conditional statements to determine which list view has been selected
                 if (!(practiceList.getSelectionModel().isEmpty())) {
                     nameLabel.setText(namesWithoutNumbers
                             .get(namesWithNumbers.indexOf(practiceList.getSelectionModel().getSelectedItem())));
                 }
 
                 currentName = practiceList.getSelectionModel().getSelectedItem();
-                System.out.println(currentName);
                 userListView();
                 SwingWorker<ArrayList<String>, Integer> gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
@@ -325,6 +358,7 @@ public class PracticeMenuController implements Initializable {
                     }
 
                 };
+                
                 gettingRecordingsWorker.execute();
 
                 for (String recordings : userRecordings) {
@@ -334,13 +368,18 @@ public class PracticeMenuController implements Initializable {
         });
     }
 
+    /**
+     * Onclick callback function for the userCreations list
+     */
     @FXML
     public void userCreationsListClicked() {
-        System.out.println("User list is clicked");
 
         practiceList.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Callback function for the shuffle button which randomizes the list view
+     */
     @FXML
     public void handleShuffleButton() {
         ObservableList<String> tempList = FXCollections.observableArrayList();
@@ -351,15 +390,21 @@ public class PracticeMenuController implements Initializable {
 
     }
 
+    /**
+     * Getter method to get the current name
+     * @return
+     */
     public static String getCurrentName() {
-        System.out.println("Current name" + currentName);
         return currentName;
     }
 
+    /**
+     * getter method to get the current name but with the number removed
+     * @return
+     */
     public static String getCurrentNameWithoutNumber() {
         if (currentName.contains("-")) {
             currentName = currentName.substring(0, currentName.lastIndexOf("-"));
-            System.out.println("This is the current name " + currentName);
         }
         return currentName;
     }

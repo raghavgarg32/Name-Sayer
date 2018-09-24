@@ -40,6 +40,10 @@ public class DataBaseController implements Initializable {
     private Button practiceBtn;
 
 
+    /**
+     * This is a callback function  thats called when the practice button is called, it changes the scene when the 
+     * callback function is called 
+     */
     @FXML
     public void handlePracticeBtn() {
         if (_practiceSelection.size() == 0) {
@@ -83,6 +87,7 @@ public class DataBaseController implements Initializable {
         _creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 
+        // Add checkboxes to the listview to allow the user to select mulitple options
         _creationList.setCellFactory(CheckBoxListCell.forListView(new Callback<String, ObservableValue<Boolean>>() {
             @Override
             public ObservableValue<Boolean> call(String item) {
@@ -93,7 +98,7 @@ public class DataBaseController implements Initializable {
 
                     }
                     else if(isNowSelected == false) {
-                        System.out.println("the item has been removed");
+                        
                         _practiceSelection.remove(item);
                     }
                 });
@@ -107,7 +112,10 @@ public class DataBaseController implements Initializable {
         _creationList.setItems(list);
         gettingRecordings();
     }
-
+    
+    /**
+     * Helper method to read recordings from the database folder
+     */
     public void gettingRecordings(){
         //This swingworker gets all of the creations from the NameSayer directory
         SwingWorker gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
@@ -142,9 +150,9 @@ public class DataBaseController implements Initializable {
                         nameArrayList.add(line);
 
                         if (list.contains(line)){
-                            System.out.println(line);
+                            
                             int occurrences = Collections.frequency(nameArrayList, line);
-                            System.out.println(occurrences);
+                            
                             line =  line + '-' + occurrences;
                         }
                         list.add(line);
@@ -160,32 +168,49 @@ public class DataBaseController implements Initializable {
         gettingRecordingsWorker.execute();
     }
 
+    /**
+     * Helper method which gets the items from the _practiceSelection 
+     */
     public static ObservableList<String> getItemList(){
         ObservableList<String> items =FXCollections.observableArrayList ();
         for (String name : _practiceSelection){
-            System.out.println(name);
             items.add(name);
         }
 
         return items;
     }
 
+    /**
+     * Method which returns the names in the database without numbers
+     */
     public static ArrayList<String> getNamesWithoutNumbers(){
-        System.out.println("Array list  " + nameArrayList);
+        
 
         return nameArrayList;
     }
 
+    
+    /**
+     * Method which returns the names in the database but with numbers
+     * @return
+     */
     public static ObservableList<String> getNamesWithNumbers(){
-        System.out.println("Array list  " + list);
+        
 
         return list;
     }
 
+    /**
+     * method which returns the databaselist 
+     * @return
+     */
     public static List<String> getDatabaseList() {
         return databaseList;
     }
 
+    /**
+     * Callback function which is called when the back button,it changes the scene when called
+     */
     @FXML
     public void handleBackButton() {
         Main.changeSceneMain();

@@ -17,11 +17,17 @@ public class MainMenuController implements Initializable {
     @FXML
     private Button quitBtn;
 
+    /**
+     * Changes the scene to database when called
+     */
     @FXML
     public void handlePracticeBtn() {
         Main.changeSceneDataBase();
     }
 
+    /**
+     * Exits the application when called
+     */
     @FXML
     public void handleQuitBtn() {
         Stage stage = (Stage) quitBtn.getScene().getWindow();
