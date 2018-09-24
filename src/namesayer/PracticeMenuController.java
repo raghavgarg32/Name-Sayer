@@ -35,6 +35,8 @@ public class PracticeMenuController implements Initializable {
 
 	private ObservableList<String> items;
 
+	private SwingWorker<Void, Void> _playWorker;
+
 	private ArrayList<String> namesWithoutNumbers;
 
 	private ArrayList<String> namesWithNumbers;
@@ -44,8 +46,6 @@ public class PracticeMenuController implements Initializable {
 	private static String currentName;
 
 	private ObservableList<String> userRecordingsList;
-	
-	private boolean pracListClicked = true;
 
 	@FXML
 	private Button playBtn;
@@ -61,60 +61,76 @@ public class PracticeMenuController implements Initializable {
 
 	@FXML
 	public void handlePlayButton() throws IOException {
+		// Check which if neither list has been selected
 		if (practiceList.getSelectionModel().isEmpty() && userCreations.getSelectionModel().isEmpty()) {
 			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.OK) {
 				alert.close();
 			}
-		} else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
+		} 
+		// Check which list has been selected
+		else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
 			String name = userCreations.getSelectionModel().getSelectedItem();
 
 			String pathToFile = "Database/" + getCurrentNameWithoutNumber() + "/User-Recordings/" + name;
+			
+			_playWorker = new SwingWorker<Void, Void>() {
 
-			AudioInputStream stream;
-			AudioFormat format;
-			DataLine.Info info;
-			SourceDataLine sourceLine;
-
-			try {
-				stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-				format = stream.getFormat();
-
-				info = new DataLine.Info(SourceDataLine.class, format);
-				sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-				sourceLine.open(format);
-
-				sourceLine.start();
-
-				int nBytesRead = 0;
-				int BUFFER_SIZE = 128000;
-				byte[] abData = new byte[BUFFER_SIZE];
-				while (nBytesRead != -1) {
+				@Override
+				protected Void doInBackground() throws Exception {
+					AudioInputStream stream;
+					AudioFormat format;
+					DataLine.Info info;
+					SourceDataLine sourceLine;
+					
 					try {
-						nBytesRead = stream.read(abData, 0, abData.length);
-					} catch (IOException e) {
-						e.printStackTrace();
+						stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+						format = stream.getFormat();
+
+						info = new DataLine.Info(SourceDataLine.class, format);
+						sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+						sourceLine.open(format);
+
+						sourceLine.start();
+
+						int nBytesRead = 0;
+						int BUFFER_SIZE = 128000;
+						byte[] abData = new byte[BUFFER_SIZE];
+						while (nBytesRead != -1) {
+							try {
+								nBytesRead = stream.read(abData, 0, abData.length);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							if (nBytesRead >= 0) {
+								@SuppressWarnings("unused")
+								int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+							}
+						}
+
+						sourceLine.drain();
+						sourceLine.close();
+
+					} catch (Exception e) {
+
 					}
-					if (nBytesRead >= 0) {
-						@SuppressWarnings("unused")
-						int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-					}
+					return null;
 				}
+				
+			};
+			_playWorker.execute();
 
-				sourceLine.drain();
-				sourceLine.close();
-
-			} catch (Exception e) {
-
-			}
-		} else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
+		}
+			
+		 else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
 			String name = practiceList.getSelectionModel().getSelectedItem();
 			String nameWithNumber = null;
 			int multipleNameIndex = 0;
 			List<String> databaseList = DataBaseController.getDatabaseList();
 			List<String> nameList = DataBaseController.getNamesWithNumbers();
 			
+			// If the name contains a number, remove that number to obtain the name
 			if(name.contains("-")) {
 				nameWithNumber = name.substring(name.lastIndexOf("-")+1,name.length());
 				System.out.println("name with number " + nameWithNumber);
@@ -133,45 +149,54 @@ public class PracticeMenuController implements Initializable {
 			String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
 			System.out.println("This is path to file  " + pathToFile);
 
-			AudioInputStream stream;
-			AudioFormat format;
-			DataLine.Info info;
-			SourceDataLine sourceLine;
+			// Use a background thread for playing audio
+			_playWorker = new SwingWorker<Void, Void>() {
 
-			try {
-				stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-				format = stream.getFormat();
+				@Override
+				protected Void doInBackground() throws Exception {
+					AudioInputStream stream;
+					AudioFormat format;
+					DataLine.Info info;
+					SourceDataLine sourceLine;
 
-				info = new DataLine.Info(SourceDataLine.class, format);
-				sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-				sourceLine.open(format);
-
-				sourceLine.start();
-
-				int nBytesRead = 0;
-				int BUFFER_SIZE = 128000;
-				byte[] abData = new byte[BUFFER_SIZE];
-				while (nBytesRead != -1) {
 					try {
-						nBytesRead = stream.read(abData, 0, abData.length);
-					} catch (IOException e) {
-						e.printStackTrace();
+						stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+						format = stream.getFormat();
+
+						info = new DataLine.Info(SourceDataLine.class, format);
+						sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+						sourceLine.open(format);
+
+						sourceLine.start();
+
+						int nBytesRead = 0;
+						int BUFFER_SIZE = 128000;
+						byte[] abData = new byte[BUFFER_SIZE];
+						while (nBytesRead != -1) {
+							try {
+								nBytesRead = stream.read(abData, 0, abData.length);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							if (nBytesRead >= 0) {
+								@SuppressWarnings("unused")
+								int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+							}
+						}
+
+						sourceLine.drain();
+						sourceLine.close();
+
+					} catch (Exception e) {
+
 					}
-					if (nBytesRead >= 0) {
-						@SuppressWarnings("unused")
-						int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-					}
-				}
-
-				sourceLine.drain();
-				sourceLine.close();
-
-			} catch (Exception e) {
-
-			}
-
+					return null;
+				} 
+			};
+			_playWorker.execute();
 		}
 	}
+
 	@FXML
 	public void handleChangeButton() throws IOException {
 		Main.changeSceneDataBase();
@@ -188,15 +213,12 @@ public class PracticeMenuController implements Initializable {
 		} else {
 			Main.changeSceneRecord();
 		}
-		// ObservableList<String> items =FXCollections.observableArrayList (
-		// "Single", "Double", "Suite", "Family App");
-		// practiceList.setItems(items);
 	}
 
 	@FXML
 	public void handleRateButton() throws IOException {
 		if (practiceList.getSelectionModel().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to review", ButtonType.OK);
+			Alert alert = new Alert(Alert.AlertType.NONE, "Please select a database recording " + "to review", ButtonType.OK);
 			alert.showAndWait();
 			if (alert.getResult() == ButtonType.OK) {
 				alert.close();
@@ -208,7 +230,8 @@ public class PracticeMenuController implements Initializable {
 	}
 
 	public void names(ObservableList<String> selectedNames, ArrayList<String> namesWithoutNumbersList,
-			ObservableList<String> namesWithNumbersList) {
+					  ObservableList<String> namesWithNumbersList) {
+		
 		items = selectedNames;
 		for (String names : namesWithoutNumbersList) {
 			namesWithoutNumbers.add(names);
@@ -222,18 +245,18 @@ public class PracticeMenuController implements Initializable {
 		practiceList.setItems(items);
 	}
 
-
 	public void userListView() {
 		String tempName = PracticeMenuController.getCurrentName();
-		if(PracticeMenuController.getCurrentName().contains("-")) {
-			tempName = PracticeMenuController.getCurrentName().substring(0, PracticeMenuController.getCurrentName().lastIndexOf("-"));
+		if (PracticeMenuController.getCurrentName().contains("-")) {
+			tempName = PracticeMenuController.getCurrentName().substring(0,
+					PracticeMenuController.getCurrentName().lastIndexOf("-"));
 		}
-		
-		ObservableList<String> items =FXCollections.observableArrayList ();
-		File folder = new File(System.getProperty("user.dir")+"/Database/"+tempName+"/User-Recordings");
+
+		ObservableList<String> items = FXCollections.observableArrayList();
+		File folder = new File(System.getProperty("user.dir") + "/Database/" + tempName + "/User-Recordings");
 		File[] listOfFiles = folder.listFiles();
-		
-		System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
+
+		System.out.println("This is the current name " + PracticeMenuController.getCurrentName());
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
 				items.add(listOfFiles[i].getName());
@@ -254,12 +277,6 @@ public class PracticeMenuController implements Initializable {
 		userRecordings = new ArrayList<String>();
 		userRecordingsList = FXCollections.observableArrayList();
 		currentName = "Name";
-		practiceList.getItems().add("hello");
-		
-//		practiceList.setCellFactory(param -> new ListView<String> {
-//			
-//		});
-		
 		practiceList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -273,7 +290,7 @@ public class PracticeMenuController implements Initializable {
 				currentName = practiceList.getSelectionModel().getSelectedItem();
 				System.out.println(currentName);
 				userListView();
-				SwingWorker gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
+				SwingWorker<ArrayList<String>, Integer> gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
 					@Override
 					protected ArrayList<String> doInBackground() throws Exception {
@@ -337,9 +354,9 @@ public class PracticeMenuController implements Initializable {
 	}
 
 	public static String getCurrentNameWithoutNumber() {
-		if(currentName.contains("-")) {
+		if (currentName.contains("-")) {
 			currentName = currentName.substring(0, currentName.lastIndexOf("-"));
-			System.out.println("This is the current name " +currentName);
+			System.out.println("This is the current name " + currentName);
 		}
 		return currentName;
 	}
