@@ -18,11 +18,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -48,6 +44,8 @@ public class PracticeMenuController implements Initializable {
 	private static String currentName;
 
 	private ObservableList<String> userRecordingsList;
+	
+	private boolean pracListClicked = true;
 
 	@FXML
 	private Button playBtn;
@@ -72,7 +70,7 @@ public class PracticeMenuController implements Initializable {
 		} else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
 			String name = userCreations.getSelectionModel().getSelectedItem();
 
-			String pathToFile = "Database/" + PracticeMenuController.getCurrentName() + "/User-Recordings/" + name;
+			String pathToFile = "Database/" + getCurrentNameWithoutNumber() + "/User-Recordings/" + name;
 
 			AudioInputStream stream;
 			AudioFormat format;
@@ -112,11 +110,28 @@ public class PracticeMenuController implements Initializable {
 			}
 		} else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
 			String name = practiceList.getSelectionModel().getSelectedItem();
+			String nameWithNumber = null;
+			int multipleNameIndex = 0;
 			List<String> databaseList = DataBaseController.getDatabaseList();
 			List<String> nameList = DataBaseController.getNamesWithNumbers();
+			
+			if(name.contains("-")) {
+				nameWithNumber = name.substring(name.lastIndexOf("-")+1,name.length());
+				System.out.println("name with number " + nameWithNumber);
+				name = name.substring(0, name.lastIndexOf("-"));
+				System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
+				multipleNameIndex = Integer.parseInt(nameWithNumber) -1;
 
-			String path = databaseList.get(nameList.indexOf(name));
+			}
+			
+			System.out.println("this is the database recordings " + databaseList);
+
+			System.out.println("This is a name " + name);
+			String path = databaseList.get(nameList.indexOf(name) + (multipleNameIndex));
+			System.out.println("This is path " + path);
+
 			String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
+			System.out.println("This is path to file  " + pathToFile);
 
 			AudioInputStream stream;
 			AudioFormat format;
@@ -157,7 +172,6 @@ public class PracticeMenuController implements Initializable {
 
 		}
 	}
-
 	@FXML
 	public void handleChangeButton() throws IOException {
 		Main.changeSceneDataBase();
@@ -174,6 +188,9 @@ public class PracticeMenuController implements Initializable {
 		} else {
 			Main.changeSceneRecord();
 		}
+		// ObservableList<String> items =FXCollections.observableArrayList (
+		// "Single", "Double", "Suite", "Family App");
+		// practiceList.setItems(items);
 	}
 
 	@FXML
@@ -205,6 +222,30 @@ public class PracticeMenuController implements Initializable {
 		practiceList.setItems(items);
 	}
 
+
+	public void userListView() {
+		String tempName = PracticeMenuController.getCurrentName();
+		if(PracticeMenuController.getCurrentName().contains("-")) {
+			tempName = PracticeMenuController.getCurrentName().substring(0, PracticeMenuController.getCurrentName().lastIndexOf("-"));
+		}
+		
+		ObservableList<String> items =FXCollections.observableArrayList ();
+		File folder = new File(System.getProperty("user.dir")+"/Database/"+tempName+"/User-Recordings");
+		File[] listOfFiles = folder.listFiles();
+		
+		System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				items.add(listOfFiles[i].getName());
+				System.out.println("File " + listOfFiles[i].getName());
+			} else if (listOfFiles[i].isDirectory()) {
+				System.out.println("Directory " + listOfFiles[i].getName());
+			}
+		}
+
+		userCreations.setItems(items);
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		practiceList.getSelectionModel().select(0);
@@ -213,7 +254,12 @@ public class PracticeMenuController implements Initializable {
 		userRecordings = new ArrayList<String>();
 		userRecordingsList = FXCollections.observableArrayList();
 		currentName = "Name";
-
+		practiceList.getItems().add("hello");
+		
+//		practiceList.setCellFactory(param -> new ListView<String> {
+//			
+//		});
+		
 		practiceList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
 			@Override
@@ -226,6 +272,7 @@ public class PracticeMenuController implements Initializable {
 
 				currentName = practiceList.getSelectionModel().getSelectedItem();
 				System.out.println(currentName);
+				userListView();
 				SwingWorker gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
 					@Override
@@ -260,7 +307,6 @@ public class PracticeMenuController implements Initializable {
 				for (String recordings : userRecordings) {
 					userRecordingsList.add(recordings);
 				}
-				userCreations.setItems(userRecordingsList);
 			}
 		});
 	}
@@ -289,4 +335,13 @@ public class PracticeMenuController implements Initializable {
 		System.out.println("Current name" + currentName);
 		return currentName;
 	}
+
+	public static String getCurrentNameWithoutNumber() {
+		if(currentName.contains("-")) {
+			currentName = currentName.substring(0, currentName.lastIndexOf("-"));
+			System.out.println("This is the current name " +currentName);
+		}
+		return currentName;
+	}
+
 }

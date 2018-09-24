@@ -20,9 +20,11 @@ public class Main extends Application {
     private static Scene _confirmMenu;
     private static Scene _micTestMenu;
     private static Scene _rateMenu;
+    private static Scene _saveMenu;
 
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
+    private static FXMLLoader saveLoader;
 
 
 
@@ -37,6 +39,10 @@ public class Main extends Application {
         recordLoader = new FXMLLoader();
         recordLoader.setLocation(getClass().getResource("RecordView.fxml"));
         Parent recordRoot = recordLoader.load();
+
+        saveLoader = new FXMLLoader();
+        saveLoader.setLocation(getClass().getResource("SaveView.fxml"));
+        Parent saveRoot = saveLoader.load();
 
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
@@ -56,7 +62,8 @@ public class Main extends Application {
         _recordMenu = new Scene(recordRoot,600,400);
         _confirmMenu = new Scene(confirmRoot,600,400);
         _micTestMenu = new Scene(micTestRoot,600,400);
-        _rateMenu = new Scene(rateMenuRoot,600,400);	
+        _rateMenu = new Scene(rateMenuRoot,600,400);
+        _saveMenu = new Scene(saveRoot,600,400);
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_mainMenu);
@@ -82,6 +89,7 @@ public class Main extends Application {
         PracticeMenuController controller = practiceLoader.getController();
         controller.names(DataBaseController.getItemList(),DataBaseController.getNamesWithoutNumbers(),
                 DataBaseController.getNamesWithNumbers());
+        controller.userListView();
         _primaryStage.setScene(_practiceMenu);
     }
 
@@ -89,6 +97,10 @@ public class Main extends Application {
         RecordView controller = recordLoader.getController();
         controller.getNameForRecording(PracticeMenuController.getCurrentName());
         _primaryStage.setScene(_recordMenu);
+    }
+
+    public static void changeSceneSave() {
+        _primaryStage.setScene(_saveMenu);
     }
 
     public static void changeSceneDataBase() {

@@ -22,49 +22,50 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class ConfirmView {
-	
-	@FXML
-	private Button delete,save,playUser,redo,playDataBase;
-	
-	@FXML
-	private Label name;
 
-	@FXML
-	public void handleDeleteButton() {
-		String name = PracticeMenuController.getCurrentName();
-		String number = RecordView.getNumberOfRecordings();
-		try {
-			Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-					"/Database/" + name + "/User-Recordings/" + name + number + ".wav"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			Main.changeScenePractice();
-		}
-	}
+    @FXML
+    private Button delete,save,playUser,redo,playDataBase;
 
-	@FXML
-	public void handleSaveButton() {
-		Main.changeScenePractice();
-	}
+    @FXML
+    private Label name;
 
-	@FXML
-	public void handlePlayUserButton() {
-		String name = PracticeMenuController.getCurrentName();
-		String number = RecordView.getNumberOfRecordings();
-		
-		
-		AudioInputStream stream;
+    @FXML
+    public void handleDeleteButton() {
+        String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
+        String number = RecordView.getNumberOfRecordings();
+        try {
+            Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
+                    "/Database/" + name + "/User-Recordings/temp.wav"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        finally {
+            Main.changeScenePractice();
+        }
+    }
+
+    @FXML
+    public void handleSaveButton() {
+        Main.changeSceneSave();
+    }
+
+    @FXML
+    public void handlePlayUserButton() {
+        String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
+        String number = RecordView.getNumberOfRecordings();
+
+
+        AudioInputStream stream;
         AudioFormat format;
         DataLine.Info info;
         SourceDataLine sourceLine;
-        
-		
-		try {
-            stream = AudioSystem.getAudioInputStream(new File("Database/"+name+"/User-Recordings/"+name+
-    				number+".wav"));
+
+
+        try {
+            stream = AudioSystem.getAudioInputStream(new File("Database/"+name+"/User-Recordings/temp.wav"));
             format = stream.getFormat();
 
             info = new DataLine.Info(SourceDataLine.class, format);
@@ -95,41 +96,43 @@ public class ConfirmView {
 
         }
 
-	}
-	
+    }
 
 
-	@FXML
-	public void handleRedoButton() {
-		String name = PracticeMenuController.getCurrentName();
-		String number = RecordView.getNumberOfRecordings();
-		try {
-			Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-					"/Database/" + name + "/User-Recordings/" + name + number + ".wav"));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally {
-			Main.changeSceneRecord();
-		}
-	}
 
-	@FXML
-	public void handlePlayDBButton() {
-		String name = PracticeMenuController.getCurrentName();
-		List<String> databaseList = DataBaseController.getDatabaseList();
-		List<String> nameList = DataBaseController.getNamesWithNumbers();
-		
-		String path = databaseList.get(nameList.indexOf(name));
-		String pathToFile = "Database/"+name+"/Database-Recordings/"+path+".wav";	
+    @FXML
+    public void handleRedoButton() {
+        String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
+        String number = RecordView.getNumberOfRecordings();
+        try {
+            Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
+                    "/Database/" + name + "/User-Recordings/temp.wav"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        finally {
+            Main.changeSceneRecord();
+        }
+    }
 
-		AudioInputStream stream;
+    @FXML
+    public void handlePlayDBButton() {
+        String name = PracticeMenuController.getCurrentName();
+        name = gettingRidOfNumbers(name);
+        List<String> databaseList = DataBaseController.getDatabaseList();
+        List<String> nameList = DataBaseController.getNamesWithNumbers();
+
+        String path = databaseList.get(nameList.indexOf(name));
+        String pathToFile = "Database/"+name+"/Database-Recordings/"+path+".wav";
+
+        AudioInputStream stream;
         AudioFormat format;
         DataLine.Info info;
         SourceDataLine sourceLine;
-		
-		try {
+
+        try {
             stream = AudioSystem.getAudioInputStream(new File(pathToFile));
             format = stream.getFormat();
 
@@ -161,7 +164,15 @@ public class ConfirmView {
 
         }
 
-	}
-	
+    }
+
+    public String gettingRidOfNumbers(String nameString){
+            if(nameString.contains("-")) {
+                nameString = nameString.substring(0, nameString.lastIndexOf("-"));
+                System.out.println("This is the current name " +nameString);
+            }
+            return nameString;
+    }
+
 
 }

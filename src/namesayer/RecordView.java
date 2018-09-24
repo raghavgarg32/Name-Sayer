@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.Timer;
 
@@ -56,6 +58,10 @@ public class RecordView implements Initializable {
     }
     
 	public void getNameForRecording(String currentNameSelected){
+		if(currentNameSelected.contains("-")) {
+			currentNameSelected = currentNameSelected.substring(0, currentNameSelected.lastIndexOf("-"));
+			System.out.println("This is the current name " +currentNameSelected);
+		}
         currentName = currentNameSelected;
         currentNameLabel.setText(currentName);
     }
@@ -95,7 +101,7 @@ public class RecordView implements Initializable {
 							@Override
 							protected Void call() throws Exception {
 								ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-										,"-ar","44100","-i","default","-t", "5","./Database/"+currentName+"/User-Recordings/"+currentName + numberOfRecordings+".wav");
+										,"-ar","44100","-i","default","-t", "5","./Database/"+currentName+"/User-Recordings/temp.wav");
 								try {
 									Process p = recordBuilder.start();
 									p.waitFor();
@@ -126,6 +132,7 @@ public class RecordView implements Initializable {
     public void handleBackBtn() {
     	if(_backgroundThread == null) {
     		recordLabel.setText("Press record to have your voice recorded");
+			deleteRecording();
 			Main.changeScenePractice();
 			return;
 		}
@@ -134,12 +141,24 @@ public class RecordView implements Initializable {
 			progressTimer.cancel();
 			recordBar.setProgress(0.0);
 			_backgroundThread.cancel();
+			deleteRecording();
 		}
 		recordLabel.setText("Press record to have your voice recorded");
 		Main.changeScenePractice();
 	}
     
-
+	public void deleteRecording(){
+		currentName = PracticeMenuController.getCurrentNameWithoutNumber();
+		String number = RecordView.getNumberOfRecordings();
+		try {
+			Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
+					"/Database/" + currentName + "/User-Recordings/temp.wav"));
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
     public void gettingNumberOfUserRecordings(){
         SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
