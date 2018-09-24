@@ -31,361 +31,339 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/**
- * Sets up the practice menu and allows user to practice
- */
 public class PracticeMenuController implements Initializable {
 
-	private ObservableList<String> items;
+    private ObservableList<String> items;
 
-	private ArrayList<String> namesWithoutNumbers;
+    private SwingWorker<Void, Void> _playWorker;
 
-	private ArrayList<String> namesWithNumbers;
+    private ArrayList<String> namesWithoutNumbers;
 
-	private ArrayList<String> userRecordings;
+    private ArrayList<String> namesWithNumbers;
 
-	private static String currentName;
+    private ArrayList<String> userRecordings;
 
-	private ObservableList<String> userRecordingsList;
+    private static String currentName;
 
-	private boolean pracListClicked = true;
+    private ObservableList<String> userRecordingsList;
 
-	@FXML
-	private Button playBtn;
+    @FXML
+    private Button playBtn;
 
-	@FXML
-	private Label nameLabel;
+    @FXML
+    private Label nameLabel;
 
-	@FXML
-	public ListView<String> practiceList; // List of practice names that the user selected
+    @FXML
+    public ListView<String> practiceList; // List of practice names that the user selected
 
-	@FXML
-	private ListView<String> userCreations; // List of user attempt at recording themeselves saying the name
+    @FXML
+    private ListView<String> userCreations; // List of user attempt at recording themeselves saying the name
 
-	/**
-	 * this handles the play button, plays either the database recording or the user recording depending which one is selected
-	 * when the button is pressed
-	 * @throws IOException
-	 */
-	@FXML
-	public void handlePlayButton() throws IOException {
-		if (practiceList.getSelectionModel().isEmpty() && userCreations.getSelectionModel().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
-			alert.showAndWait();
-			if (alert.getResult() == ButtonType.OK) {
-				alert.close();
-			}
-		} else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
-			String name = userCreations.getSelectionModel().getSelectedItem();
+    @FXML
+    public void handlePlayButton() throws IOException {
+        // Check which if neither list has been selected
+        if (practiceList.getSelectionModel().isEmpty() && userCreations.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
+        // Check which list has been selected
+        else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
+            String name = userCreations.getSelectionModel().getSelectedItem();
 
-			String pathToFile = "Database/" + getCurrentNameWithoutNumber() + "/User-Recordings/" + name;
+            String pathToFile = "Database/" + getCurrentNameWithoutNumber() + "/User-Recordings/" + name;
 
-			AudioInputStream stream;
-			AudioFormat format;
-			DataLine.Info info;
-			SourceDataLine sourceLine;
+            _playWorker = new SwingWorker<Void, Void>() {
 
-			try {
-				stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-				format = stream.getFormat();
+                @Override
+                protected Void doInBackground() throws Exception {
+                    AudioInputStream stream;
+                    AudioFormat format;
+                    DataLine.Info info;
+                    SourceDataLine sourceLine;
 
-				info = new DataLine.Info(SourceDataLine.class, format);
-				sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-				sourceLine.open(format);
+                    try {
+                        stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+                        format = stream.getFormat();
 
-				sourceLine.start();
+                        info = new DataLine.Info(SourceDataLine.class, format);
+                        sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+                        sourceLine.open(format);
 
-				int nBytesRead = 0;
-				int BUFFER_SIZE = 128000;
-				byte[] abData = new byte[BUFFER_SIZE];
-				while (nBytesRead != -1) {
-					try {
-						nBytesRead = stream.read(abData, 0, abData.length);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					if (nBytesRead >= 0) {
-						@SuppressWarnings("unused")
-						int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-					}
-				}
+                        sourceLine.start();
 
-				sourceLine.drain();
-				sourceLine.close();
+                        int nBytesRead = 0;
+                        int BUFFER_SIZE = 128000;
+                        byte[] abData = new byte[BUFFER_SIZE];
+                        while (nBytesRead != -1) {
+                            try {
+                                nBytesRead = stream.read(abData, 0, abData.length);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (nBytesRead >= 0) {
+                                @SuppressWarnings("unused")
+                                int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+                            }
+                        }
 
-			} catch (Exception e) {
+                        sourceLine.drain();
+                        sourceLine.close();
 
-			}
-		} else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
-			String name = practiceList.getSelectionModel().getSelectedItem();
-			String nameWithNumber = null;
-			int multipleNameIndex = 0;
-			List<String> databaseList = DataBaseController.getDatabaseList();
-			List<String> nameList = DataBaseController.getNamesWithNumbers();
+                    } catch (Exception e) {
 
-			if(name.contains("-")) {
-				nameWithNumber = name.substring(name.lastIndexOf("-")+1,name.length());
-				System.out.println("name with number " + nameWithNumber);
-				name = name.substring(0, name.lastIndexOf("-"));
-				System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
-				multipleNameIndex = Integer.parseInt(nameWithNumber) -1;
+                    }
+                    return null;
+                }
 
-			}
+            };
+            _playWorker.execute();
 
-			System.out.println("this is the database recordings " + databaseList);
+        }
 
-			System.out.println("This is a name " + name);
-			String path = databaseList.get(nameList.indexOf(name) + (multipleNameIndex));
-			System.out.println("This is path " + path);
+        else if (userCreations.getSelectionModel().isEmpty() && !(practiceList.getSelectionModel().isEmpty())) {
+            String name = practiceList.getSelectionModel().getSelectedItem();
+            String nameWithNumber = null;
+            int multipleNameIndex = 0;
+            List<String> databaseList = DataBaseController.getDatabaseList();
+            List<String> nameList = DataBaseController.getNamesWithNumbers();
 
-			String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
-			System.out.println("This is path to file  " + pathToFile);
+            // If the name contains a number, remove that number to obtain the name
+            if(name.contains("-")) {
+                nameWithNumber = name.substring(name.lastIndexOf("-")+1,name.length());
+                System.out.println("name with number " + nameWithNumber);
+                name = name.substring(0, name.lastIndexOf("-"));
+                System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
+                multipleNameIndex = Integer.parseInt(nameWithNumber) -1;
 
-			AudioInputStream stream;
-			AudioFormat format;
-			DataLine.Info info;
-			SourceDataLine sourceLine;
+            }
 
-			try {
-				stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-				format = stream.getFormat();
+            System.out.println("this is the database recordings " + databaseList);
 
-				info = new DataLine.Info(SourceDataLine.class, format);
-				sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-				sourceLine.open(format);
+            System.out.println("This is a name " + name);
+            String path = databaseList.get(nameList.indexOf(name) + (multipleNameIndex));
+            System.out.println("This is path " + path);
 
-				sourceLine.start();
+            String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
+            System.out.println("This is path to file  " + pathToFile);
 
-				int nBytesRead = 0;
-				int BUFFER_SIZE = 128000;
-				byte[] abData = new byte[BUFFER_SIZE];
-				while (nBytesRead != -1) {
-					try {
-						nBytesRead = stream.read(abData, 0, abData.length);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-					if (nBytesRead >= 0) {
-						@SuppressWarnings("unused")
-						int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-					}
-				}
+            // Use a background thread for playing audio
+            _playWorker = new SwingWorker<Void, Void>() {
 
-				sourceLine.drain();
-				sourceLine.close();
+                @Override
+                protected Void doInBackground() throws Exception {
+                    AudioInputStream stream;
+                    AudioFormat format;
+                    DataLine.Info info;
+                    SourceDataLine sourceLine;
 
-			} catch (Exception e) {
+                    try {
+                        stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+                        format = stream.getFormat();
 
-			}
+                        info = new DataLine.Info(SourceDataLine.class, format);
+                        sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+                        sourceLine.open(format);
 
-		}
-	}
+                        sourceLine.start();
 
-	/**
-	 * Allows the user to go back and pick different names to practice
-	 * @throws IOException
-	 */
-	@FXML
-	public void handleChangeButton() throws IOException {
-		Main.changeSceneDataBase();
-	}
+                        int nBytesRead = 0;
+                        int BUFFER_SIZE = 128000;
+                        byte[] abData = new byte[BUFFER_SIZE];
+                        while (nBytesRead != -1) {
+                            try {
+                                nBytesRead = stream.read(abData, 0, abData.length);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if (nBytesRead >= 0) {
+                                @SuppressWarnings("unused")
+                                int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+                            }
+                        }
 
-	/**
-	 * Allows the user to go create own recording for name by changing scene and makes sure the user has selected name
-	 * @throws IOException
-	 */
-	@FXML
-	public void handleCreateButton() throws IOException {
-		if (practiceList.getSelectionModel().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection first", ButtonType.OK);
-			alert.showAndWait();
-			if (alert.getResult() == ButtonType.OK) {
-				alert.close();
-			}
-		} else {
-			Main.changeSceneRecord();
-		}
-	}
+                        sourceLine.drain();
+                        sourceLine.close();
 
-	/**
-	 * Allows the user to go rate database recording for name by changing scene and makes sure the user has selected name
-	 * @throws IOException
-	 */
-	@FXML
-	public void handleRateButton() throws IOException {
-		if (practiceList.getSelectionModel().isEmpty()) {
-			Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to review", ButtonType.OK);
-			alert.showAndWait();
-			if (alert.getResult() == ButtonType.OK) {
-				alert.close();
-			}
-		} else {
-			Main.changeSceneRateMenu();
-		}
+                    } catch (Exception e) {
 
-	}
+                    }
+                    return null;
+                }
+            };
+            _playWorker.execute();
+        }
+    }
 
-	/**
-	 * Setting up different array lists for the different list views to use
-	 * @param selectedNames
-	 * @param namesWithoutNumbersList
-	 * @param namesWithNumbersList
-	 */
-	public void names(ObservableList<String> selectedNames, ArrayList<String> namesWithoutNumbersList,
-			ObservableList<String> namesWithNumbersList) {
-		items = selectedNames;
-		for (String names : namesWithoutNumbersList) {
-			namesWithoutNumbers.add(names);
-		}
+    @FXML
+    public void handleChangeButton() throws IOException {
+        Main.changeSceneDataBase();
+    }
 
-		for (String names : namesWithNumbersList) {
-			namesWithNumbers.add(names);
-		}
+    @FXML
+    public void handleCreateButton() throws IOException {
+        if (practiceList.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection first", ButtonType.OK);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        } else {
+            Main.changeSceneRecord();
+        }
+    }
 
-		System.out.println("this is playing " + namesWithNumbersList);
-		practiceList.setItems(items);
-	}
+    @FXML
+    public void handleRateButton() throws IOException {
+        if (practiceList.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.NONE, "Please select a database recording " + "to review", ButtonType.OK);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        } else {
+            Main.changeSceneRateMenu();
+        }
 
-	/**
-	 * Places user recordings into the list view
-	 */
-	public void userListView() {
-		String tempName = PracticeMenuController.getCurrentName();
-		if(PracticeMenuController.getCurrentName().contains("-")) {
-			tempName = PracticeMenuController.getCurrentName().substring(0, PracticeMenuController.getCurrentName().lastIndexOf("-"));
-		}
+    }
 
-		ObservableList<String> items =FXCollections.observableArrayList ();
-		File folder = new File(System.getProperty("user.dir")+"/Database/"+tempName+"/User-Recordings");
-		File[] listOfFiles = folder.listFiles();
+    public void names(ObservableList<String> selectedNames, ArrayList<String> namesWithoutNumbersList,
+                      ObservableList<String> namesWithNumbersList) {
 
-		System.out.println("This is the current name " +PracticeMenuController.getCurrentName());
-		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				items.add(listOfFiles[i].getName());
-				System.out.println("File " + listOfFiles[i].getName());
-			} else if (listOfFiles[i].isDirectory()) {
-				System.out.println("Directory " + listOfFiles[i].getName());
-			}
-		}
+        items = selectedNames;
+        for (String names : namesWithoutNumbersList) {
+            namesWithoutNumbers.add(names);
+        }
 
-		userCreations.setItems(items);
-	}
+        for (String names : namesWithNumbersList) {
+            namesWithNumbers.add(names);
+        }
 
-	/**
-	 * Allows user to click on different names and change name label and user recording array list accordingly
-	 * @param location
-	 * @param resources
-	 */
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		practiceList.getSelectionModel().select(0);
-		namesWithoutNumbers = new ArrayList<String>();
-		namesWithNumbers = new ArrayList<String>();
-		userRecordings = new ArrayList<String>();
-		userRecordingsList = FXCollections.observableArrayList();
-		currentName = "Name";
-		practiceList.getItems().add("hello");
+        System.out.println("this is playing " + namesWithNumbersList);
+        practiceList.setItems(items);
+    }
 
-		practiceList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    public void userListView() {
+        String tempName = PracticeMenuController.getCurrentName();
+        if (!(practiceList.getSelectionModel().isEmpty()) && PracticeMenuController.getCurrentName().contains("-")) {
+            tempName = PracticeMenuController.getCurrentName().substring(0,
+                    PracticeMenuController.getCurrentName().lastIndexOf("-"));
+        }
 
-			@Override
-			public void handle(MouseEvent event) {
-				userRecordingsList.clear();
-				if (!(practiceList.getSelectionModel().isEmpty())) {
-					nameLabel.setText(namesWithoutNumbers
-							.get(namesWithNumbers.indexOf(practiceList.getSelectionModel().getSelectedItem())));
-				}
 
-				currentName = practiceList.getSelectionModel().getSelectedItem();
-				System.out.println(currentName);
-				userListView();
-				SwingWorker gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
+        ObservableList<String> items = FXCollections.observableArrayList();
+        File folder = new File(System.getProperty("user.dir") + "/Database/" + tempName + "/User-Recordings");
+        if(tempName != null) {
+            File[] listOfFiles = folder.listFiles();
 
-					@Override
-					protected ArrayList<String> doInBackground() throws Exception {
-						if (!(practiceList.getSelectionModel().isEmpty())) {
-							ArrayList<String> nameList = new ArrayList<String>();
+            System.out.println("This is the current name " + PracticeMenuController.getCurrentName());
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    items.add(listOfFiles[i].getName());
+                    System.out.println("File " + listOfFiles[i].getName());
+                } else if (listOfFiles[i].isDirectory()) {
+                    System.out.println("Directory " + listOfFiles[i].getName());
+                }
+            }
 
-							try {
-								ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database;\n" + "cd "
-										+ currentName + ";\n" + "cd User-Recordings;\n" + "\n" + "echo $(ls)");
-								Process userRecordingsList = builder.start();
+            userCreations.setItems(items);
+        }
 
-								InputStream stdout = userRecordingsList.getInputStream();
-								BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+    }
 
-								String line = null;
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        practiceList.getSelectionModel().select(0);
+        namesWithoutNumbers = new ArrayList<String>();
+        namesWithNumbers = new ArrayList<String>();
+        userRecordings = new ArrayList<String>();
+        userRecordingsList = FXCollections.observableArrayList();
+        currentName = "Name";
+        practiceList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 
-								while ((line = stdoutBuffered.readLine()) != null) {
-									userRecordings.add(line);
-								}
-								stdoutBuffered.close();
-							} catch (IOException ioe) {
-								ioe.printStackTrace();
-							}
-						}
-						return null;
-					}
+            @Override
+            public void handle(MouseEvent event) {
+                userRecordingsList.clear();
+                if (!(practiceList.getSelectionModel().isEmpty())) {
+                    nameLabel.setText(namesWithoutNumbers
+                            .get(namesWithNumbers.indexOf(practiceList.getSelectionModel().getSelectedItem())));
+                }
 
-				};
-				gettingRecordingsWorker.execute();
+                currentName = practiceList.getSelectionModel().getSelectedItem();
+                System.out.println(currentName);
+                userListView();
+                SwingWorker<ArrayList<String>, Integer> gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
-				for (String recordings : userRecordings) {
-					userRecordingsList.add(recordings);
-				}
-			}
-		});
-	}
+                    @Override
+                    protected ArrayList<String> doInBackground() throws Exception {
+                        if (!(practiceList.getSelectionModel().isEmpty())) {
+                            ArrayList<String> nameList = new ArrayList<String>();
 
-	/**
-	 * Clears practice names so array list for other names can be shown
-	 */
-	@FXML
-	public void practiceListClicked() {
-		userCreations.getSelectionModel().clearSelection();
-	}
+                            try {
+                                ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database;\n" + "cd "
+                                        + currentName + ";\n" + "cd User-Recordings;\n" + "\n" + "echo $(ls)");
+                                Process userRecordingsList = builder.start();
 
-	/**
-	 * Clears user recordings so array list for other names can be shown
-	 */
-	@FXML
-	public void userCreationsListClicked() {
-		practiceList.getSelectionModel().clearSelection();
-	}
+                                InputStream stdout = userRecordingsList.getInputStream();
+                                BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
 
-	/**
-	 * Randomises the practice names when shuffle button is pressed.
-	 */
-	@FXML
-	public void handleShuffleButton() {
-		ObservableList<String> tempList = FXCollections.observableArrayList();
-		List<String> praticeSelection = DataBaseController._practiceSelection;
-		Collections.shuffle(praticeSelection);
-		tempList.addAll(praticeSelection);
-		practiceList.setItems(tempList);
+                                String line = null;
 
-	}
+                                while ((line = stdoutBuffered.readLine()) != null) {
+                                    userRecordings.add(line);
+                                }
+                                stdoutBuffered.close();
+                            } catch (IOException ioe) {
+                                ioe.printStackTrace();
+                            }
+                        }
+                        return null;
+                    }
 
-	/**
-	 * Returns the current selected name
-	 * @return
-	 */
-	public static String getCurrentName() {
-		System.out.println("Current name" + currentName);
-		return currentName;
-	}
+                };
+                gettingRecordingsWorker.execute();
 
-	/**
-	 * Returns the current selected name without numbers
-	 * @return
-	 */
-	public static String getCurrentNameWithoutNumber() {
-		if(currentName.contains("-")) {
-			currentName = currentName.substring(0, currentName.lastIndexOf("-"));
-			System.out.println("This is the current name " +currentName);
-		}
-		return currentName;
-	}
+                for (String recordings : userRecordings) {
+                    userRecordingsList.add(recordings);
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void practiceListClicked() {
+        System.out.println("Practice list is clicked");
+        userCreations.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    public void userCreationsListClicked() {
+        practiceList.getSelectionModel().clearSelection();
+    }
+
+    @FXML
+    public void handleShuffleButton() {
+        ObservableList<String> tempList = FXCollections.observableArrayList();
+        List<String> praticeSelection = DataBaseController._practiceSelection;
+        Collections.shuffle(praticeSelection);
+        tempList.addAll(praticeSelection);
+        practiceList.setItems(tempList);
+
+    }
+
+    public static String getCurrentName() {
+        System.out.println("Current name" + currentName);
+        return currentName;
+    }
+
+    public static String getCurrentNameWithoutNumber() {
+        if (currentName.contains("-")) {
+            currentName = currentName.substring(0, currentName.lastIndexOf("-"));
+            System.out.println("This is the current name " + currentName);
+        }
+        return currentName;
+    }
 
 }

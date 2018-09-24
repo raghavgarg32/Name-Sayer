@@ -149,7 +149,7 @@ public class Main extends Application {
      * Changes scene to Rate Menu scene
      */
     public static void changeSceneRateMenu() {
-    	_primaryStage.setScene(_rateMenu);
+        _primaryStage.setScene(_rateMenu);
     }
 
 }

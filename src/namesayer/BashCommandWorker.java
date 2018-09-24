@@ -4,6 +4,8 @@ import javax.swing.SwingWorker;
 
 /**
  * Runs bash commands on the swing worker so the UI doesn't crash
+ * @author rgar969
+ *
  */
 public class BashCommandWorker extends SwingWorker<Void, Void> {
     private String command;

@@ -15,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
+import javax.swing.*;
+
 /**
  * Sets up the rating system for the database recordings
  */
@@ -47,6 +49,11 @@ public class RateViewController implements Initializable  {
 			e.printStackTrace();
 		}
 		finally {
+			SwingWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+PracticeMenuController.getCurrentName()+" has a bad recording'\n" +
+					"\n" +
+					"if ! grep -qF \"$badRecordingMessage\" BadRecordingList.txt ; then " +
+					"echo \"$badRecordingMessage\" >> BadRecordingList.txt ; " +
+					"fi");
 			Main.changeScenePractice();
 		}
 
@@ -70,10 +77,12 @@ public class RateViewController implements Initializable  {
 			e.printStackTrace();
 		}
 		finally {
+			SwingWorker creationDirectoryWorker = new BashCommandWorker("sed -i '/"+PracticeMenuController.getCurrentName()+" has a bad recording/d' ./BadRecordingList.txt ");
+			Main.changeScenePractice();
 			Main.changeScenePractice();
 		}
 	}
-	
+
 	@FXML
 	public void handleBackButton() {
 		Main.changeScenePractice();

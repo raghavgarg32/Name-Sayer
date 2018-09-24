@@ -1,10 +1,15 @@
 package namesayer;
 
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class MainMenuController {
+import javax.swing.*;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MainMenuController implements Initializable {
 
     @FXML
     private Button practiceBtn;
@@ -23,4 +28,10 @@ public class MainMenuController {
         stage.close();
     }
 
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        SwingWorker creationDirectoryWorker = new BashCommandWorker("if [ ! -e \"BadRecordingList.txt\" ]; then\n" +
+                "    touch BadRecordingList.txt\n" +
+                "fi");
+    }
 }

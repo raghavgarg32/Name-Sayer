@@ -29,7 +29,7 @@ public class MicTestController implements Initializable {
 			protected Void doInBackground() throws Exception {
 				TargetDataLine line = null;
 				AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-				DataLine.Info info = new DataLine.Info(TargetDataLine.class, format); 
+				DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 				if (!AudioSystem.isLineSupported(info)) {
 					System.out.println("The line is not supported.");
 				}
@@ -55,7 +55,7 @@ public class MicTestController implements Initializable {
 	}
 
 
-	public int calculateRMSLevel(byte[] audioData) { 
+	public int calculateRMSLevel(byte[] audioData) {
 		long lSum = 0;
 		for(int i=0; i<audioData.length; i++)
 			lSum = lSum + audioData[i];
@@ -75,5 +75,5 @@ public class MicTestController implements Initializable {
 		_micTestWorker.cancel(true);
 		Main.changeSceneRecord();
 	}
-	
+
 }

@@ -51,9 +51,9 @@ public class SaveViewController {
                 try {
                     Thread.sleep(1000);
                 }
-                    catch (Exception e){
+                catch (Exception e){
 
-                    }
+                }
                 Main.changeScenePractice();
             } else {
                 Alert alert = new Alert(Alert.AlertType.NONE, "Please enter in a valid name ", ButtonType.OK);

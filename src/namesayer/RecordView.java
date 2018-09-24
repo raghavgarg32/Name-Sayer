@@ -27,20 +27,20 @@ import java.util.Timer;
  */
 public class RecordView implements Initializable {
 
-	private Service<Void> _backgroundThread;
+    private Service<Void> _backgroundThread;
 
-	private static Timer progressTimer = new Timer();
+    private static Timer progressTimer = new Timer();
 
-	private ArrayList<String> allUserRecordings;
+    private ArrayList<String> allUserRecordings;
 
-	@FXML
-	private Button micTestBtn;
+    @FXML
+    private Button micTestBtn;
 
-	@FXML
-	private Button backBtn;
+    @FXML
+    private Button backBtn;
 
-	@FXML
-	private ProgressBar recordBar;
+    @FXML
+    private ProgressBar recordBar;
 
     @FXML
     private Label currentNameLabel;
@@ -54,128 +54,119 @@ public class RecordView implements Initializable {
 
     @FXML
     public void handleMicTestButton() {
-    	Main.changeSceneMicTest();
+        Main.changeSceneMicTest();
     }
 
-	/**
-	 * This get the names of all of the names without numbers
-	 * @param currentNameSelected
-	 */
-	public void getNameForRecording(String currentNameSelected){
-		if(currentNameSelected.contains("-")) {
-			currentNameSelected = currentNameSelected.substring(0, currentNameSelected.lastIndexOf("-"));
-			System.out.println("This is the current name " +currentNameSelected);
-		}
+    public void getNameForRecording(String currentNameSelected){
+        if(currentNameSelected.contains("-")) {
+            currentNameSelected = currentNameSelected.substring(0, currentNameSelected.lastIndexOf("-"));
+            System.out.println("This is the current name " +currentNameSelected);
+        }
         currentName = currentNameSelected;
         currentNameLabel.setText(currentName);
     }
 
-	/**
-	 * Records the users audio when the user clicks the record buton and also shows a progress bar
-	 * @throws IOException
-	 */
-	@FXML
+    @FXML
     public void handleRecordButton() throws IOException {
-    	progressTimer.cancel();
-		recordBar.setProgress(0.0);
+        progressTimer.cancel();
+        recordBar.setProgress(0.0);
         recordLabel.setText("Recording now...");
 
 
         TimerTask timerTask = new TimerTask() {
-			@Override
-			public void run() {
-				double progress = recordBar.getProgress();
-				if (progress == 1) {
-					recordBar.setProgress(0);
-					progressTimer.cancel();
-					return;
-				}
+            @Override
+            public void run() {
+                double progress = recordBar.getProgress();
+                if (progress == 1) {
+                    recordBar.setProgress(0);
+                    progressTimer.cancel();
+                    return;
+                }
 
-				recordBar.setProgress(progress + 0.01);
-			}
-		};
+                recordBar.setProgress(progress + 0.01);
+            }
+        };
 
-		progressTimer = new Timer();
-		progressTimer.scheduleAtFixedRate(timerTask, 0, 50);
+        progressTimer = new Timer();
+        progressTimer.scheduleAtFixedRate(timerTask, 0, 50);
         gettingNumberOfUserRecordings();
         if (numberOfRecordings == null){
             numberOfRecordings = "";
         }
-		//Use a background thread for recording
-				_backgroundThread = new Service<Void>() {
-					@Override
-					protected Task<Void> createTask() {
-						return new Task<Void>() {
-							@Override
-							protected Void call() throws Exception {
-								ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-										,"-ar","44100","-i","default","-t", "5","./Database/"+currentName+"/User-Recordings/temp.wav");
-								try {
-									Process p = recordBuilder.start();
-									p.waitFor();
+        //Use a background thread for recording
+        _backgroundThread = new Service<Void>() {
+            @Override
+            protected Task<Void> createTask() {
+                return new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
+                                ,"-ar","44100","-i","default","-t", "5","./Database/"+currentName+"/User-Recordings/temp.wav");
+                        try {
+                            Process p = recordBuilder.start();
+                            p.waitFor();
 
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								return null;
-							}
-						};
-					}
-				};
+                        } catch (IOException e1) {
+                            // TODO Auto-generated catch block
+                            e1.printStackTrace();
+                        }
+                        return null;
+                    }
+                };
+            }
+        };
 
-				_backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-					//Change scene when recording is finished
-					@Override
-					public void handle(WorkerStateEvent event) {
-						Main.changeSceneConfirm();
+        _backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+            //Change scene when recording is finished
+            @Override
+            public void handle(WorkerStateEvent event) {
+                Main.changeSceneConfirm();
 
-					}
-				});
-				_backgroundThread.start();
-			}
+            }
+        });
+        _backgroundThread.start();
+    }
 
-	/**
-	 * Allows the user to go back to the practice view without the recording has finished
-	 */
+
     @FXML
     public void handleBackBtn() {
-    	if(_backgroundThread == null) {
-    		recordLabel.setText("Press record to have your voice recorded");
-			deleteRecording();
-			Main.changeScenePractice();
-			return;
-		}
-		//Check if a background thread is running
-		if(_backgroundThread.isRunning()) {
-			progressTimer.cancel();
-			recordBar.setProgress(0.0);
-			_backgroundThread.cancel();
-			deleteRecording();
-		}
-		recordLabel.setText("Press record to have your voice recorded");
-		Main.changeScenePractice();
-	}
+        if(_backgroundThread == null) {
+            recordLabel.setText("Press record to have your voice recorded");
+            deleteRecording();
+            Main.changeScenePractice();
+            return;
+        }
+        //Check if a background thread is running
+        if(_backgroundThread.isRunning()) {
+            progressTimer.cancel();
+            recordBar.setProgress(0.0);
+            _backgroundThread.cancel();
+            deleteRecording();
+        }
+        recordLabel.setText("Press record to have your voice recorded");
+        Main.changeScenePractice();
+    }
 
-	/**
-	 * Deletes the current recording if the user goes back in the middle of recording
-	 */
-	public void deleteRecording(){
-		currentName = PracticeMenuController.getCurrentNameWithoutNumber();
-		String number = RecordView.getNumberOfRecordings();
-		try {
-			Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-					"/Database/" + currentName + "/User-Recordings/temp.wav"));
-			Thread.sleep(1000);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+    public void deleteRecording(){
+        SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                currentName = PracticeMenuController.getCurrentNameWithoutNumber();
+                String number = RecordView.getNumberOfRecordings();
+                try {
+                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
+                            "/Database/" + currentName + "/User-Recordings/temp.wav"));
+                    Thread.sleep(1000);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        deleteWorker.execute();
+    }
 
-	/**
-	 * Gets the number of user recordings
-	 */
     public void gettingNumberOfUserRecordings(){
         SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
@@ -186,7 +177,7 @@ public class RecordView implements Initializable {
                 try {
                     ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database;\n" +
                             "cd "+currentName+";\n" +
-                    "cd User-Recordings;\n" +
+                            "cd User-Recordings;\n" +
                             "\n" +
                             "echo $(ls -l | wc -l)");
                     Process process = builder.start();
@@ -213,11 +204,7 @@ public class RecordView implements Initializable {
         System.out.println("This is the number " + numberOfRecordings);
 
     }
-	/**
-	 * initializes the arraylist of all user recordings and current name label
-	 * @param location
-	 * @param resources
-	 */
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allUserRecordings = new ArrayList<String>();
@@ -225,10 +212,8 @@ public class RecordView implements Initializable {
 
     }
 
-	/**
-	 * Returns the number of user recordings
-	 */
+
     public static String getNumberOfRecordings() {
-    	return numberOfRecordings;
+        return numberOfRecordings;
     }
 }
