@@ -11,13 +11,25 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * Allows the user to enter in a name that they want to save the file with
+ */
 public class SaveViewController {
     @FXML
     TextField nameTextField;
 
     private ArrayList<String> nameArrayList = new ArrayList<>();
 
+    /**
+     * This sets the prompt text for text field
+     */
+    public void setsPromptText(){
+        nameTextField.setPromptText("e.g. " + PracticeMenuController.getCurrentNameWithoutNumber());
+    }
 
+    /**
+     * Save the user recordoing and does error checking
+     */
     public void save(){
         gettingAllRecordings();
         String name = PracticeMenuController.getCurrentName();
@@ -35,7 +47,7 @@ public class SaveViewController {
             newName = newName.trim();
             if (newName.length() > 0) {
                 BashCommandWorker savingFileWorker = new BashCommandWorker("mv ./Database/" + name + "/User-Recordings/temp.wav" +
-                        " ./Database/" + name + "/User-Recordings/" + nameTextField.getText() + ".wav");
+                        " ./Database/" + name + "/User-Recordings/\"" + nameTextField.getText() + "\".wav");
                 try {
                     Thread.sleep(1000);
                 }
@@ -53,6 +65,9 @@ public class SaveViewController {
         }
     }
 
+    /**
+     * Gets all of the user recordings for the name
+     */
     public void gettingAllRecordings(){
         String name = PracticeMenuController.getCurrentName();
         name = gettingRidOfNumbers(name);
@@ -69,6 +84,11 @@ public class SaveViewController {
         }
     }
 
+    /**
+     * Getting rid of numbers in any of the names
+     * @param nameString
+     * @return
+     */
     public String gettingRidOfNumbers(String nameString){
         if(nameString.contains("-")) {
             nameString = nameString.substring(0, nameString.lastIndexOf("-"));

@@ -26,19 +26,19 @@ import java.util.Timer;
  * Controller for the recording scene
  */
 public class RecordView implements Initializable {
-	
+
 	private Service<Void> _backgroundThread;
-	
+
 	private static Timer progressTimer = new Timer();
 
 	private ArrayList<String> allUserRecordings;
 
 	@FXML
 	private Button micTestBtn;
-	
+
 	@FXML
 	private Button backBtn;
-	
+
 	@FXML
 	private ProgressBar recordBar;
 
@@ -51,12 +51,16 @@ public class RecordView implements Initializable {
     private String currentName;
 
     private static String numberOfRecordings;
-    
+
     @FXML
     public void handleMicTestButton() {
     	Main.changeSceneMicTest();
     }
-    
+
+	/**
+	 * This get the names of all of the names without numbers
+	 * @param currentNameSelected
+	 */
 	public void getNameForRecording(String currentNameSelected){
 		if(currentNameSelected.contains("-")) {
 			currentNameSelected = currentNameSelected.substring(0, currentNameSelected.lastIndexOf("-"));
@@ -66,7 +70,11 @@ public class RecordView implements Initializable {
         currentNameLabel.setText(currentName);
     }
 
-    @FXML
+	/**
+	 * Records the users audio when the user clicks the record buton and also shows a progress bar
+	 * @throws IOException
+	 */
+	@FXML
     public void handleRecordButton() throws IOException {
     	progressTimer.cancel();
 		recordBar.setProgress(0.0);
@@ -82,18 +90,18 @@ public class RecordView implements Initializable {
 					progressTimer.cancel();
 					return;
 				}
-				
+
 				recordBar.setProgress(progress + 0.01);
-			}	
+			}
 		};
-		
+
 		progressTimer = new Timer();
 		progressTimer.scheduleAtFixedRate(timerTask, 0, 50);
         gettingNumberOfUserRecordings();
         if (numberOfRecordings == null){
             numberOfRecordings = "";
         }
-		//Use a background thread for recording 
+		//Use a background thread for recording
 				_backgroundThread = new Service<Void>() {
 					@Override
 					protected Task<Void> createTask() {
@@ -105,11 +113,11 @@ public class RecordView implements Initializable {
 								try {
 									Process p = recordBuilder.start();
 									p.waitFor();
-									
+
 								} catch (IOException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
-								} 
+								}
 								return null;
 							}
 						};
@@ -122,12 +130,14 @@ public class RecordView implements Initializable {
 					public void handle(WorkerStateEvent event) {
 						Main.changeSceneConfirm();
 
-					}		
+					}
 				});
 				_backgroundThread.start();
 			}
 
-
+	/**
+	 * Allows the user to go back to the practice view without the recording has finished
+	 */
     @FXML
     public void handleBackBtn() {
     	if(_backgroundThread == null) {
@@ -146,27 +156,26 @@ public class RecordView implements Initializable {
 		recordLabel.setText("Press record to have your voice recorded");
 		Main.changeScenePractice();
 	}
-    
+
+	/**
+	 * Deletes the current recording if the user goes back in the middle of recording
+	 */
 	public void deleteRecording(){
-		SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
-			@Override
-			protected Void doInBackground() throws Exception {
-				currentName = PracticeMenuController.getCurrentNameWithoutNumber();
-				String number = RecordView.getNumberOfRecordings();
-				try {
-					Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-							"/Database/" + currentName + "/User-Recordings/temp.wav"));
-					Thread.sleep(1000);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return null;
-			}
-		};
-		deleteWorker.execute();
+		currentName = PracticeMenuController.getCurrentNameWithoutNumber();
+		String number = RecordView.getNumberOfRecordings();
+		try {
+			Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
+					"/Database/" + currentName + "/User-Recordings/temp.wav"));
+			Thread.sleep(1000);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * Gets the number of user recordings
+	 */
     public void gettingNumberOfUserRecordings(){
         SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
 
@@ -204,15 +213,21 @@ public class RecordView implements Initializable {
         System.out.println("This is the number " + numberOfRecordings);
 
     }
-
+	/**
+	 * initializes the arraylist of all user recordings and current name label
+	 * @param location
+	 * @param resources
+	 */
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allUserRecordings = new ArrayList<String>();
         currentNameLabel.setText("Name");
 
     }
-    
-    
+
+	/**
+	 * Returns the number of user recordings
+	 */
     public static String getNumberOfRecordings() {
     	return numberOfRecordings;
     }
