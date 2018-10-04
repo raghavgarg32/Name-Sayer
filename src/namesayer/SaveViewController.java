@@ -6,10 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Allows the user to enter in a name that they want to save the file with

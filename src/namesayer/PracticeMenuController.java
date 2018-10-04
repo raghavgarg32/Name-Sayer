@@ -4,19 +4,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.stage.Stage;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
@@ -47,17 +41,16 @@ public class PracticeMenuController implements Initializable {
 
     private ObservableList<String> userRecordingsList;
 
-    @FXML
-    private Button playBtn;
-
-    @FXML
-    private Label nameLabel;
+@FXML
+public Label names;
 
     @FXML
     public ListView<String> practiceList; // List of practice names that the user selected
 
     @FXML
     private ListView<String> userCreations; // List of user attempt at recording themeselves saying the name
+
+
 
     /**
      * Callback function which is called when the play button is pressed. It checks which list is selected
@@ -127,9 +120,9 @@ public class PracticeMenuController implements Initializable {
             _playWorker.execute();
 
         }
-        
+
         /**
-         * When the user has selected a database recording or a user recording this will allow the user to play the 
+         * When the user has selected a database recording or a user recording this will allow the user to play the
          * recording
          */
 
@@ -143,16 +136,16 @@ public class PracticeMenuController implements Initializable {
             // If the name contains a number, remove that number to obtain the name
             if(name.contains("-")) {
                 nameWithNumber = name.substring(name.lastIndexOf("-")+1,name.length());
-                
+
                 name = name.substring(0, name.lastIndexOf("-"));
-          
+
                 multipleNameIndex = Integer.parseInt(nameWithNumber) -1;
 
             }
 
-  
+
             String path = databaseList.get(nameList.indexOf(name) + (multipleNameIndex));
-  
+
 
             String pathToFile = "Database/" + name + "/Database-Recordings/" + path + ".wav";
 
@@ -253,23 +246,13 @@ public class PracticeMenuController implements Initializable {
     /**
 	 * Setting up different array lists for the different list views to use
 	 * @param selectedNames
-	 * @param namesWithoutNumbersList
-	 * @param namesWithNumbersList
+
 	 */
 
-    public void names(ObservableList<String> selectedNames, ArrayList<String> namesWithoutNumbersList,
-                      ObservableList<String> namesWithNumbersList) {
+    public void names(ObservableList<String> selectedNames) {
 
         items = selectedNames;
-        for (String names : namesWithoutNumbersList) {
-            namesWithoutNumbers.add(names);
-        }
 
-        for (String names : namesWithNumbersList) {
-            namesWithNumbers.add(names);
-        }
-
-        
         practiceList.setItems(items);
     }
 
@@ -289,14 +272,14 @@ public class PracticeMenuController implements Initializable {
         if(tempName != null) {
             File[] listOfFiles = folder.listFiles();
 
-            
-            for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
-                    items.add(listOfFiles[i].getName());
-                } 
-            }
 
-            userCreations.setItems(items);
+//            for (int i = 0; i < listOfFiles.length; i++) {
+//                if (listOfFiles[i].isFile()) {
+//                    items.add(listOfFiles[i].getName());
+//                }
+//            }
+
+//            userCreations.setItems(items);
         }
 
     }
@@ -318,56 +301,20 @@ public class PracticeMenuController implements Initializable {
         	//Changes the practice view depending on which was the last selected list
             @Override
             public void handle(MouseEvent event) {
-                
-                userCreations.getSelectionModel().clearSelection();
-
-                // Conditional statements to determine which list view has been selected
-                if (!(practiceList.getSelectionModel().isEmpty())) {
-                    nameLabel.setText(namesWithoutNumbers
-                            .get(namesWithNumbers.indexOf(practiceList.getSelectionModel().getSelectedItem())));
-                }
-
+                System.out.println(practiceList.getSelectionModel().getSelectedItem());
                 currentName = practiceList.getSelectionModel().getSelectedItem();
-                userListView();
-                SwingWorker<ArrayList<String>, Integer> gettingRecordingsWorker = new SwingWorker<ArrayList<String>, Integer>() {
-
-                    @Override
-                    protected ArrayList<String> doInBackground() throws Exception {
-                        if (!(practiceList.getSelectionModel().isEmpty())) {
-                            ArrayList<String> nameList = new ArrayList<String>();
-
-                            try {
-                                ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database;\n" + "cd "
-                                        + currentName + ";\n" + "cd User-Recordings;\n" + "\n" + "echo $(ls)");
-                                Process userRecordingsList = builder.start();
-
-                                InputStream stdout = userRecordingsList.getInputStream();
-                                BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-
-                                String line = null;
-
-                                while ((line = stdoutBuffered.readLine()) != null) {
-                                    userRecordings.add(line);
-                                }
-                                stdoutBuffered.close();
-                            } catch (IOException ioe) {
-                                ioe.printStackTrace();
-                            }
-                        }
-                        return null;
-                    }
-
-                };
-                
-                gettingRecordingsWorker.execute();
-
-                for (String recordings : userRecordings) {
-                    userRecordingsList.add(recordings);
+                String tempCurrentName = currentName;
+                if (tempCurrentName.length() > 20){
+                    tempCurrentName = tempCurrentName.substring(0,17);
+                    tempCurrentName = tempCurrentName + "...";
                 }
+                names.setText(tempCurrentName);
             }
         });
     }
-
+    public static String getSelectedName(){
+        return currentName;
+    }
     /**
      * Onclick callback function for the userCreations list
      */
@@ -395,6 +342,7 @@ public class PracticeMenuController implements Initializable {
      * @return
      */
     public static String getCurrentName() {
+        System.out.println(currentName);
         return currentName;
     }
 

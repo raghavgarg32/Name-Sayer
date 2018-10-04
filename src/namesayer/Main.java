@@ -6,8 +6,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
-
 
 /**
  * Sets up the initial scene of the application
@@ -30,6 +28,7 @@ public class Main extends Application {
     private static FXMLLoader recordLoader;
     private static FXMLLoader saveLoader;
     private static FXMLLoader confirmLoader;
+    private static FXMLLoader rateLoader;
 
 
     /**
@@ -57,22 +56,25 @@ public class Main extends Application {
         confirmLoader.setLocation(getClass().getResource("ConfirmView.fxml"));
         Parent confirmRoot = confirmLoader.load();
 
+        rateLoader = new FXMLLoader();
+        rateLoader.setLocation(getClass().getResource("RateView.fxml"));
+        Parent rateMenuRoot = rateLoader.load();
+
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
-        Parent rateMenuRoot = FXMLLoader.load(getClass().getResource("RateView.fxml"));
 
-        _mainMenu = new Scene(root,600,400);
-        _dataBaseMenu = new Scene(dataBaseRoot,600,400);
-        _practiceMenu = new Scene(practiceRoot,600,400);
-        _recordMenu = new Scene(recordRoot,600,400);
+        _mainMenu = new Scene(root,925,634);
+        _dataBaseMenu = new Scene(dataBaseRoot,925,634);
+        _practiceMenu = new Scene(practiceRoot,925,634);
+        _recordMenu = new Scene(recordRoot,925,634);
         _confirmMenu = new Scene(confirmRoot,600,400);
         _micTestMenu = new Scene(micTestRoot,600,400);
-        _rateMenu = new Scene(rateMenuRoot,600,400);
+        _rateMenu = new Scene(rateMenuRoot,925,634);
         _saveMenu = new Scene(saveRoot,600,400);
 
         primaryStage.setTitle("Namesayer");
-        primaryStage.setScene(_mainMenu);
+        primaryStage.setScene(_dataBaseMenu);
         primaryStage.show();
 
 
@@ -98,8 +100,7 @@ public class Main extends Application {
      */
     public static void changeScenePractice() {
         PracticeMenuController controller = practiceLoader.getController();
-        controller.names(DataBaseController.getItemList(),DataBaseController.getNamesWithoutNumbers(),
-                DataBaseController.getNamesWithNumbers());
+        controller.names(DataBaseController.getItemList());
         controller.userListView();
         _primaryStage.setScene(_practiceMenu);
     }
@@ -150,6 +151,8 @@ public class Main extends Application {
      * Changes scene to Rate Menu scene
      */
     public static void changeSceneRateMenu() {
+        RateViewController controller = rateLoader.getController();
+        controller.setlabel();
         _primaryStage.setScene(_rateMenu);
     }
 
