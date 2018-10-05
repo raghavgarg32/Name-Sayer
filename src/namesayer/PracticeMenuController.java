@@ -304,7 +304,7 @@ public Label names;
                 System.out.println(practiceList.getSelectionModel().getSelectedItem());
                 currentName = practiceList.getSelectionModel().getSelectedItem();
                 String tempCurrentName = currentName;
-                if (tempCurrentName.length() > 20){
+                if (tempCurrentName != null && tempCurrentName.length() > 20){
                     tempCurrentName = tempCurrentName.substring(0,17);
                     tempCurrentName = tempCurrentName + "...";
                 }

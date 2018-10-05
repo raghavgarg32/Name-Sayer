@@ -102,10 +102,21 @@ public class DataBaseController implements Initializable {
 
     @FXML
     public void addToPlayList(){
+    	List<File> listOfFiles = new ArrayList<>();
         if (userName.getText().length() > 0) {
+        	String fullName = userName.getText();
+        	String[] names = fullName.split(" ");
+        	
+        	if(names.length != 0) {
+        		for(int i = 0;i<names.length;i++) {
+        			listOfFiles.add(new File("Database/"+names[i]+"Database-Recordings/" + this.databaseList.get(nameArrayList.indexOf(names[i]) 
+        									) + ".wav"));
+        		}
+        		createConcatFile(listOfFiles);
+        	}
+        	
             playList.getItems().add(userName.getText());
             _practiceSelection.add(userName.getText());
-
             userName.clear();
         }
 
@@ -284,5 +295,67 @@ public class DataBaseController implements Initializable {
     @FXML
     public void handleBackButton() {
         Main.changeSceneMain();
+    }
+    
+    /**
+     * Method will take in a list of .wav files and concatenat them into one .wav file and return it
+     * 
+     * @param listOfFiles
+     * @return concat audio file
+     */
+    public File createConcatFile(List<File> listOfFiles) {
+    	
+    	String command = "ffmpeg -y";
+    	
+    	for(File file:listOfFiles) {	
+    		removeWhiteNoise(file);
+    		String filename = file.getPath().substring(0, file.getPath().lastIndexOf('.'));
+    		
+    		ProcessBuilder noiseBuilder = new ProcessBuilder("/bin/bash","-c","ffmpeg -y -i "+file.getPath() + " -filter:a \"volume=0.5\" " + 
+    														filename + "Temp.wav");
+    		Process noiseProcess;
+			try {
+				noiseProcess = noiseBuilder.start();
+				noiseProcess.waitFor();
+			} catch (IOException | InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		
+    		command =  command + " -i " + filename +"Temp.wav";  
+    	}
+    	
+    	command = command + " -filter_complex '[0:0][1:0]concat=n="+ listOfFiles.size()+":v=0:a=1[out]' -map '[out]' concatFile.wav";
+    	
+    	System.out.println(command);
+    	
+    	ProcessBuilder concatBuilder = new ProcessBuilder("/bin/bash","-c",command);
+  
+    	try {
+			Process concatProcess = concatBuilder.start();
+			concatProcess.waitFor();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
+    	return new File("concatFile.wav");
+    }
+    
+    public void removeWhiteNoise(File file) {
+    	ProcessBuilder whitenoiseBuilder = new ProcessBuilder("/bin/bash","-c","ffmpeg -y -hide_banner -i " + file.getPath() + " -af " +
+    														"silenceremove=1:0:-35dB:1:5:-35dB:0" + file.getPath());
+    	try {
+    		Process whitenoiseProcess = whitenoiseBuilder.start();
+			whitenoiseProcess.waitFor();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }

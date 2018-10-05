@@ -1,5 +1,7 @@
 package namesayer;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -40,6 +42,13 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         _primaryStage = primaryStage;
+        
+        
+        File userRecordings = new File(System.getProperty("user.dir")+"/User-Recordings");
+		if (!userRecordings.exists()){
+			userRecordings.mkdir();
+		} 
+        
         practiceLoader = new FXMLLoader();
         practiceLoader.setLocation(getClass().getResource("PracticeMenu.fxml"));
         Parent practiceRoot = practiceLoader.load();

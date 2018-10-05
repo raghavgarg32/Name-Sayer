@@ -91,6 +91,7 @@ public class RateViewController implements Initializable {
 					"echo \"$badRecordingMessage\" >> BadRecordingList.txt ; " +
 					"fi");
 		}
+		Main.changeScenePractice();
 
 	}
 

@@ -6,7 +6,15 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import javax.swing.*;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class MainMenuController implements Initializable {
@@ -39,5 +47,15 @@ public class MainMenuController implements Initializable {
         SwingWorker creationDirectoryWorker = new BashCommandWorker("if [ ! -e \"BadRecordingList.txt\" ]; then\n" +
                 "    touch BadRecordingList.txt\n" +
                 "fi");
+       
+        File antony = new File("antony.wav");
+        File catherine = new File("catherine.wav");
+        
+  
+        List<File> listOfFiles = new ArrayList<>();
+        
+        listOfFiles.add(antony);
+        listOfFiles.add(catherine);
     }
+
 }

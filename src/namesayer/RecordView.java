@@ -113,7 +113,7 @@ public class RecordView implements Initializable {
                     @Override
                     protected Void call() throws Exception {
                         ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-                                ,"-ar","44100","-i","default","-t", "5","./Database/"+currentName+"/User-Recordings/temp.wav");
+                                ,"-ar","44100","-i","default","-t", "5","./User-Recordings/temp.wav");
                         try {
                             Process p = recordBuilder.start();
                             p.waitFor();
@@ -183,8 +183,7 @@ public class RecordView implements Initializable {
                 currentName = PracticeMenuController.getCurrentNameWithoutNumber();
                 String number = RecordView.getNumberOfRecordings();
                 try {
-                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-                            "/Database/" + currentName + "/User-Recordings/temp.wav"));
+                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block

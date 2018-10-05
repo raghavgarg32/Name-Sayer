@@ -1,38 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeMenuController">
-   <columnConstraints>
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
+<AnchorPane prefHeight="634.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeMenuController">
    <children>
-      <Pane prefHeight="375.0" prefWidth="473.0">
-         <children>
-            <Button fx:id="playBtn" layoutX="270.0" layoutY="85.0" mnemonicParsing="false" onAction="#handlePlayButton" text="Play" />
-            <ListView fx:id="practiceList" layoutY="57.0" onMouseClicked="#userCreationsListClicked" prefHeight="270.0" prefWidth="151.0" />
-            <ListView fx:id="userCreations" layoutX="223.0" layoutY="151.0" onMouseClicked="#userCreationsListClicked" prefHeight="159.0" prefWidth="185.0" />
-            <Button layoutX="257.0" layoutY="325.0" mnemonicParsing="false" onAction="#handleCreateButton" text="Create Recording" />
-            <Label layoutX="250.0" layoutY="126.0" text="Select existing recording:" />
-            <Label fx:id="nameLabel" layoutX="243.0" layoutY="6.0" text="Name">
-               <font>
-                  <Font size="49.0" />
-               </font>
-            </Label>
-            <Button layoutX="328.0" layoutY="85.0" mnemonicParsing="false" onAction="#handleRateButton" text="Rate" />
-            <Button layoutY="325.0" mnemonicParsing="false" onAction="#handleChangeButton" prefHeight="51.0" prefWidth="151.0" text="Change names" />
-            <Button layoutX="35.0" layoutY="23.0" mnemonicParsing="false" onAction="#handleShuffleButton" prefHeight="25.0" prefWidth="82.0" text="Shuffle" />
-         </children>
-      </Pane>
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="308.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="64.0" layoutY="115.0" text="Home" />
+      <Label layoutX="36.0" layoutY="236.0" text="Your Recordings" />
+      <Label layoutX="20.0" layoutY="359.0" text="Database Recordings" />
+      <Label layoutX="55.0" layoutY="475.0" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="68.0" layoutY="592.0" text="Help" />
+      <Label fx:id="names" layoutX="199.0" layoutY="138.0" text="Record yourself saying the name and then compare.">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ListView fx:id="userCreations" layoutX="565.0" layoutY="293.0" prefHeight="205.0" prefWidth="268.0" />
+      <Button layoutX="610.0" layoutY="516.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="179.0" text="Play Selected Recoding" />
+      <Button layoutX="610.0" layoutY="205.0" mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="44.0" prefWidth="179.0" text="Create Name Recording" />
+      <Button layoutX="284.0" layoutY="516.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="168.0" text="Play Name Recording" />
+      <Label layoutX="605.0" layoutY="266.0" text="Select your recoding to play:" />
+      <Button layoutX="750.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleRateButton" prefHeight="44.0" prefWidth="83.0" text="Rate" />
+      <ListView fx:id="practiceList" layoutX="234.0" layoutY="199.0" prefHeight="296.0" prefWidth="268.0" />
+      <Label fx:id="names" layoutX="192.0" layoutY="66.0" text="Select Name">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
    </children>
-</GridPane>
+</AnchorPane>

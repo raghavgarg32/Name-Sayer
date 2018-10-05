@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
@@ -16,6 +17,9 @@ import javax.swing.SwingWorker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+
+import java.util.Calendar;
+import java.util.Date;  
 
 public class ConfirmView {
 
@@ -36,8 +40,7 @@ public class ConfirmView {
         String name = PracticeMenuController.getCurrentNameWithoutNumber();
         
         try {
-            Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-                    "/Database/" + name + "/User-Recordings/temp.wav"));
+            Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -53,7 +56,31 @@ public class ConfirmView {
      */
     @FXML
     public void handleSaveButton() {
-        Main.changeSceneSave();
+    	String timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+    	
+    	System.out.println(timeStamp);
+    	
+    	String folderName = PracticeMenuController.getCurrentNameWithoutNumber();
+    	if(folderName.contains(" ")) {
+    		folderName = folderName.replaceAll("\\s","_");
+    	}
+    	
+    	System.out.println(folderName);
+    	
+        ProcessBuilder saveBuilder = new ProcessBuilder("/bin/bash","-c","mv " + System.getProperty("user.dir") + "/User-Recordings/temp.wav" +  
+        		" " + System.getProperty("user.dir") + "/User-Recordings/" + "se206_" + timeStamp + "_" + folderName +".wav");
+        try {
+			Process saveProcess = saveBuilder.start();
+			saveProcess.waitFor();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+        Main.changeScenePractice();
+        
     }
     
     /**
@@ -79,7 +106,7 @@ public class ConfirmView {
 
 
                 try {
-                    stream = AudioSystem.getAudioInputStream(new File("Database/"+name+"/User-Recordings/temp.wav"));
+                    stream = AudioSystem.getAudioInputStream(new File("User-Recordings/temp.wav"));
                     format = stream.getFormat();
 
                     info = new DataLine.Info(SourceDataLine.class, format);
@@ -124,12 +151,8 @@ public class ConfirmView {
      */
     @FXML
     public void handleRedoButton() {
-        String name = PracticeMenuController.getCurrentNameWithoutNumber();
-        
-        String number = RecordView.getNumberOfRecordings();
         try {
-            Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-                    "/Database/" + name + "/User-Recordings/temp.wav"));
+            Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/User-Recordings/temp.wav"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
