@@ -21,17 +21,19 @@ public class MicTestController implements Initializable {
 	private Button backBtn;
 
 
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		// Swing worker used so that the application would be responsive
 		_micTestWorker = new SwingWorker<Void, Void>() {
 
 			@Override
 			protected Void doInBackground() throws Exception {
 				TargetDataLine line = null;
 				AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
-				DataLine.Info info = new DataLine.Info(TargetDataLine.class, format); 
+				DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
 				if (!AudioSystem.isLineSupported(info)) {
-					System.out.println("The line is not supported.");
+					
 				}
 				// Obtain and open the line.
 				try {
@@ -39,7 +41,7 @@ public class MicTestController implements Initializable {
 					line.open(format);
 					line.start();
 				} catch (LineUnavailableException ex) {
-					System.out.println("The TargetDataLine is Unavailable.");
+					
 				}
 
 
@@ -54,8 +56,12 @@ public class MicTestController implements Initializable {
 		_micTestWorker.execute();
 	}
 
-
-	public int calculateRMSLevel(byte[] audioData) { 
+	/**
+	 * helper method that calcalutes the RMS level when inputted audio data
+	 * @param audioData
+	 * @return
+	 */
+	public int calculateRMSLevel(byte[] audioData) {
 		long lSum = 0;
 		for(int i=0; i<audioData.length; i++)
 			lSum = lSum + audioData[i];
@@ -70,10 +76,14 @@ public class MicTestController implements Initializable {
 		return (int)(Math.pow(averageMeanSquare,0.5d) + 0.5);
 	}
 
+	/**
+	 * Callback function thats called when the back button is clicked, it cancels the background thread and 
+	 * changes scene
+	 */
 	@FXML
 	public void handleBackButton() {
 		_micTestWorker.cancel(true);
 		Main.changeSceneRecord();
 	}
-	
+
 }
