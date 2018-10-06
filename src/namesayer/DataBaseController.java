@@ -270,6 +270,11 @@ public class DataBaseController implements Initializable {
         return items;
     }
 
+    @FXML
+    public void handleRewardIcon() {
+        Main.changeSceneRewardMenu();
+    }
+
     /**
      * Method which returns the names in the database without numbers
      */
@@ -282,7 +287,7 @@ public class DataBaseController implements Initializable {
      * Method which returns the names in the database but with numbers
      * @return
      */
-    public static ObservableList<String> getNamesWithNumbers(){
+    public static ObservableList<String> getNames(){
 
 
         return list;

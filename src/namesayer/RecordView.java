@@ -69,6 +69,10 @@ public class RecordView implements Initializable {
      */
     public void getNameForRecording(String currentNameSelected){
         currentName = currentNameSelected;
+        if (currentName.length() > 20){
+            currentName = currentName.substring(0,17);
+            currentName = currentName + "...";
+        }
         currentNameLabel.setText(currentName);
     }
 
@@ -113,7 +117,7 @@ public class RecordView implements Initializable {
                     @Override
                     protected Void call() throws Exception {
                         ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-                                ,"-ar","44100","-i","default","-t", "5","./Database/"+currentName+"/User-Recordings/temp.wav");
+                                ,"-ar","44100","-i","default","-t", "5","./User-Recordings/temp.wav");
                         try {
                             Process p = recordBuilder.start();
                             p.waitFor();
@@ -149,7 +153,7 @@ public class RecordView implements Initializable {
         recordBar.setProgress(0.0);
 
     }
-    
+
     /**
      * Callback function for the back button which changes the scene back to the practice menu
      */
@@ -174,7 +178,7 @@ public class RecordView implements Initializable {
     }
 
     /**
-     * Help method to delete the temp recordings 
+     * Help method to delete the temp recordings
      */
     public void deleteRecording(){
         SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
@@ -183,8 +187,7 @@ public class RecordView implements Initializable {
                 currentName = PracticeMenuController.getCurrentNameWithoutNumber();
                 String number = RecordView.getNumberOfRecordings();
                 try {
-                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+
-                            "/Database/" + currentName + "/User-Recordings/temp.wav"));
+                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
@@ -195,7 +198,7 @@ public class RecordView implements Initializable {
         };
         deleteWorker.execute();
     }
-    
+
     /**
      * Helper method to get the number of user recordings for a specific database recording
      */
@@ -221,7 +224,7 @@ public class RecordView implements Initializable {
 
                     while ((line = stdoutBuffered.readLine()) != null) {
                         numberOfRecordings = line;
-                        
+
 
                     }
                     stdoutBuffered.close();
@@ -233,11 +236,11 @@ public class RecordView implements Initializable {
 
         };
         gettingRecordingsNumberWorker.execute();
-        
+
 
     }
 
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allUserRecordings = new ArrayList<String>();

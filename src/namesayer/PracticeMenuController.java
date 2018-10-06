@@ -29,7 +29,7 @@ public class PracticeMenuController implements Initializable {
 
     private ObservableList<String> items;
 
-    private SwingWorker<Void, Void> _playWorker;
+    private static SwingWorker<Void, Void> _playWorker;
 
     private ArrayList<String> namesWithoutNumbers;
 
@@ -58,67 +58,101 @@ public Label names;
      * @throws IOException
      */
     @FXML
-    public void handlePlayButton() throws IOException {
+    public void handlePlayDBRecordingButton() throws IOException {
         // Check which if neither list has been selected
-        if (practiceList.getSelectionModel().isEmpty() && userCreations.getSelectionModel().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
-            alert.showAndWait();
-            if (alert.getResult() == ButtonType.OK) {
-                alert.close();
-            }
+        if (practiceList.getSelectionModel().isEmpty()) {
+            emptyListViewPopup();
         }
         // Check which list has been selected
-        else if (practiceList.getSelectionModel().isEmpty() && !(userCreations.getSelectionModel().isEmpty())) {
-            String name = userCreations.getSelectionModel().getSelectedItem().replaceAll(" ", "_");
+        else if (!(practiceList.getSelectionModel().isEmpty())) {
+            if(currentName.contains(" ") || currentName.contains("-")) {
+                String name = practiceList.getSelectionModel().getSelectedItem().replaceAll(" ", "_");
 
-            String pathToFile = "Concat-Recordings/" + name;
+                String pathToFile = "Concat-Recordings/" + name + ".wav";
 
-            _playWorker = new SwingWorker<Void, Void>() {
+                handlingPlayingRecordings(pathToFile);
+            } else {
+                String name = currentName;
 
-                @Override
-                protected Void doInBackground() throws Exception {
-                    AudioInputStream stream;
-                    AudioFormat format;
-                    DataLine.Info info;
-                    SourceDataLine sourceLine;
+                List<String> databaseList = DataBaseController.getDatabaseList();
+                List<String> nameList = DataBaseController.getNames();
 
-                    try {
-                        stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-                        format = stream.getFormat();
+                String path = databaseList.get(nameList.indexOf(name));
+                String pathToFile = "Database/"+name+"/Database-Recordings/"+path+".wav";
+                PracticeMenuController.handlingPlayingRecordings(pathToFile);
+            }
+        }
+    }
 
-                        info = new DataLine.Info(SourceDataLine.class, format);
-                        sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-                        sourceLine.open(format);
+    public void emptyListViewPopup(){
+        Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            alert.close();
+        }
+    }
 
-                        sourceLine.start();
+    public static void handlingPlayingRecordings(String pathToFile){
 
-                        int nBytesRead = 0;
-                        int BUFFER_SIZE = 128000;
-                        byte[] abData = new byte[BUFFER_SIZE];
-                        while (nBytesRead != -1) {
-                            try {
-                                nBytesRead = stream.read(abData, 0, abData.length);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            if (nBytesRead >= 0) {
-                                @SuppressWarnings("unused")
-                                int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-                            }
+        _playWorker = new SwingWorker<Void, Void>() {
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                AudioInputStream stream;
+                AudioFormat format;
+                DataLine.Info info;
+                SourceDataLine sourceLine;
+
+                try {
+                    stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+                    format = stream.getFormat();
+
+                    info = new DataLine.Info(SourceDataLine.class, format);
+                    sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+                    sourceLine.open(format);
+
+                    sourceLine.start();
+
+                    int nBytesRead = 0;
+                    int BUFFER_SIZE = 128000;
+                    byte[] abData = new byte[BUFFER_SIZE];
+                    while (nBytesRead != -1) {
+                        try {
+                            nBytesRead = stream.read(abData, 0, abData.length);
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-
-                        sourceLine.drain();
-                        sourceLine.close();
-
-                    } catch (Exception e) {
-
+                        if (nBytesRead >= 0) {
+                            @SuppressWarnings("unused")
+                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+                        }
                     }
-                    return null;
+
+                    sourceLine.drain();
+                    sourceLine.close();
+
+                } catch (Exception e) {
+
                 }
+                return null;
+            }
 
-            };
-            _playWorker.execute();
+        };
+        _playWorker.execute();
+    }
 
+
+    @FXML
+    public void handlePlayUserRecordingButton() throws IOException {
+        // Check which if neither list has been selected
+        if (userCreations.getSelectionModel().isEmpty()) {
+            emptyListViewPopup();
+        }
+        // Check which list has been selected
+        else if (!(userCreations.getSelectionModel().isEmpty())) {
+            String name = userCreations.getSelectionModel().getSelectedItem();
+            String pathToFile = "User-Recordings/" + name;
+            handlingPlayingRecordings(pathToFile);
         }
 
         /**
@@ -180,6 +214,7 @@ public Label names;
             _playWorker.execute();
         }
     }
+
 
     /**
      * Allows the user to change their selected names to practice by changing the scene to Database scene
@@ -268,7 +303,32 @@ public Label names;
 
     }
 
-	/**
+    public void settingUserListView(String currentName) {
+        String tempName = PracticeMenuController.getCurrentName();
+
+
+        ObservableList<String> items = FXCollections.observableArrayList();
+        File folder = new File(System.getProperty("user.dir") + "/User-Recordings");
+        if(tempName != null) {
+            File[] listOfFiles = folder.listFiles();
+
+
+            for (int i = 0; i < listOfFiles.length; i++) {
+                if (listOfFiles[i].isFile()) {
+                    String currentFileName = listOfFiles[i].getName().replaceAll("_", " ");
+                    if (currentFileName.contains(currentName)){
+                        items.add(listOfFiles[i].getName());
+                    }
+                }
+            }
+
+            userCreations.setItems(items);
+        }
+
+    }
+
+
+    /**
 	 * Allows user to click on different names and change name label and user recording array list accordingly
 	 * @param location
 	 * @param resources
@@ -285,9 +345,11 @@ public Label names;
         	//Changes the practice view depending on which was the last selected list
             @Override
             public void handle(MouseEvent event) {
+                userCreations.getSelectionModel().clearSelection();
                 System.out.println(practiceList.getSelectionModel().getSelectedItem());
                 currentName = practiceList.getSelectionModel().getSelectedItem();
                 String tempCurrentName = currentName;
+                settingUserListView(currentName);
                 if (tempCurrentName.length() > 20){
                     tempCurrentName = tempCurrentName.substring(0,17);
                     tempCurrentName = tempCurrentName + "...";
@@ -296,6 +358,9 @@ public Label names;
             }
         });
     }
+
+
+
     public static String getSelectedName(){
         return currentName;
     }

@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="634.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeMenuController">
+<AnchorPane prefHeight="634.0" prefWidth="925.0" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.PracticeMenuController">
    <children>
       <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
@@ -24,11 +24,11 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <ListView fx:id="userCreations" layoutX="565.0" layoutY="293.0" prefHeight="205.0" prefWidth="268.0" />
-      <Button layoutX="610.0" layoutY="516.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="179.0" text="Play Selected Recoding" />
-      <Button layoutX="610.0" layoutY="205.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="179.0" text="Create Name Recording" />
-      <Button layoutX="284.0" layoutY="516.0" mnemonicParsing="false" onAction="#handlePlayButton" prefHeight="44.0" prefWidth="168.0" text="Play Name Recording" />
-      <Label layoutX="605.0" layoutY="266.0" text="Select your recoding to play:" />
+      <ListView fx:id="userCreations" layoutX="565.0" layoutY="293.0" onMouseClicked="#userCreationsListClicked" prefHeight="205.0" prefWidth="268.0" />
+      <Button layoutX="594.0" layoutY="516.0" mnemonicParsing="false" onAction="#handlePlayUserRecordingButton" prefHeight="44.0" prefWidth="211.0" text="Play Selected Recoding" />
+      <Button layoutX="594.0" layoutY="199.0" mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="44.0" prefWidth="211.0" text="Create Name Recording" />
+      <Button layoutX="271.0" layoutY="516.0" mnemonicParsing="false" onAction="#handlePlayDBRecordingButton" prefHeight="44.0" prefWidth="194.0" text="Play Name Recording" />
+      <Label layoutX="598.0" layoutY="260.0" text="Select your recoding to play:" />
       <Button layoutX="750.0" layoutY="74.0" mnemonicParsing="false" onAction="#handleRateButton" prefHeight="44.0" prefWidth="83.0" text="Rate" />
       <ListView fx:id="practiceList" layoutX="234.0" layoutY="199.0" prefHeight="296.0" prefWidth="268.0" />
       <Label fx:id="names" layoutX="192.0" layoutY="66.0" text="Select Name">
