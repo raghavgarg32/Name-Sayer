@@ -39,6 +39,12 @@ public class DataBaseController implements Initializable {
 
     private static String currentName;
 
+    
+    
+    @FXML
+    public void handleRewardIcon() {
+    	Main.changeSceneRewardMenu();
+    }
 
     /**
      * This is a callback function  thats called when the practice button is called, it changes the scene when the

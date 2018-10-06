@@ -85,7 +85,7 @@ public class RateViewController implements Initializable {
 			e.printStackTrace();
 		}
 		finally {
-			SwingWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+currentName+" has a bad recording'\n" +
+			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+currentName+" has a bad recording'\n" +
 					"\n" +
 					"if ! grep -qF \"$badRecordingMessage\" BadRecordingList.txt ; then " +
 					"echo \"$badRecordingMessage\" >> BadRecordingList.txt ; " +
@@ -113,7 +113,7 @@ public class RateViewController implements Initializable {
 			e.printStackTrace();
 		}
 		finally {
-			SwingWorker creationDirectoryWorker = new BashCommandWorker("sed -i '/"+currentName+" has a bad recording/d' ./BadRecordingList.txt ");
+			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("sed -i '/"+currentName+" has a bad recording/d' ./BadRecordingList.txt ");
 			Main.changeScenePractice();
 		}
 	}

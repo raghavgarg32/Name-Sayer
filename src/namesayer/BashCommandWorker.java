@@ -1,13 +1,16 @@
 package namesayer;
 
+import javafx.concurrent.Task;
+
 import javax.swing.SwingWorker;
+import java.util.List;
 
 /**
  * Runs bash commands on the swing worker so the UI doesn't crash
  * @author rgar969
  *
  */
-public class BashCommandWorker extends SwingWorker<Void, Void> {
+public class BashCommandWorker extends Task<List<Integer>> {
     private String command;
 
     /**
@@ -16,14 +19,15 @@ public class BashCommandWorker extends SwingWorker<Void, Void> {
      */
     public BashCommandWorker(String basCommand) {
         command = basCommand;
-        this.execute();
+        new Thread(this).start();
     }
 
     /**
      * Runs the bash command process in the worker thread
      */
+
     @Override
-    protected Void doInBackground() throws Exception {
+    protected List<Integer> call() throws Exception {
         ProcessBuilder commandProcessBuilder = new ProcessBuilder("/bin/sh", "-c", command);
         Process commandProcess = commandProcessBuilder.start();
 

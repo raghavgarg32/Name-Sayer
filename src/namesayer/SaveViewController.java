@@ -26,7 +26,7 @@ public class SaveViewController {
     }
 
     /**
-     * Save the user recordoing and does error checking
+     * Save the user recording and does error checking
      */
     public void save(){
 

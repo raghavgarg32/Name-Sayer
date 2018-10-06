@@ -44,18 +44,10 @@ public class MainMenuController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        SwingWorker creationDirectoryWorker = new BashCommandWorker("if [ ! -e \"BadRecordingList.txt\" ]; then\n" +
+        BashCommandWorker creationDirectoryWorker = new BashCommandWorker("if [ ! -e \"BadRecordingList.txt\" ]; then\n" +
                 "    touch BadRecordingList.txt\n" +
                 "fi");
-       
-        File antony = new File("antony.wav");
-        File catherine = new File("catherine.wav");
-        
-  
-        List<File> listOfFiles = new ArrayList<>();
-        
-        listOfFiles.add(antony);
-        listOfFiles.add(catherine);
+
     }
 
 }

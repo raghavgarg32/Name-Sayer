@@ -25,12 +25,14 @@ public class Main extends Application {
     private static Scene _micTestMenu;
     private static Scene _rateMenu;
     private static Scene _saveMenu;
+    private static Scene _rewardMenu;
 
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
     private static FXMLLoader saveLoader;
     private static FXMLLoader confirmLoader;
     private static FXMLLoader rateLoader;
+    private static FXMLLoader rewardLoader;
 
 
     /**
@@ -48,6 +50,7 @@ public class Main extends Application {
 		if (!userRecordings.exists()){
 			userRecordings.mkdir();
 		} 
+	
         
         practiceLoader = new FXMLLoader();
         practiceLoader.setLocation(getClass().getResource("PracticeMenu.fxml"));
@@ -68,6 +71,10 @@ public class Main extends Application {
         rateLoader = new FXMLLoader();
         rateLoader.setLocation(getClass().getResource("RateView.fxml"));
         Parent rateMenuRoot = rateLoader.load();
+        
+        rewardLoader = new FXMLLoader();
+        rewardLoader.setLocation(getClass().getResource("RewardMenu.fxml"));
+        Parent rewardMenuRoot = rewardLoader.load();
 
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
@@ -81,6 +88,7 @@ public class Main extends Application {
         _micTestMenu = new Scene(micTestRoot,600,400);
         _rateMenu = new Scene(rateMenuRoot,925,634);
         _saveMenu = new Scene(saveRoot,600,400);
+        _rewardMenu = new Scene(rewardMenuRoot,925,634);
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_dataBaseMenu);
@@ -163,6 +171,10 @@ public class Main extends Application {
         RateViewController controller = rateLoader.getController();
         controller.setlabel();
         _primaryStage.setScene(_rateMenu);
+    }
+    
+    public static void changeSceneRewardMenu() {
+    	_primaryStage.setScene(_rewardMenu);
     }
 
 }
