@@ -84,8 +84,8 @@ public class Main extends Application {
         _dataBaseMenu = new Scene(dataBaseRoot,925,634);
         _practiceMenu = new Scene(practiceRoot,925,634);
         _recordMenu = new Scene(recordRoot,925,634);
-        _confirmMenu = new Scene(confirmRoot,600,400);
-        _micTestMenu = new Scene(micTestRoot,600,400);
+        _confirmMenu = new Scene(confirmRoot,925,634);
+        _micTestMenu = new Scene(micTestRoot,925,634);
         _rateMenu = new Scene(rateMenuRoot,925,634);
         _saveMenu = new Scene(saveRoot,600,400);
         _rewardMenu = new Scene(rewardMenuRoot,925,634);
@@ -94,6 +94,12 @@ public class Main extends Application {
         primaryStage.setScene(_dataBaseMenu);
         primaryStage.show();
 
+
+    }
+
+    @Override
+    public void stop(){
+        BashCommandWorker removeConcatRecordings = new BashCommandWorker("rm -rf Concat-Recordings;");
 
     }
 
@@ -118,7 +124,7 @@ public class Main extends Application {
     public static void changeScenePractice() {
         PracticeMenuController controller = practiceLoader.getController();
         controller.names(DataBaseController.getItemList());
-        controller.userListView();
+        controller.settingUserListView(PracticeMenuController.getSelectedName());
         _primaryStage.setScene(_practiceMenu);
     }
 
@@ -174,6 +180,8 @@ public class Main extends Application {
     }
 
     public static void changeSceneRewardMenu() {
+        RewardMenuController controller = rewardLoader.getController();
+        controller.updateButtonStatus();
         _primaryStage.setScene(_rewardMenu);
     }
 

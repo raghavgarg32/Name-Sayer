@@ -22,7 +22,7 @@ import javax.swing.*;
 /**
  * Sets up the rating system for the database recordings
  */
-public class RateViewController implements Initializable {
+public class RateViewController extends SideButtons implements Initializable {
 	@FXML
 	public Label name;
 

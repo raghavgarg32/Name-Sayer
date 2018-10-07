@@ -8,13 +8,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
 
-public class DataBaseController implements Initializable {
+public class DataBaseController extends SideButtons implements Initializable {
 
     public static List<String> _practiceSelection = new ArrayList<>();
 
@@ -43,6 +44,8 @@ public class DataBaseController implements Initializable {
 
     private static HashMap<String, String> Names = new HashMap<>();
 
+    @FXML
+    private Button closeButton;
 
 
     /**
@@ -110,24 +113,30 @@ public class DataBaseController implements Initializable {
     @FXML
     public void addToPlayList(){
         if (userName.getText().length() > 0) {
-            playList.getItems().add(userName.getText());
-            _practiceSelection.add(userName.getText());
-            System.out.println("Thiss is a lsit " + list);
-            System.out.println("Thiss is a tskjsed " + getDatabaseList());
             String[] singleName = userName.getText().split(" ");
             String tempDatabaseName = "";
+
+            Boolean nameExists = true;
 
             for ( String ss : singleName) {
                 System.out.println("SSSSS  " + ss);
                 for (String database  : databaseList){
-                    System.out.println(database);
-                    if (database.contains(ss)){
-                        System.out.println("This is ss " + database);
-                        databaseNames.add(database);
+                    if (!nameArrayList.contains(ss)){
+
+                        nameExists = false;
                     }
                 }
             }
-
+            if (nameExists){
+                playList.getItems().add(userName.getText());
+                _practiceSelection.add(userName.getText());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.NONE, "This name doesn't exist in our database, please add another name.", ButtonType.OK);
+                alert.showAndWait();
+                if (alert.getResult() == ButtonType.OK) {
+                    alert.close();
+                }
+            }
             userName.clear();
         }
 
@@ -137,7 +146,28 @@ public class DataBaseController implements Initializable {
         return playList.getItems();
     }
 
+    @FXML
+    public void handleQuitButton(){
+        Stage stage = (Stage) closeButton.getScene().getWindow();
+        stage.close();
+    }
 
+    @FXML
+    public void handleExportPlayListButton(){
+        for (String name : _practiceSelection){
+            BashCommandWorker creationDirectoryWorker = new BashCommandWorker("name='"+name+"'\n" +
+                    "\n" +
+                    "if ! grep -qF \"$name\" UserPlayList.txt ; then " +
+                    "echo \"$name\" >> UserPlayList.txt ; " +
+                    "fi");
+        }
+
+        Alert alert = new Alert(Alert.AlertType.NONE, "DONE! - check in local folder", ButtonType.OK);
+        alert.showAndWait();
+        if (alert.getResult() == ButtonType.OK) {
+            alert.close();
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -252,28 +282,28 @@ public class DataBaseController implements Initializable {
         for (String name : _practiceSelection){
             System.out.println("This is the name " + name);
             String[] individualNames = name.split(" ");
-            List<File> listOfFiles = new ArrayList<>();
-            for ( String ss : individualNames) {
-                System.out.println("Individual names " + ss);
-                System.out.println("Database names " + Names.get(ss));
+            if (name.contains(" ")) {
+                List<File> listOfFiles = new ArrayList<>();
+                for (String ss : individualNames) {
+                    System.out.println("Individual names " + ss);
+                    System.out.println("Database names " + Names.get(ss));
 
-                File antony = new File("./Database/" + ss + "/Database-Recordings/" + Names.get(ss));
+                    File antony = new File("./Database/" + ss + "/Database-Recordings/" + Names.get(ss));
 
 
-                listOfFiles.add(antony);
+                    listOfFiles.add(antony);
 
+                }
+                createConcatFile(listOfFiles, "./Concat-Recordings/" + name.replaceAll(" ", "_"));
             }
-            createConcatFile(listOfFiles, "./Concat-Recordings/" + name.replaceAll(" ", "_"));
             items.add(name);
+            System.out.println("Items " + items);
         }
 
         return items;
     }
 
-    @FXML
-    public void handleRewardIcon() {
-        Main.changeSceneRewardMenu();
-    }
+
 
     /**
      * Method which returns the names in the database without numbers

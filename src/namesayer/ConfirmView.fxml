@@ -12,12 +12,12 @@
       <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="308.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle onMouseClicked="#handleRewardIcon" fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="64.0" layoutY="115.0" text="Home" />
       <Label layoutX="36.0" layoutY="236.0" text="Your Recordings" />
       <Label layoutX="20.0" layoutY="359.0" text="Database Recordings" />
       <Label layoutX="55.0" layoutY="475.0" text="Rewards" />
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle onMouseClicked="#handleRewardIcon" fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Label layoutX="68.0" layoutY="592.0" text="Help" />
       <Button fx:id="playUser" layoutX="321.0" layoutY="278.0" mnemonicParsing="false" onAction="#handlePlayUserButton" prefHeight="49.0" prefWidth="141.0" text="Play" />
       <Button fx:id="redo" layoutX="321.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleRedoButton" prefHeight="49.0" prefWidth="141.0" text="Redo" />

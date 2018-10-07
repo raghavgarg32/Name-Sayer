@@ -16,13 +16,15 @@ import javax.swing.SwingWorker;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
 import java.util.Calendar;
 import java.util.Date;
 
-public class ConfirmView {
+public class ConfirmView extends SideButtons{
 
     private SwingWorker<Void,Void> _playWorker;
 
@@ -66,7 +68,17 @@ public class ConfirmView {
             e1.printStackTrace();
         }
         RewardMenuController rewardController = rewardLoader.getController();
-        rewardController.increaseRewardPoint();
+        System.out.println("This is reward " + rewardController.getPoints());
+        RewardMenuController.increaseRewardPoint();
+        System.out.println("This is reward " + rewardController.getPoints());
+
+        if (rewardController.getPoints() == 10 || rewardController.getPoints() == 20 || rewardController.getPoints() == 30){
+            Alert alert = new Alert(Alert.AlertType.NONE, "New reward -check it in Rewards", ButtonType.OK);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
 
         String timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
 

@@ -24,7 +24,7 @@ import java.util.Timer;
 /**
  * Controller for the recording scene
  */
-public class RecordView implements Initializable {
+public class RecordView extends SideButtons implements Initializable {
 
     private Service<Void> _backgroundThread;
 

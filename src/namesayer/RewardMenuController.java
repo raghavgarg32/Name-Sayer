@@ -17,7 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class RewardMenuController implements Initializable {
+public class RewardMenuController extends SideButtons implements Initializable {
 
     private static int points;
 
@@ -205,9 +205,12 @@ public class RewardMenuController implements Initializable {
 
     }
 
-    public void increaseRewardPoint() {
+    public int getPoints(){
+        return points;
+    }
+
+    public static void increaseRewardPoint() {
         points++;
-        updateButtonStatus();
     }
 
     public void updateButtonStatus() {
