@@ -1,12 +1,12 @@
 package namesayer;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.File;
 
 
 /**
@@ -25,11 +25,16 @@ public class Main extends Application {
     private static Scene _micTestMenu;
     private static Scene _rateMenu;
     private static Scene _saveMenu;
+    private static Scene _rewardMenu;
+    private static Scene _helpMenu;
 
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
     private static FXMLLoader saveLoader;
     private static FXMLLoader confirmLoader;
+    private static FXMLLoader rateLoader;
+    private static FXMLLoader rewardLoader;
+    private static FXMLLoader helpLoader;
 
 
     /**
@@ -41,6 +46,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         _primaryStage = primaryStage;
+
+
+        File userRecordings = new File(System.getProperty("user.dir")+"/User-Recordings");
+        if (!userRecordings.exists()){
+            userRecordings.mkdir();
+        }
+
+
         practiceLoader = new FXMLLoader();
         practiceLoader.setLocation(getClass().getResource("PracticeMenu.fxml"));
         Parent practiceRoot = practiceLoader.load();
@@ -57,22 +70,36 @@ public class Main extends Application {
         confirmLoader.setLocation(getClass().getResource("ConfirmView.fxml"));
         Parent confirmRoot = confirmLoader.load();
 
+        rateLoader = new FXMLLoader();
+        rateLoader.setLocation(getClass().getResource("RateView.fxml"));
+        Parent rateMenuRoot = rateLoader.load();
+
+        rewardLoader = new FXMLLoader();
+        rewardLoader.setLocation(getClass().getResource("RewardMenu.fxml"));
+        Parent rewardMenuRoot = rewardLoader.load();
+        
+        helpLoader = new FXMLLoader();
+        helpLoader.setLocation(getClass().getResource("HelpPage.fxml"));
+        Parent helpMenuRoot = helpLoader.load();
+        
+
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
-        Parent rateMenuRoot = FXMLLoader.load(getClass().getResource("RateView.fxml"));
 
-        _mainMenu = new Scene(root,600,400);
-        _dataBaseMenu = new Scene(dataBaseRoot,600,400);
-        _practiceMenu = new Scene(practiceRoot,600,400);
-        _recordMenu = new Scene(recordRoot,600,400);
+        _mainMenu = new Scene(root,925,634);
+        _dataBaseMenu = new Scene(dataBaseRoot,925,634);
+        _practiceMenu = new Scene(practiceRoot,925,634);
+        _recordMenu = new Scene(recordRoot,925,634);
         _confirmMenu = new Scene(confirmRoot,600,400);
         _micTestMenu = new Scene(micTestRoot,600,400);
-        _rateMenu = new Scene(rateMenuRoot,600,400);
+        _rateMenu = new Scene(rateMenuRoot,925,634);
         _saveMenu = new Scene(saveRoot,600,400);
+        _rewardMenu = new Scene(rewardMenuRoot,925,634);
+        _helpMenu = new Scene(helpMenuRoot,925,634);
 
         primaryStage.setTitle("Namesayer");
-        primaryStage.setScene(_mainMenu);
+        primaryStage.setScene(_dataBaseMenu);
         primaryStage.show();
 
 
@@ -98,8 +125,7 @@ public class Main extends Application {
      */
     public static void changeScenePractice() {
         PracticeMenuController controller = practiceLoader.getController();
-        controller.names(DataBaseController.getItemList(),DataBaseController.getNamesWithoutNumbers(),
-                DataBaseController.getNamesWithNumbers());
+        controller.names(DataBaseController.getItemList());
         controller.userListView();
         _primaryStage.setScene(_practiceMenu);
     }
@@ -109,7 +135,8 @@ public class Main extends Application {
      */
     public static void changeSceneRecord() {
         RecordView controller = recordLoader.getController();
-        controller.getNameForRecording(PracticeMenuController.getCurrentName());
+        controller.getNameForRecording(PracticeMenuController.getCurrentNameWithoutNumber());
+        controller.initScene();
         _primaryStage.setScene(_recordMenu);
     }
 
@@ -149,7 +176,17 @@ public class Main extends Application {
      * Changes scene to Rate Menu scene
      */
     public static void changeSceneRateMenu() {
+        RateViewController controller = rateLoader.getController();
+        controller.setlabel();
         _primaryStage.setScene(_rateMenu);
+    }
+
+    public static void changeSceneRewardMenu() {
+        _primaryStage.setScene(_rewardMenu);
+    }
+    
+    public static void changeSceneHelpMenu() {
+    	_primaryStage.setScene(_helpMenu);
     }
 
 }

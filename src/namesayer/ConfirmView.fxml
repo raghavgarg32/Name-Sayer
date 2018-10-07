@@ -3,29 +3,46 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ConfirmView">
+<AnchorPane prefHeight="634.0" prefWidth="925.0" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.ConfirmView">
    <children>
-      <Button fx:id="playUser" layoutX="114.0" layoutY="187.0" mnemonicParsing="false" onAction="#handlePlayUserButton" text="Play" />
-      <Button fx:id="playDataBase" layoutX="399.0" layoutY="215.0" mnemonicParsing="false" onAction="#handlePlayDBButton" text="Play" />
-      <Button fx:id="redo" layoutX="111.0" layoutY="228.0" mnemonicParsing="false" onAction="#handleRedoButton" text="Redo" />
-      <Button fx:id="save" layoutX="112.0" layoutY="270.0" mnemonicParsing="false" onAction="#handleSaveButton" text="Save" />
-      <Button fx:id="delete" layoutX="107.0" layoutY="311.0" mnemonicParsing="false" onAction="#handleDeleteButton" text="Delete" />
-      <Label layoutX="33.0" layoutY="132.0" text="Your recording">
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="308.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="64.0" layoutY="115.0" text="Home" />
+      <Label layoutX="36.0" layoutY="236.0" text="Your Recordings" />
+      <Label layoutX="20.0" layoutY="359.0" text="Database Recordings" />
+      <Label layoutX="55.0" layoutY="475.0" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="68.0" layoutY="592.0" text="Help" />
+      <Button fx:id="playUser" layoutX="321.0" layoutY="278.0" mnemonicParsing="false" onAction="#handlePlayUserButton" prefHeight="49.0" prefWidth="141.0" text="Play" />
+      <Button fx:id="redo" layoutX="321.0" layoutY="350.0" mnemonicParsing="false" onAction="#handleRedoButton" prefHeight="49.0" prefWidth="141.0" text="Redo" />
+      <Button fx:id="save" layoutX="320.0" layoutY="422.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="49.0" prefWidth="141.0" text="Save" />
+      <Button fx:id="delete" layoutX="321.0" layoutY="495.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="49.0" prefWidth="141.0" text="Delete" />
+      <Label fx:id="nameLabel" layoutX="199.0" layoutY="68.0" text="Full Name">
          <font>
-            <Font size="28.0" />
+            <Font size="50.0" />
          </font>
       </Label>
-      <Label layoutX="283.0" layoutY="135.0" text="Database recording">
+      <Button fx:id="delete" layoutX="627.0" layoutY="387.0" mnemonicParsing="false" onAction="#handlePlayDBButton" prefHeight="49.0" prefWidth="141.0" text="Play" />
+      <Label fx:id="currentNameLabel" layoutX="291.0" layoutY="221.0" text="Your Recording">
          <font>
-            <Font size="28.0" />
+            <Font size="26.0" />
          </font>
       </Label>
-      <Label fx:id="nameLabel" layoutX="211.0" layoutY="38.0" text="Name">
+      <Label fx:id="currentNameLabel" layoutX="571.0" layoutY="335.0" text="Database Recording">
          <font>
-            <Font size="49.0" />
+            <Font size="25.0" />
          </font>
       </Label>
+      <Text fill="WHITE" layoutX="199.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Compare your recording or redo, save, delete your recording">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

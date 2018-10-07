@@ -4,18 +4,34 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.RecordView">
+<AnchorPane prefHeight="634.0" prefWidth="925.0" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.RecordView">
    <children>
-      <Label fx:id="recordLabel" layoutX="138.0" layoutY="129.0" text="Press record to have your voice recorded" />
-      <Button layoutX="167.0" layoutY="188.0" mnemonicParsing="false" onAction="#handleRecordButton" text="Record" />
-      <Label fx:id="currentNameLabel" layoutX="167.0" layoutY="28.0" text="Name">
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="308.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="64.0" layoutY="115.0" text="Home" />
+      <Label layoutX="36.0" layoutY="236.0" text="Your Recordings" />
+      <Label layoutX="20.0" layoutY="359.0" text="Database Recordings" />
+      <Label layoutX="55.0" layoutY="475.0" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="68.0" layoutY="592.0" text="Help" />
+      <Label fx:id="recordLabel" layoutX="199.0" layoutY="138.0" text="Press record to have your voice recorded for 5 seconds">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Button layoutX="305.0" layoutY="283.0" mnemonicParsing="false" onAction="#handleRecordButton" prefHeight="50.0" prefWidth="140.0" text="Record" />
+      <ProgressBar fx:id="recordBar" layoutX="305.0" layoutY="367.0" prefHeight="52.0" prefWidth="457.0" progress="0.0" />
+      <Button layoutX="622.0" layoutY="283.0" mnemonicParsing="false" onAction="#handleMicTestButton" prefHeight="50.0" prefWidth="140.0" text="Mic Test" />
+      <Label fx:id="currentNameLabel" layoutX="199.0" layoutY="68.0" text="Full Name">
          <font>
             <Font size="50.0" />
-         </font></Label>
-      <Button layoutX="64.0" layoutY="28.0" mnemonicParsing="false" onAction="#handleBackBtn" text="Back" />
-      <ProgressBar fx:id="recordBar" layoutX="167.0" layoutY="229.0" prefWidth="200.0" progress="0.0" />
-      <Button fx:id="micTestBtn" layoutX="295.0" layoutY="188.0" mnemonicParsing="false" onAction="#handleMicTestButton" text="Mic Test" />
+         </font>
+      </Label>
+       <Button fx:id="backButton" layoutX="746.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleBackBtn" prefHeight="44.0" prefWidth="133.0" text="Practice Menu" />
    </children>
 </AnchorPane>

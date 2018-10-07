@@ -6,10 +6,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * Allows the user to enter in a name that they want to save the file with
@@ -31,6 +29,7 @@ public class SaveViewController {
      * Save the user recordoing and does error checking
      */
     public void save(){
+
         gettingAllRecordings();
         String name = PracticeMenuController.getCurrentName();
         name = gettingRidOfNumbers(name);
@@ -43,7 +42,6 @@ public class SaveViewController {
             }
         }
         else {
-            System.out.println("This is the new name " + newName);
             newName = newName.trim();
             if (newName.length() > 0) {
                 BashCommandWorker savingFileWorker = new BashCommandWorker("mv ./Database/" + name + "/User-Recordings/temp.wav" +
@@ -54,6 +52,7 @@ public class SaveViewController {
                 catch (Exception e){
 
                 }
+                nameTextField.clear();
                 Main.changeScenePractice();
             } else {
                 Alert alert = new Alert(Alert.AlertType.NONE, "Please enter in a valid name ", ButtonType.OK);
@@ -77,10 +76,7 @@ public class SaveViewController {
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].isFile()) {
                 nameArrayList.add(listOfFiles[i].getName());
-                System.out.println("File " + listOfFiles[i].getName());
-            } else if (listOfFiles[i].isDirectory()) {
-                System.out.println("Directory " + listOfFiles[i].getName());
-            }
+            } 
         }
     }
 
@@ -92,7 +88,6 @@ public class SaveViewController {
     public String gettingRidOfNumbers(String nameString){
         if(nameString.contains("-")) {
             nameString = nameString.substring(0, nameString.lastIndexOf("-"));
-            System.out.println("This is the current name " +nameString);
         }
         return nameString;
     }
