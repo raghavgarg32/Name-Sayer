@@ -240,6 +240,7 @@ public Label names;
                 alert.close();
             }
         } else {
+            RecordView.recordingForUserRecording();
             Main.changeSceneRecord();
         }
     }
@@ -397,9 +398,13 @@ public Label names;
      * getter method to get the current name but with the number removed
      * @return
      */
-    public static String getCurrentNameWithoutNumber() {
+    public static String getCurrentNameWithoutNumber(Boolean addDBRecording) {
         if (currentName.contains("-")) {
             currentName = currentName.substring(0, currentName.lastIndexOf("-"));
+        }
+
+        if (addDBRecording) {
+            return AddDBRecordingsViewController.getCurrentDBName();
         }
         return currentName;
     }

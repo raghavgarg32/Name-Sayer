@@ -10,15 +10,15 @@
 <AnchorPane prefHeight="634.0" prefWidth="925.0" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.RecordView">
    <children>
       <Circle onMouseClicked="#handleHomeIcon" fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle onMouseClicked="#handleUserRecordingsIcon" fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="308.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
       <Circle onMouseClicked="#handleRewardIcon" fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label onMouseClicked="#handleHomeIcon" layoutX="64.0" layoutY="115.0" text="Home" />
-      <Label layoutX="36.0" layoutY="236.0" text="Your Recordings" />
+      <Label layoutX="64.0" layoutY="115.0" onMouseClicked="#handleHomeIcon" text="Home" />
+      <Label onMouseClicked="#handleUserRecordingsIcon" layoutX="36.0" layoutY="236.0" text="Your Recordings" />
       <Label layoutX="20.0" layoutY="359.0" text="Database Recordings" />
       <Label onMouseClicked="#handleRewardIcon" layoutX="55.0" layoutY="475.0" text="Rewards" />
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="68.0" layoutY="592.0" text="Help" />
+      <Circle onMouseClicked="#handleHelpIcon" fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label onMouseClicked="#handleHelpIcon" layoutX="68.0" layoutY="592.0" text="Help" />
       <Label fx:id="recordLabel" layoutX="199.0" layoutY="138.0" text="Press record to have your voice recorded for 5 seconds">
          <font>
             <Font size="20.0" />
@@ -33,5 +33,30 @@
          </font>
       </Label>
        <Button fx:id="backButton" layoutX="746.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleBackBtn" prefHeight="44.0" prefWidth="133.0" text="Practice Menu" />
+      <Label onMouseClicked="#handleHomeIcon" fx:id="nameLabel" layoutX="67.0" layoutY="38.0" text="h">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label onMouseClicked="#handleUserRecordingsIcon" fx:id="nameLabel" layoutX="68.0" layoutY="159.0" text="y">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label fx:id="nameLabel" layoutX="68.0" layoutY="278.0" text="d">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label onMouseClicked="#handleRewardIcon" fx:id="nameLabel" layoutX="75.0" layoutY="398.0" text="r">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label onMouseClicked="#handleHelpIcon" fx:id="nameLabel" layoutX="70.0" layoutY="516.0" text="?">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

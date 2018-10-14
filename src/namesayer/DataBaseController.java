@@ -47,6 +47,9 @@ public class DataBaseController extends SideButtons implements Initializable {
     @FXML
     private Button closeButton;
 
+    public static HashMap<String, String> getNamesHashMap(){
+        return Names;
+    }
 
     /**
      * This is a callback function  thats called when the practice button is called, it changes the scene when the
@@ -58,6 +61,8 @@ public class DataBaseController extends SideButtons implements Initializable {
 
         Main.changeScenePractice();
     }
+
+
 
     @FXML
     public void uploadPlayList(){
@@ -220,6 +225,8 @@ public class DataBaseController extends SideButtons implements Initializable {
         });
     }
 
+
+
     /**
      * Helper method to read recordings from the database folder
      */
@@ -274,6 +281,13 @@ public class DataBaseController extends SideButtons implements Initializable {
         gettingRecordingsWorker.execute();
     }
 
+    public static void addingNewDBRecording(String databaseName, String realName){
+        databaseList.add(databaseName);
+        nameArrayList.add(realName);
+        list.add(realName);
+        Names.put(realName,databaseName);
+    }
+
     /**
      * Helper method which gets the items from the _practiceSelection
      */
@@ -318,7 +332,7 @@ public class DataBaseController extends SideButtons implements Initializable {
      * @return
      */
     public static ObservableList<String> getNames(){
-
+        System.out.println(list);
 
         return list;
     }
@@ -332,15 +346,6 @@ public class DataBaseController extends SideButtons implements Initializable {
 
         return databaseList;
     }
-
-    /**
-     * Callback function which is called when the back button,it changes the scene when called
-     */
-    @FXML
-    public void handleBackButton() {
-        Main.changeSceneMain();
-    }
-
 
     /**
      * Method will take in a list of .wav files and concatenat them into one .wav file and return it

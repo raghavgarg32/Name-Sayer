@@ -145,7 +145,7 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
     @FXML
     public void handle30PointButton() {
-        String pathToFile = System.getProperty("user.dir") + "/Rewards/come_get_it.wav";
+        String pathToFile = System.getProperty("user.dir") + "/Rewards/car_crash2.wav";
 
         _playWorker = new SwingWorker<Void, Void>() {
 
@@ -199,7 +199,10 @@ public class RewardMenuController extends SideButtons implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
-        points = userRecordingDir.list().length;
+        if(userRecordingDir.exists()) {
+            points = userRecordingDir.list().length;
+        }
+
 
         updateButtonStatus();
 

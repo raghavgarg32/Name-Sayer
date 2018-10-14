@@ -55,6 +55,20 @@ public class RecordView extends SideButtons implements Initializable {
 
     private static String numberOfRecordings;
 
+    private static Boolean isThisNewDBRecording = false;
+
+    private static String recordingLocation = "./User-Recordings/";
+
+    public static void recordingForNewDBRecording(){
+        isThisNewDBRecording = true;
+        recordingLocation = "./Database/";
+    }
+
+    public static void recordingForUserRecording(){
+        isThisNewDBRecording = false;
+        recordingLocation = "./User-Recordings/";
+    }
+
     /**
      * Callback function for the Mic test button, it changes the scene
      */
@@ -104,7 +118,7 @@ public class RecordView extends SideButtons implements Initializable {
 
         progressTimer = new Timer();
         progressTimer.scheduleAtFixedRate(timerTask, 0, 50);
-        gettingNumberOfUserRecordings();
+
         if (numberOfRecordings == null){
             numberOfRecordings = "";
         }
@@ -117,7 +131,7 @@ public class RecordView extends SideButtons implements Initializable {
                     @Override
                     protected Void call() throws Exception {
                         ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-                                ,"-ar","44100","-i","default","-t", "5","./User-Recordings/temp.wav");
+                                ,"-ar","44100","-i","default","-t", "5",recordingLocation + "temp.wav");
                         try {
                             Process p = recordBuilder.start();
                             p.waitFor();
@@ -136,8 +150,11 @@ public class RecordView extends SideButtons implements Initializable {
             //Change scene when recording is finished
             @Override
             public void handle(WorkerStateEvent event) {
-                Main.changeSceneConfirm();
-
+                if (isThisNewDBRecording){
+                    Main.changeSceneConfrimDBRecordingsMenu();
+                } else {
+                    Main.changeSceneConfirm();
+                }
             }
         });
         _backgroundThread.start();
@@ -184,10 +201,10 @@ public class RecordView extends SideButtons implements Initializable {
         SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                currentName = PracticeMenuController.getCurrentNameWithoutNumber();
+                currentName = PracticeMenuController.getCurrentNameWithoutNumber(false);
                 String number = RecordView.getNumberOfRecordings();
                 try {
-                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
+                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+recordingLocation + "temp.wav"));
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
@@ -199,46 +216,6 @@ public class RecordView extends SideButtons implements Initializable {
         deleteWorker.execute();
     }
 
-    /**
-     * Helper method to get the number of user recordings for a specific database recording
-     */
-    public void gettingNumberOfUserRecordings(){
-        SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
-
-            @Override
-            protected ArrayList<String> doInBackground() throws Exception {
-                ArrayList<String> nameList = new ArrayList<String>();
-
-                try {
-                    ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database;\n" +
-                            "cd "+currentName+";\n" +
-                            "cd User-Recordings;\n" +
-                            "\n" +
-                            "echo $(ls -l | wc -l)");
-                    Process process = builder.start();
-
-                    InputStream stdout = process.getInputStream();
-                    BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-
-                    String line = null;
-
-                    while ((line = stdoutBuffered.readLine()) != null) {
-                        numberOfRecordings = line;
-
-
-                    }
-                    stdoutBuffered.close();
-                } catch (IOException ioe) {
-                    ioe.printStackTrace();
-                }
-                return null;
-            }
-
-        };
-        gettingRecordingsNumberWorker.execute();
-
-
-    }
 
 
     @Override
