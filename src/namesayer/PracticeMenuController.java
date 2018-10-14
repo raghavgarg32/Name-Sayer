@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class PracticeMenuController implements Initializable {
+public class PracticeMenuController extends SideButtons implements Initializable {
 
     private ObservableList<String> items;
 
@@ -51,11 +51,6 @@ public Label names;
     private ListView<String> userCreations; // List of user attempt at recording themeselves saying the name
 
 
-    
-    @FXML
-    public void handleHelpIcon() {
-    	Main.changeSceneHelpMenu();
-    }
 
     /**
      * Callback function which is called when the play button is pressed. It checks which list is selected
@@ -83,8 +78,9 @@ public Label names;
                 List<String> nameList = DataBaseController.getNames();
 
                 String path = databaseList.get(nameList.indexOf(name));
-                String pathToFile = "Database/"+name+"/Database-Recordings/"+path+".wav";
-                PracticeMenuController.handlingPlayingRecordings(pathToFile);
+                String pathToFile = "Database/"+name+"/Database-Recordings/"+path;
+                System.out.println("This is the PATH TO THE FILE " + pathToFile);
+                handlingPlayingRecordings(pathToFile);
             }
         }
     }
@@ -296,14 +292,6 @@ public Label names;
         if(tempName != null) {
             File[] listOfFiles = folder.listFiles();
 
-
-//            for (int i = 0; i < listOfFiles.length; i++) {
-//                if (listOfFiles[i].isFile()) {
-//                    items.add(listOfFiles[i].getName());
-//                }
-//            }
-
-//            userCreations.setItems(items);
         }
 
     }
@@ -321,8 +309,13 @@ public Label names;
             for (int i = 0; i < listOfFiles.length; i++) {
                 if (listOfFiles[i].isFile()) {
                     String currentFileName = listOfFiles[i].getName().replaceAll("_", " ");
-                    if (currentFileName.contains(currentName)){
-                        items.add(listOfFiles[i].getName());
+                    System.out.println("This is the current names FILE " + currentFileName);
+                    if (currentFileName.length() >= 26) {
+                        System.out.println("This is the current names FILE SOMETHINGS " + currentFileName.substring(26, currentFileName.length() -4));
+
+                        if (currentFileName.substring(26, currentFileName.length() -4).equals(currentName)) {
+                            items.add(listOfFiles[i].getName());
+                        }
                     }
                 }
             }

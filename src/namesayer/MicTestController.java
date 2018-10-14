@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class MicTestController implements Initializable {
+public class MicTestController extends SideButtons implements Initializable {
 
 	private SwingWorker<Void,Void> _micTestWorker;
 

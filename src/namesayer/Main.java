@@ -26,7 +26,6 @@ public class Main extends Application {
     private static Scene _rateMenu;
     private static Scene _saveMenu;
     private static Scene _rewardMenu;
-    private static Scene _helpMenu;
 
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
@@ -34,7 +33,6 @@ public class Main extends Application {
     private static FXMLLoader confirmLoader;
     private static FXMLLoader rateLoader;
     private static FXMLLoader rewardLoader;
-    private static FXMLLoader helpLoader;
 
 
     /**
@@ -77,11 +75,6 @@ public class Main extends Application {
         rewardLoader = new FXMLLoader();
         rewardLoader.setLocation(getClass().getResource("RewardMenu.fxml"));
         Parent rewardMenuRoot = rewardLoader.load();
-        
-        helpLoader = new FXMLLoader();
-        helpLoader.setLocation(getClass().getResource("HelpPage.fxml"));
-        Parent helpMenuRoot = helpLoader.load();
-        
 
         Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
@@ -91,17 +84,22 @@ public class Main extends Application {
         _dataBaseMenu = new Scene(dataBaseRoot,925,634);
         _practiceMenu = new Scene(practiceRoot,925,634);
         _recordMenu = new Scene(recordRoot,925,634);
-        _confirmMenu = new Scene(confirmRoot,600,400);
-        _micTestMenu = new Scene(micTestRoot,600,400);
+        _confirmMenu = new Scene(confirmRoot,925,634);
+        _micTestMenu = new Scene(micTestRoot,925,634);
         _rateMenu = new Scene(rateMenuRoot,925,634);
         _saveMenu = new Scene(saveRoot,600,400);
         _rewardMenu = new Scene(rewardMenuRoot,925,634);
-        _helpMenu = new Scene(helpMenuRoot,925,634);
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_dataBaseMenu);
         primaryStage.show();
 
+
+    }
+
+    @Override
+    public void stop(){
+        BashCommandWorker removeConcatRecordings = new BashCommandWorker("rm -rf Concat-Recordings;");
 
     }
 
@@ -126,7 +124,7 @@ public class Main extends Application {
     public static void changeScenePractice() {
         PracticeMenuController controller = practiceLoader.getController();
         controller.names(DataBaseController.getItemList());
-        controller.userListView();
+        controller.settingUserListView(PracticeMenuController.getSelectedName());
         _primaryStage.setScene(_practiceMenu);
     }
 
@@ -182,11 +180,9 @@ public class Main extends Application {
     }
 
     public static void changeSceneRewardMenu() {
+        RewardMenuController controller = rewardLoader.getController();
+        controller.updateButtonStatus();
         _primaryStage.setScene(_rewardMenu);
-    }
-    
-    public static void changeSceneHelpMenu() {
-    	_primaryStage.setScene(_helpMenu);
     }
 
 }

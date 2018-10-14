@@ -21,10 +21,13 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.Timer;
 
+//COPY PASTE WHOLE CLASS
+
+
 /**
  * Controller for the recording scene
  */
-public class RecordView implements Initializable {
+public class RecordView extends SideButtons implements Initializable {
 
     private Service<Void> _backgroundThread;
 
@@ -36,11 +39,10 @@ public class RecordView implements Initializable {
     private Button micTestBtn;
 
     @FXML
-    public Button backBtn;
-
-    @FXML
     public Button backButton;
-
+    
+    @FXML
+    public Button recordButton;
 
     @FXML
     private ProgressBar recordBar;
@@ -54,6 +56,10 @@ public class RecordView implements Initializable {
     private String currentName;
 
     private static String numberOfRecordings;
+    
+    private Thread recordThread;
+    
+    private Task<Void> recordTask;
 
     /**
      * Callback function for the Mic test button, it changes the scene
@@ -82,65 +88,47 @@ public class RecordView implements Initializable {
      */
     @FXML
     public void handleRecordButton() throws IOException {
+   
+    	recordTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
+                        ,"-ar","44100","-i","default","./User-Recordings/temp.wav");
+                try {
+                    Process recordProcess = recordBuilder.start();
+
+                } catch (IOException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+                return null;
+            }
+        };
+         
+        recordThread = new Thread(recordTask);
+    	
+    	if(this.recordButton.getText() == "Stop") {
+    		this.recordButton.setText("Record");
+    		stopRecording();
+    		Main.changeSceneConfirm();
+    		return;
+    	}
+    	else {
+    		recordThread.start();
+    		this.recordButton.setText("Stop");
+    	}
+    	
         backButton.setVisible(false);
         progressTimer.cancel();
         recordBar.setProgress(0.0);
-        recordLabel.setText("Audio is currently being recorded 5 seconds now");
-
-        //Create a timer task for the progress bar
-        TimerTask timerTask = new TimerTask() {
-            @Override
-            public void run() {
-                double progress = recordBar.getProgress();
-                if (progress == 1) {
-                    recordBar.setProgress(0);
-                    progressTimer.cancel();
-                    return;
-                }
-
-                recordBar.setProgress(progress + 0.01);
-            }
-        };
-
-        progressTimer = new Timer();
-        progressTimer.scheduleAtFixedRate(timerTask, 0, 50);
+        
         gettingNumberOfUserRecordings();
+        
         if (numberOfRecordings == null){
             numberOfRecordings = "";
         }
-        //Use a background thread for recording
-        _backgroundThread = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
+        
 
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-                                ,"-ar","44100","-i","default","-t", "5","./User-Recordings/temp.wav");
-                        try {
-                            Process p = recordBuilder.start();
-                            p.waitFor();
-
-                        } catch (IOException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-
-        _backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            //Change scene when recording is finished
-            @Override
-            public void handle(WorkerStateEvent event) {
-                Main.changeSceneConfirm();
-
-            }
-        });
-        _backgroundThread.start();
     }
 
     /**
@@ -160,17 +148,15 @@ public class RecordView implements Initializable {
     @FXML
     public void handleBackBtn() {
 
-        if(_backgroundThread == null) {
+        if(recordThread == null) {
             recordLabel.setText("Press record to have your voice recorded");
             deleteRecording();
             Main.changeScenePractice();
             return;
         }
         //Check if a background thread is running
-        if(_backgroundThread.isRunning()) {
-
-            progressTimer.cancel();
-            _backgroundThread.cancel();
+        if(recordThread.isAlive()) {
+            stopRecording();
             deleteRecording();
         }
         recordLabel.setText("Press record to have your voice recorded");
@@ -239,7 +225,8 @@ public class RecordView implements Initializable {
 
 
     }
-
+    
+ 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -254,5 +241,11 @@ public class RecordView implements Initializable {
      */
     public static String getNumberOfRecordings() {
         return numberOfRecordings;
+    }
+    
+    public void stopRecording() {
+    	BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");
+		recordThread.interrupt();
+		recordTask.cancel();
     }
 }

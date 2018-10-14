@@ -2,10 +2,12 @@ package namesayer;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -14,23 +16,36 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.SwingWorker;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ConfirmView {
+public class ConfirmView extends SideButtons implements Initializable{
 
     private SwingWorker<Void,Void> _playWorker;
 
     @FXML
     private Button delete,save,playUser,redo,playDataBase;
+    
+    @FXML
+    private Thread compareRecordingThread;
 
     @FXML
     private Label nameLabel;
+    
+    @FXML
+    private TextField loopNumber;
+    
 
     /**
      * handleDeleteButton is call back function that is called when the delete button is pressed,
@@ -66,7 +81,17 @@ public class ConfirmView {
             e1.printStackTrace();
         }
         RewardMenuController rewardController = rewardLoader.getController();
-        rewardController.increaseRewardPoint();
+        System.out.println("This is reward " + rewardController.getPoints());
+        RewardMenuController.increaseRewardPoint();
+        System.out.println("This is reward " + rewardController.getPoints());
+
+        if (rewardController.getPoints() == 10 || rewardController.getPoints() == 20 || rewardController.getPoints() == 30){
+            Alert alert = new Alert(Alert.AlertType.NONE, "New reward -check it in Rewards", ButtonType.OK);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
 
         String timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
 
@@ -197,7 +222,7 @@ public class ConfirmView {
             List<String> nameList = DataBaseController.getNames();
 
             String path = databaseList.get(nameList.indexOf(name));
-            String pathToFile = "Database/"+name+"/Database-Recordings/"+path+".wav";
+            String pathToFile = "Database/"+name+"/Database-Recordings/"+path;
             PracticeMenuController.handlingPlayingRecordings(pathToFile);
 
         }
@@ -215,5 +240,95 @@ public class ConfirmView {
 
     }
 
+
+    //COPY PASTE FROM HERE
+    
+    @FXML
+    public void handleCompareButton() {
+    	
+        List<String> databaseList = DataBaseController.getDatabaseList();
+        List<String> nameList = DataBaseController.getNames();
+    	List<File> concatList = new ArrayList<File>();
+    	String name = PracticeMenuController.getCurrentName();
+    	
+    	concatList.add(new File("User-Recordings/temp.wav"));
+    	
+    	 if(name.contains(" ") || name.contains("-")) {
+    		 name = name.replace(" ", "_");
+    		 name = name.replace("-", "_");  
+    		 concatList.add(new File("Concat-Recordings/" + name + ".wav"));
+         }
+    	 else {
+    		 name = PracticeMenuController.getSelectedName();
+    		 String path = databaseList.get(nameList.indexOf(name));
+    		 concatList.add(new File("Database/"+name+"/Database-Recordings/"+path));
+    	 }
+    	
+    	System.out.println(concatList);
+    //	File concatFile = DataBaseController.createConcatFile(concatList, "Concat-Recordings/tempConcatFile");
+    	 
+    	try {
+    		int numberToLoop = Integer.parseInt(this.loopNumber.getText());
+    		System.out.println("Number of times to loop is " + numberToLoop);
+    		playCompareRecording(concatList,numberToLoop);
+        	
+    	}
+    	catch(NumberFormatException e) {
+    		Alert alert = new Alert(Alert.AlertType.INFORMATION,"Value in text field should be a number",ButtonType.OK);
+    		alert.showAndWait();
+    		if(alert.getResult() == ButtonType.OK) {
+    			alert.close();
+    			return;
+    		}
+    	}
+    	
+    }
+    
+ 
+    
+    
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		loopNumber.setText("1");
+	}
+	
+	public void playCompareRecording(List<File> filesToPlay,int numberToLoop) {
+//		String command = "ffmpeg -y -i \"concat:";
+//		
+//		for(File file:filesToPlay) {
+//			command = command + file.getPath() + "|";
+//		}
+//		command = command.substring(0,command.length()-1);
+//		command = command +"\"" + " -c copy Concat-Recordings/tempConcatFile.wav";
+//		System.out.println(command);
+//		BashCommandWorker concatWorker = new BashCommandWorker(command);
+		
+		
+
+    	Task<Void> playTask = new Task<Void>() {
+
+			@Override
+			protected Void call() throws Exception {
+				
+				
+				DataBaseController.createConcatFile(filesToPlay, "Concat-Recordings/tempConcatFile");
+				
+	    		ProcessBuilder playBuilder = new ProcessBuilder("/bin/bash","-c","ffplay -nodisp -loop " + numberToLoop + 
+	    					" Concat-Recordings/tempConcatFile.wav");
+	    		Process play = playBuilder.start();
+	    		play.waitFor();
+	    		play.destroy();
+	   
+				return null;  		
+			}
+    	};
+    	compareRecordingThread = new Thread(playTask);
+    	compareRecordingThread.start();
+	}
+	
+	public void stopPlayingCompareRecording() {
+		compareRecordingThread.interrupt();
+		BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");
+	}
 
 }
