@@ -8,12 +8,16 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineEvent;
+import javax.sound.sampled.LineListener;
 import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.LineEvent.Type;
 import javax.swing.SwingWorker;
 
 import javafx.concurrent.Task;
@@ -30,302 +34,368 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class ConfirmView extends SideButtons implements Initializable{
+public class ConfirmView extends SideButtons implements Initializable {
 
-    private SwingWorker<Void,Void> _playWorker;
+	private SwingWorker<Void, Void> _playWorker;
 
-    @FXML
-    private Button delete,save,playUser,redo,playDataBase;
-    
-    @FXML
-    private Thread compareRecordingThread;
+	@FXML
+	private Button delete, save, playUser, redo, playDataBase;
 
-    @FXML
-    private Label nameLabel;
-    
-    @FXML
-    private TextField loopNumber;
-    
+	@FXML
+	private Thread compareRecordingThread;
 
-    /**
-     * handleDeleteButton is call back function that is called when the delete button is pressed,
-     * it deletes the temp.wav file and goes back to the practice menu
-     */
-    @FXML
-    public void handleDeleteButton() {
-        String name = PracticeMenuController.getCurrentNameWithoutNumber();
+	@FXML
+	private Label nameLabel;
 
-        try {
-            Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        finally {
-            Main.changeScenePractice();
-        }
-    }
+	@FXML
+	private TextField loopNumber;
 
-    /**
-     * handleSaveButton is a call back function that is called when the save button is pressed, it changes
-     * the scene back to the save menu.
-     */
-    @FXML
-    public void handleSaveButton() {
-        FXMLLoader rewardLoader = new FXMLLoader();
-        rewardLoader.setLocation(getClass().getResource("RewardMenu.fxml"));
-        try {
-            rewardLoader.load();
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-        }
-        RewardMenuController rewardController = rewardLoader.getController();
-        System.out.println("This is reward " + rewardController.getPoints());
-        RewardMenuController.increaseRewardPoint();
-        System.out.println("This is reward " + rewardController.getPoints());
+	private String pathToDBRecording;
 
-        if (rewardController.getPoints() == 10 || rewardController.getPoints() == 20 || rewardController.getPoints() == 30){
-            Alert alert = new Alert(Alert.AlertType.NONE, "New reward -check it in Rewards", ButtonType.OK);
-            alert.showAndWait();
-            if (alert.getResult() == ButtonType.OK) {
-                alert.close();
-            }
-        }
+	private String name;
 
-        String timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
+	/**
+	 * handleDeleteButton is call back function that is called when the delete
+	 * button is pressed, it deletes the temp.wav file and goes back to the practice
+	 * menu
+	 */
+	@FXML
+	public void handleDeleteButton() {
+		String name = PracticeMenuController.getCurrentNameWithoutNumber();
 
-        System.out.println(timeStamp);
+		try {
+			Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/User-Recordings/temp.wav"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			Main.changeScenePractice();
+		}
+	}
 
-        String folderName = PracticeMenuController.getCurrentNameWithoutNumber();
-        if(folderName.contains(" ")) {
-            folderName = folderName.replaceAll("\\s","_");
-        }
+	/**
+	 * handleSaveButton is a call back function that is called when the save button
+	 * is pressed, it changes the scene back to the save menu.
+	 */
+	@FXML
+	public void handleSaveButton() {
+		FXMLLoader rewardLoader = new FXMLLoader();
+		rewardLoader.setLocation(getClass().getResource("RewardMenu.fxml"));
+		try {
+			rewardLoader.load();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		RewardMenuController rewardController = rewardLoader.getController();
+		System.out.println("This is reward " + rewardController.getPoints());
+		RewardMenuController.increaseRewardPoint();
+		System.out.println("This is reward " + rewardController.getPoints());
 
-        System.out.println(folderName);
+		if (rewardController.getPoints() == 10 || rewardController.getPoints() == 20
+				|| rewardController.getPoints() == 30) {
+			Alert alert = new Alert(Alert.AlertType.NONE, "New reward -check it in Rewards", ButtonType.OK);
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.OK) {
+				alert.close();
+			}
+		}
 
-        ProcessBuilder saveBuilder = new ProcessBuilder("/bin/bash","-c","mv " + System.getProperty("user.dir") + "/User-Recordings/temp.wav" +
-                " " + System.getProperty("user.dir") + "/User-Recordings/" + "se206_" + timeStamp + "_" + folderName +".wav");
-        try {
-            Process saveProcess = saveBuilder.start();
-            saveProcess.waitFor();
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        Main.changeScenePractice();
+		String timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
 
-    }
+		System.out.println(timeStamp);
 
-    /**
-     * handlePlayUserButton is a callback function that is called when the play button is pressed, it plays the current
-     * .wav file selected.
-     */
-    @FXML
-    public void handlePlayUserButton() {
+		String folderName = PracticeMenuController.getCurrentNameWithoutNumber();
+		if (folderName.contains(" ")) {
+			folderName = folderName.replaceAll("\\s", "_");
+		}
 
-        //Swing worker used for concurrency
-        _playWorker = new SwingWorker<Void,Void>() {
+		System.out.println(folderName);
 
-            @Override
-            protected Void doInBackground() throws Exception {
-                String name = PracticeMenuController.getCurrentNameWithoutNumber();
+		ProcessBuilder saveBuilder = new ProcessBuilder("/bin/bash", "-c",
+				"mv " + System.getProperty("user.dir") + "/User-Recordings/temp.wav" + " "
+						+ System.getProperty("user.dir") + "/User-Recordings/" + "se206_" + timeStamp + "_" + folderName
+						+ ".wav");
+		try {
+			Process saveProcess = saveBuilder.start();
+			saveProcess.waitFor();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Main.changeScenePractice();
 
-                String number = RecordView.getNumberOfRecordings();
+	}
 
-                AudioInputStream stream;
-                AudioFormat format;
-                DataLine.Info info;
-                SourceDataLine sourceLine;
+	/**
+	 * handlePlayUserButton is a callback function that is called when the play
+	 * button is pressed, it plays the current .wav file selected.
+	 */
+	@FXML
+	public void handlePlayUserButton() {
 
+		// Swing worker used for concurrency
+		_playWorker = new SwingWorker<Void, Void>() {
 
-                try {
-                    stream = AudioSystem.getAudioInputStream(new File("User-Recordings/temp.wav"));
-                    format = stream.getFormat();
+			@Override
+			protected Void doInBackground() throws Exception {
+				String name = PracticeMenuController.getCurrentNameWithoutNumber();
 
-                    info = new DataLine.Info(SourceDataLine.class, format);
-                    sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-                    sourceLine.open(format);
+				String number = RecordView.getNumberOfRecordings();
 
-                    sourceLine.start();
+				AudioInputStream stream;
+				AudioFormat format;
+				DataLine.Info info;
+				SourceDataLine sourceLine;
 
-                    int nBytesRead = 0;
-                    int BUFFER_SIZE = 128000;
-                    byte[] abData = new byte[BUFFER_SIZE];
-                    while (nBytesRead != -1) {
-                        try {
-                            nBytesRead = stream.read(abData, 0, abData.length);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        if (nBytesRead >= 0) {
-                            @SuppressWarnings("unused")
-                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-                        }
-                    }
+				try {
+					stream = AudioSystem.getAudioInputStream(new File("User-Recordings/temp.wav"));
+					format = stream.getFormat();
 
-                    sourceLine.drain();
-                    sourceLine.close();
+					info = new DataLine.Info(SourceDataLine.class, format);
+					sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+					sourceLine.open(format);
 
-                } catch (Exception e) {
+					sourceLine.start();
 
-                }
-                return null;
-            }
+					int nBytesRead = 0;
+					int BUFFER_SIZE = 128000;
+					byte[] abData = new byte[BUFFER_SIZE];
+					while (nBytesRead != -1) {
+						try {
+							nBytesRead = stream.read(abData, 0, abData.length);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						if (nBytesRead >= 0) {
+							@SuppressWarnings("unused")
+							int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+						}
+					}
 
-        };
-        _playWorker.execute();
+					sourceLine.drain();
+					sourceLine.close();
 
-    }
+				} catch (Exception e) {
 
+				}
+				return null;
+			}
 
-    /**
-     * handleRedoButton is a callback function that is called when the redo button is pressed, it deletes the temp
-     * .wav file and changes scene
-     */
-    @FXML
-    public void handleRedoButton() {
-        try {
-            Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/User-Recordings/temp.wav"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        finally {
+		};
+		_playWorker.execute();
 
-            Main.changeSceneRecord();
-        }
-    }
+	}
 
-    /**
-     * handlePlayDBButton is a callback function that is called when the play button for database recordings is called
-     * when the play button for database recordings is called.
-     */
-    @FXML
-    public void handlePlayDBButton() {
+	/**
+	 * handleRedoButton is a callback function that is called when the redo button
+	 * is pressed, it deletes the temp .wav file and changes scene
+	 */
+	@FXML
+	public void handleRedoButton() {
+		try {
+			Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/User-Recordings/temp.wav"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
 
-        if(PracticeMenuController.getCurrentName().contains(" ") || PracticeMenuController.getCurrentName().contains("-")) {
-            // swingworker used to add an element of concurrency
-            String name = PracticeMenuController.getCurrentName().replace(" ", "_");
-            String pathToFile = "Concat-Recordings/" + name + ".wav";
-            PracticeMenuController.handlingPlayingRecordings(pathToFile);
-        }
+			Main.changeSceneRecord();
+		}
+	}
 
-        else {
-            // swingworker used to add an element of concurrency
-            String name = PracticeMenuController.getSelectedName();
+	/**
+	 * handlePlayDBButton is a callback function that is called when the play button
+	 * for database recordings is called when the play button for database
+	 * recordings is called.
+	 */
+	@FXML
+	public void handlePlayDBButton() {
 
-            List<String> databaseList = DataBaseController.getDatabaseList();
-            List<String> nameList = DataBaseController.getNames();
+		if (PracticeMenuController.getCurrentName().contains(" ")
+				|| PracticeMenuController.getCurrentName().contains("-")) {
+			// swingworker used to add an element of concurrency
+			String name = PracticeMenuController.getCurrentName().replace(" ", "_");
+			String pathToFile = "Concat-Recordings/" + name + ".wav";
+			PracticeMenuController.handlingPlayingRecordings(pathToFile);
+		}
 
-            String path = databaseList.get(nameList.indexOf(name));
-            String pathToFile = "Database/"+name+"/Database-Recordings/"+path;
-            PracticeMenuController.handlingPlayingRecordings(pathToFile);
+		else {
+			// swingworker used to add an element of concurrency
+			name = PracticeMenuController.getSelectedName();
 
-        }
+			List<String> databaseList = DataBaseController.getDatabaseList();
+			List<String> nameList = DataBaseController.getNames();
 
-    }
+			String path = databaseList.get(nameList.indexOf(name));
+			String pathToFile = "Database/" + name + "/Database-Recordings/" + path;
+			PracticeMenuController.handlingPlayingRecordings(pathToFile);
 
+		}
 
+	}
 
-    public void setNameLabel(String name){
-        if (name.length() > 20){
-            name = name.substring(0,17);
-            name = name + "...";
-        }
-        nameLabel.setText(name);
+	public void setNameLabel(String name) {
+		if (name.length() > 20) {
+			name = name.substring(0, 17);
+			name = name + "...";
+		}
+		nameLabel.setText(name);
 
-    }
+	}
 
+	// COPY PASTE FROM HERE
 
-    //COPY PASTE FROM HERE
-    
-    @FXML
-    public void handleCompareButton() {
-    	
-        List<String> databaseList = DataBaseController.getDatabaseList();
-        List<String> nameList = DataBaseController.getNames();
-    	List<File> concatList = new ArrayList<File>();
-    	String name = PracticeMenuController.getCurrentName();
-    	
-    	concatList.add(new File("User-Recordings/temp.wav"));
-    	
-    	 if(name.contains(" ") || name.contains("-")) {
-    		 name = name.replace(" ", "_");
-    		 name = name.replace("-", "_");  
-    		 concatList.add(new File("Concat-Recordings/" + name + ".wav"));
-         }
-    	 else {
-    		 name = PracticeMenuController.getSelectedName();
-    		 String path = databaseList.get(nameList.indexOf(name));
-    		 concatList.add(new File("Database/"+name+"/Database-Recordings/"+path));
-    	 }
-    	
-    	System.out.println(concatList);
-    //	File concatFile = DataBaseController.createConcatFile(concatList, "Concat-Recordings/tempConcatFile");
-    	 
-    	try {
-    		int numberToLoop = Integer.parseInt(this.loopNumber.getText());
-    		System.out.println("Number of times to loop is " + numberToLoop);
-    		playCompareRecording(concatList,numberToLoop);
-        	
-    	}
-    	catch(NumberFormatException e) {
-    		Alert alert = new Alert(Alert.AlertType.INFORMATION,"Value in text field should be a number",ButtonType.OK);
-    		alert.showAndWait();
-    		if(alert.getResult() == ButtonType.OK) {
-    			alert.close();
-    			return;
-    		}
-    	}
-    	
-    }
-    
- 
-    
-    
+	@FXML
+	public void handleCompareButton() {
+
+		List<String> databaseList = DataBaseController.getDatabaseList();
+		List<String> nameList = DataBaseController.getNames();
+		List<File> concatList = new ArrayList<File>();
+		name = PracticeMenuController.getCurrentName();
+
+		concatList.add(new File("User-Recordings/temp.wav"));
+
+		if (name.contains(" ") || name.contains("-")) {
+			name = name.replace(" ", "_");
+			name = name.replace("-", "_");
+			concatList.add(new File("Concat-Recordings/" + name + ".wav"));
+		} else {
+			name = PracticeMenuController.getSelectedName();
+			String path = databaseList.get(nameList.indexOf(name));
+			pathToDBRecording = path;
+			concatList.add(new File("Database/" + name + "/Database-Recordings/" + path));
+		}
+
+		System.out.println(concatList);
+		
+
+		try {
+
+			int numberToLoop = Integer.parseInt(this.loopNumber.getText());
+			System.out.println("Number of times to loop is " + numberToLoop);
+
+			Task<Void> playTask = new Task<Void>() {
+
+				@Override
+				protected Void call() throws Exception {
+					File concatFile = DataBaseController.createConcatFile(concatList, "Concat-Recordings/tempConcatFile");
+					
+					for (int i = 0; i < numberToLoop; i++) {
+						playCompareRecording("User-Recordings/temp.wav", "Concat-Recordings/tempConcatFile");
+					}
+					return null;
+				}
+
+			};
+
+			compareRecordingThread = new Thread(playTask);
+			compareRecordingThread.start();
+
+		} catch (NumberFormatException e) {
+			Alert alert = new Alert(Alert.AlertType.INFORMATION, "Value in text field should be a number",
+					ButtonType.OK);
+			alert.showAndWait();
+			if (alert.getResult() == ButtonType.OK) {
+				alert.close();
+				return;
+			}
+		}
+
+	}
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		loopNumber.setText("1");
 	}
+
+	public void playCompareRecording(String pathToUserRecording, String pathToDataBaseRecording) {
+		
 	
-	public void playCompareRecording(List<File> filesToPlay,int numberToLoop) {
-//		String command = "ffmpeg -y -i \"concat:";
-//		
-//		for(File file:filesToPlay) {
-//			command = command + file.getPath() + "|";
-//		}
-//		command = command.substring(0,command.length()-1);
-//		command = command +"\"" + " -c copy Concat-Recordings/tempConcatFile.wav";
-//		System.out.println(command);
-//		BashCommandWorker concatWorker = new BashCommandWorker(command);
 		
 		
+		
+		AudioInputStream stream;
+		AudioFormat format;
+		DataLine.Info info;
+		SourceDataLine sourceLine;
 
-    	Task<Void> playTask = new Task<Void>() {
+		try {
+			stream = AudioSystem.getAudioInputStream(new File("Concat-Recordings/tempConcatFile.wav"));
+			format = stream.getFormat();
 
-			@Override
-			protected Void call() throws Exception {
-				
-				
-				DataBaseController.createConcatFile(filesToPlay, "Concat-Recordings/tempConcatFile");
-				
-	    		ProcessBuilder playBuilder = new ProcessBuilder("/bin/bash","-c","ffplay -nodisp -loop " + numberToLoop + 
-	    					" Concat-Recordings/tempConcatFile.wav");
-	    		Process play = playBuilder.start();
-	    		play.waitFor();
-	    		play.destroy();
-	   
-				return null;  		
+			info = new DataLine.Info(SourceDataLine.class, format);
+			sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+			sourceLine.open(format);
+
+			sourceLine.start();
+
+			int nBytesRead = 0;
+			int BUFFER_SIZE = 128000;
+			byte[] abData = new byte[BUFFER_SIZE];
+			while (nBytesRead != -1) {
+				try {
+					nBytesRead = stream.read(abData, 0, abData.length);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				if (nBytesRead >= 0) {
+					@SuppressWarnings("unused")
+					int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+				}
 			}
-    	};
-    	compareRecordingThread = new Thread(playTask);
-    	compareRecordingThread.start();
-	}
+
+			sourceLine.drain();
+			sourceLine.close();
+		
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}	
+		
+		try {
+			TimeUnit.SECONDS.sleep(1);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
+//		try {
+//			stream = AudioSystem.getAudioInputStream(new File(pathToDataBaseRecording+".wav"));
+//			format = stream.getFormat();
+//
+//			info = new DataLine.Info(SourceDataLine.class, format);
+//			sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+//			sourceLine.open(format);
+//
+//			sourceLine.start();
+//
+//			int nBytesRead = 0;
+//			int BUFFER_SIZE = 128000;
+//			byte[] abData = new byte[BUFFER_SIZE];
+//			while (nBytesRead != -1) {
+//				try {
+//					nBytesRead = stream.read(abData, 0, abData.length);
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+//				if (nBytesRead >= 0) {
+//					@SuppressWarnings("unused")
+//					int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+//				}
+//			}
+//
+//			sourceLine.drain();
+//			sourceLine.close();
+//		}
+//		catch(Exception e) {	
+//			e.printStackTrace();
+//		}			
 	
+	}
+
 	public void stopPlayingCompareRecording() {
 		compareRecordingThread.interrupt();
 		BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");

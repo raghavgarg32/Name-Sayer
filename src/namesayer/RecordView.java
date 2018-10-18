@@ -98,7 +98,7 @@ public class RecordView extends SideButtons implements Initializable {
                     Process recordProcess = recordBuilder.start();
 
                 } catch (IOException e1) {
-                    // TODO Auto-generated catch block
+                    
                     e1.printStackTrace();
                 }
                 return null;
@@ -226,7 +226,7 @@ public class RecordView extends SideButtons implements Initializable {
 
     }
     
- 
+    
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {

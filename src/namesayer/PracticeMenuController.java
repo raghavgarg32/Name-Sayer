@@ -172,6 +172,7 @@ public Label names;
 
                 @Override
                 protected Void doInBackground() throws Exception {
+                	
                     AudioInputStream stream;
                     AudioFormat format;
                     DataLine.Info info;
@@ -205,6 +206,8 @@ public Label names;
 
                         sourceLine.drain();
                         sourceLine.close();
+                        
+                        
 
                     } catch (Exception e) {
 
@@ -213,6 +216,8 @@ public Label names;
                 }
             };
             _playWorker.execute();
+            
+            
         }
     }
 
