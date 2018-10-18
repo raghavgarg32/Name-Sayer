@@ -95,7 +95,7 @@ public class Main extends Application {
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
 
-        _dataBaseMenu = new Scene(dataBaseRoot,925,634);
+        _dataBaseMenu = new Scene(dataBaseRoot,959,773);
         _practiceMenu = new Scene(practiceRoot,925,634);
         _recordMenu = new Scene(recordRoot,925,634);
         _confirmMenu = new Scene(confirmRoot,925,634);

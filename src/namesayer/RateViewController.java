@@ -85,7 +85,8 @@ public class RateViewController extends SideButtons implements Initializable {
 			e.printStackTrace();
 		}
 		finally {
-			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+currentName+" has a bad recording'\n" +
+			System.out.println(DataBaseController.getNamesHashMap().get(currentName));
+			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+DataBaseController.getNamesHashMap().get(currentName)+"'\n" +
 					"\n" +
 					"if ! grep -qF \"$badRecordingMessage\" BadRecordingList.txt ; then " +
 					"echo \"$badRecordingMessage\" >> BadRecordingList.txt ; " +

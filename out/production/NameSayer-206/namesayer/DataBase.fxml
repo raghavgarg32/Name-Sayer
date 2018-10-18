@@ -1,72 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="634.0" prefWidth="925.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.DataBaseController">
+<AnchorPane prefHeight="773.0" prefWidth="959.0" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.DataBaseController">
    <children>
-      <Button fx:id="closeButton" layoutX="816.0" layoutY="86.0" mnemonicParsing="false" onAction="#handleQuitButton" text="Quit" />
+      <Button fx:id="closeButton" layoutX="817.0" layoutY="77.0" mnemonicParsing="false" onAction="#handleQuitButton" text="Quit" />
       <Text fill="WHITE" layoutX="201.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name Sayer">
          <font>
             <Font size="48.0" />
          </font></Text>
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="68.0" onMouseClicked="#handleHomeIcon" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="189.0" onMouseClicked="#handleUserRecordingsIcon" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="308.0" onMouseClicked="#handleDBRecordingsIcon" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Circle fill="DODGERBLUE" layoutX="84.0" layoutY="428.0" onMouseClicked="#handleRewardIcon" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="64.0" layoutY="115.0" onMouseClicked="#handleHomeIcon" text="Home" />
-      <Label layoutX="36.0" layoutY="236.0" onMouseClicked="#handleUserRecordingsIcon" text="Your Recordings" />
-      <Label layoutX="20.0" layoutY="359.0" onMouseClicked="#handleDBRecordingsIcon" text="Database Recordings" />
-      <Label layoutX="55.0" layoutY="475.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
-      <Circle fill="DODGERBLUE" layoutX="83.0" layoutY="546.0" onMouseClicked="#handleHelpIcon" radius="39.0" stroke="BLACK" strokeType="INSIDE" />
-      <Label layoutX="68.0" layoutY="592.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <TextField fx:id="userName" layoutX="201.0" layoutY="200.0" prefHeight="44.0" prefWidth="378.0" />
+      <Circle fill="DODGERBLUE" layoutX="95.0" layoutY="76.0" onMouseClicked="#handleHomeIcon" radius="50.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="95.0" layoutY="222.0" onMouseClicked="#handleUserRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="95.0" layoutY="517.0" onMouseClicked="#handleDBRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
+      <Circle fill="DODGERBLUE" layoutX="95.0" layoutY="367.0" onMouseClicked="#handleRewardIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="74.0" layoutY="132.0" onMouseClicked="#handleHomeIcon" text="Home" />
+      <Label layoutX="40.0" layoutY="279.0" onMouseClicked="#handleUserRecordingsIcon" text="Your Recordings" />
+      <Label layoutX="25.0" layoutY="427.0" onMouseClicked="#handleDBRecordingsIcon" text="Database Recordings" />
+      <Label layoutX="64.0" layoutY="576.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="95.0" layoutY="668.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label layoutX="79.0" layoutY="725.0" onMouseClicked="#handleHelpIcon" text="Help" />
+      <TextField fx:id="userName" layoutX="201.0" layoutY="201.0" prefHeight="44.0" prefWidth="378.0" />
       <Label layoutX="201.0" layoutY="150.0" text="Enter in a Name to practice or select name from the list below:">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <ListView fx:id="_creationList" layoutX="201.0" layoutY="251.0" prefHeight="257.0" prefWidth="346.0" />
+      <ListView fx:id="_creationList" layoutX="201.0" layoutY="258.0" prefHeight="379.0" prefWidth="346.0" />
       <Button layoutX="586.0" layoutY="200.0" mnemonicParsing="false" onAction="#addToPlayList" prefHeight="44.0" prefWidth="139.0" text="Add to playlist" />
-      <ListView fx:id="playList" layoutX="555.0" layoutY="251.0" prefHeight="257.0" prefWidth="316.0" />
-      <Button layoutX="201.0" layoutY="517.0" mnemonicParsing="false" onAction="#handlePracticeBtn" prefHeight="44.0" prefWidth="346.0" text="Practice Name" />
+      <ListView fx:id="playList" layoutX="555.0" layoutY="258.0" prefHeight="379.0" prefWidth="316.0" />
+      <Button layoutX="201.0" layoutY="646.0" mnemonicParsing="false" onAction="#handlePracticeBtn" prefHeight="44.0" prefWidth="346.0" text="Practice Name" />
       <Button layoutX="732.0" layoutY="200.0" mnemonicParsing="false" onAction="#uploadPlayList" prefHeight="44.0" prefWidth="139.0" text="Upload playlist" />
-      <Button layoutX="555.0" layoutY="517.0" mnemonicParsing="false" onAction="#handleExportPlayListButton" prefHeight="44.0" prefWidth="316.0" text="Export Playlist" />
-      <Label fx:id="nameLabel" layoutX="67.0" layoutY="38.0" onMouseClicked="#handleHomeIcon" text="h">
+      <Button layoutX="555.0" layoutY="646.0" mnemonicParsing="false" onAction="#handleExportPlayListButton" prefHeight="44.0" prefWidth="316.0" text="Export Playlist" />
+      <Label fx:id="nameLabel" layoutX="76.0" layoutY="627.0" onMouseClicked="#handleHelpIcon" text="?">
          <font>
-            <Font size="50.0" />
+            <Font size="68.0" />
          </font>
       </Label>
-      <Label fx:id="nameLabel" layoutX="68.0" layoutY="159.0" onMouseClicked="#handleUserRecordingsIcon" text="y">
-         <font>
-            <Font size="50.0" />
-         </font>
-      </Label>
-      <Label fx:id="nameLabel" layoutX="68.0" layoutY="278.0" onMouseClicked="#handleDBRecordingsIcon" text="d">
-         <font>
-            <Font size="50.0" />
-         </font>
-      </Label>
-      <Label fx:id="nameLabel" layoutX="75.0" layoutY="398.0" onMouseClicked="#handleRewardIcon" text="r">
-         <font>
-            <Font size="50.0" />
-         </font>
-      </Label>
-      <Label fx:id="nameLabel" layoutX="70.0" layoutY="516.0" onMouseClicked="#handleHelpIcon" text="?">
-         <font>
-            <Font size="50.0" />
-         </font>
-      </Label>
+      <ImageView fitHeight="69.0" fitWidth="78.0" layoutX="61.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/home.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="69.0" layoutX="65.0" layoutY="192.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/mic.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="44.0" fitWidth="61.0" layoutX="65.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/database.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="78.0" layoutX="61.0" layoutY="487.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/star.png" />
+         </image>
+      </ImageView>
    </children>
-   <stylesheets>
-      <URL value="@material.css" />
-      <URL value="@mac_os.css" />
-   </stylesheets>
 </AnchorPane>

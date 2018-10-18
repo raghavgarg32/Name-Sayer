@@ -6,6 +6,8 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,12 +46,20 @@ public class DataBaseController extends SideButtons implements Initializable {
 
     private static HashMap<String, String> Names = new HashMap<>();
 
+    private static HashMap<String, String> actualNames = new HashMap<>();
+
+    ArrayList<String> actualNamesBadRecordings = new ArrayList<>();
+
+
     @FXML
     private Button closeButton;
 
     public static HashMap<String, String> getNamesHashMap(){
         return Names;
     }
+
+    @FXML
+    private ImageView homeImage;
 
     /**
      * This is a callback function  thats called when the practice button is called, it changes the scene when the
@@ -113,6 +123,22 @@ public class DataBaseController extends SideButtons implements Initializable {
         }
 
 
+    }
+
+    public ArrayList<String> getBadRecordings(){
+        Scanner s = null;
+        try {
+            s = new Scanner(new File("BadRecordingList.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        ArrayList<String> badlist = new ArrayList<String>();
+        while (s.hasNext()){
+            badlist.add(s.next());
+        }
+        s.close();
+
+        return badlist;
     }
 
     @FXML
@@ -206,12 +232,11 @@ public class DataBaseController extends SideButtons implements Initializable {
         _creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 
-
-
         // This is just test data for the list
         list = FXCollections.observableArrayList();
         _creationList.setItems(list);
         gettingRecordings();
+        selectGoodRecordings();
 
 
         _creationList.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -223,6 +248,7 @@ public class DataBaseController extends SideButtons implements Initializable {
                 System.out.println("This is the name of the customer " + currentName);
             }
         });
+
     }
 
 
@@ -245,7 +271,7 @@ public class DataBaseController extends SideButtons implements Initializable {
                             "cd $i\n" +
                             "\n" +
                             "cd Database-Recordings\n" +
-                            "   ls -1 *.wav | shuf -n 1\n" +
+                            "ls -1 *.wav\n" +
                             "cd ..\n" +
                             "cd ..\n" +
                             "\n" +
@@ -260,17 +286,19 @@ public class DataBaseController extends SideButtons implements Initializable {
                     while ((line = stdoutBuffered.readLine()) != null) {
                         String databaseName = line;
                         databaseList.add(line);
-                        System.out.println("This is the recording file " +line);
+//                        System.out.println("This is the recording file " +line);
                         line = line.substring(0,line.length()-4);
                         line = line.substring(line.lastIndexOf('_') + 1);
                         nameArrayList.add(line);
-                        System.out.println("This is the ds file " +line);
+//                        System.out.println("This is the ds file " +line);
                         list.add(line);
                         Names.put(line, databaseName);
 
 
+
                     }
                     stdoutBuffered.close();
+                    selectGoodRecordings();
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
@@ -279,6 +307,54 @@ public class DataBaseController extends SideButtons implements Initializable {
 
         };
         gettingRecordingsWorker.execute();
+    }
+
+    public ArrayList<String> actualNamesInBadRecordings(){
+        for (String actualName : getBadRecordings()){
+            actualNamesBadRecordings.add(actualName);
+        }
+        return actualNamesBadRecordings;
+    }
+
+    public void selectGoodRecordings(){
+        ArrayList<String> namesBadRecordings = new ArrayList<>();
+        System.out.println("This is the database list ");
+        for (String actualName : getBadRecordings()){
+            actualName = actualName.substring(0,actualName.length()-4);
+            actualName = actualName.substring(actualName.lastIndexOf('_') + 1);
+            namesBadRecordings.add(actualName);
+            System.out.println("acsdfdsfastas " + actualName);
+        }
+
+        System.out.println(namesBadRecordings);
+
+        for (String databaseName : databaseList){
+//            System.out.println("This is the database list " + databaseName);
+            String actualName = databaseName.substring(0,databaseName.length()-4);
+            actualName = actualName.substring(actualName.lastIndexOf('_') + 1);
+//            System.out.println("This is the actual name " + actualName);
+            int occurrences = Collections.frequency(nameArrayList, actualName);
+            System.out.println("Occurence " + occurrences);
+            System.out.println("actas " + Collections.frequency(namesBadRecordings, actualName));
+
+            if (occurrences > 1 && (occurrences != Collections.frequency(namesBadRecordings, actualName))){
+                if (!getBadRecordings().contains(databaseName)){
+                    actualNames.put(actualName, databaseName);
+                }
+            } else {
+                actualNames.put(actualName, databaseName);
+
+            }
+        }
+        Iterator it = actualNames.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry)it.next();
+            if (pair.getKey().equals("li")) {
+                System.out.println(pair.getKey() + " = " + pair.getValue());
+                it.remove(); // avoids a ConcurrentModificationException
+            }
+        }
+
     }
 
     public static void addingNewDBRecording(String databaseName, String realName){
