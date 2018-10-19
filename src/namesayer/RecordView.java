@@ -20,10 +20,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.Timer;
-import java.util.jar.Pack200;
-
-//COPY PASTE WHOLE CLASS
-
 
 /**
  * Controller for the recording scene
@@ -40,8 +36,15 @@ public class RecordView extends SideButtons implements Initializable {
     private Button micTestBtn;
 
     @FXML
+    public Button backBtn;
+
+    @FXML
     public Button backButton;
-    
+
+    private Thread recordThread;
+
+    private Task<Void> recordTask;
+
     @FXML
     public Button recordButton;
 
@@ -57,14 +60,21 @@ public class RecordView extends SideButtons implements Initializable {
     private String currentName;
 
     private static String numberOfRecordings;
-    
-    private Thread recordThread;
-    
-    private Task<Void> recordTask;
 
-    /**
-     * Callback function for the Mic test button, it changes the scene
-     */
+    private static Boolean isThisNewDBRecording = false;
+
+    private static String recordingLocation = "./User-Recordings/";
+
+    public static void recordingForNewDBRecording(){
+        isThisNewDBRecording = true;
+        recordingLocation = "./Database/";
+    }
+
+    public static void recordingForUserRecording(){
+        isThisNewDBRecording = false;
+        recordingLocation = "./User-Recordings/";
+    }
+
     @FXML
     public void handleMicTestButton() {
         Main.changeSceneMicTest();
@@ -89,9 +99,9 @@ public class RecordView extends SideButtons implements Initializable {
      */
     @FXML
     public void handleRecordButton() throws IOException {
-   
 
-    	recordTask = new Task<Void>() {
+
+        recordTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
@@ -100,37 +110,37 @@ public class RecordView extends SideButtons implements Initializable {
                     Process recordProcess = recordBuilder.start();
 
                 } catch (IOException e1) {
-                    
+
                     e1.printStackTrace();
                 }
                 return null;
             }
         };
-         
+
         recordThread = new Thread(recordTask);
-    	
-    	if(this.recordButton.getText() == "Stop") {
-    		this.recordButton.setText("Record");
-    		recordBar.setProgress(0.0);
-    		stopRecording();
-    		Main.changeSceneConfirm();
-    		return;
-    	}
-    	else {
-    		recordThread.start();
+
+        if(this.recordButton.getText() == "Stop") {
+            this.recordButton.setText("Record");
+            recordBar.setProgress(0.0);
+            stopRecording();
+            Main.changeSceneConfirm();
+            return;
+        }
+        else {
+            recordThread.start();
             recordBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-    		this.recordButton.setText("Stop");
-    	}
-    	
+            this.recordButton.setText("Stop");
+        }
+
         backButton.setVisible(false);
         progressTimer.cancel();
-        
+
         gettingNumberOfUserRecordings();
-        
+
         if (numberOfRecordings == null){
             numberOfRecordings = "";
         }
-        
+
 
     }
 
@@ -142,7 +152,7 @@ public class RecordView extends SideButtons implements Initializable {
         backButton.setVisible(true);
         progressTimer.cancel();
         recordBar.setProgress(0.0);
-        
+
     }
 
     /**
@@ -157,7 +167,7 @@ public class RecordView extends SideButtons implements Initializable {
             Main.changeScenePractice();
             return;
         }
-        
+
         //Check if a background thread is running
         if(recordThread.isAlive()) {
             stopRecording();
@@ -171,10 +181,10 @@ public class RecordView extends SideButtons implements Initializable {
      * Help method to delete the temp recordings
      */
     public void deleteRecording(){
-        SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
+        Task<Void> deleteWorker = new Task<Void>() {
             @Override
-            protected Void doInBackground() throws Exception {
-                currentName = PracticeMenuController.getCurrentNameWithoutNumber();
+            protected Void call() throws Exception{
+                currentName = PracticeMenuController.getCurrentNameWithoutNumber(false);
                 String number = RecordView.getNumberOfRecordings();
                 try {
                     Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
@@ -186,17 +196,17 @@ public class RecordView extends SideButtons implements Initializable {
                 return null;
             }
         };
-        deleteWorker.execute();
+        new Thread(deleteWorker);
     }
 
     /**
      * Helper method to get the number of user recordings for a specific database recording
      */
     public void gettingNumberOfUserRecordings(){
-        SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
+        Task<Void> gettingRecordingsNumberWorker = new Task<Void>() {
 
             @Override
-            protected ArrayList<String> doInBackground() throws Exception {
+            protected Void call() throws Exception {
                 ArrayList<String> nameList = new ArrayList<String>();
 
                 try {
@@ -225,12 +235,11 @@ public class RecordView extends SideButtons implements Initializable {
             }
 
         };
-        gettingRecordingsNumberWorker.execute();
-
+        new Thread(gettingRecordingsNumberWorker).start();
 
     }
-    
-    
+
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -247,10 +256,10 @@ public class RecordView extends SideButtons implements Initializable {
     public static String getNumberOfRecordings() {
         return numberOfRecordings;
     }
-    
+
     public void stopRecording() {
-    	BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");
-		recordThread.interrupt();
-		recordTask.cancel();
+        BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");
+        recordThread.interrupt();
+        recordTask.cancel();
     }
 }

@@ -1,5 +1,6 @@
 package namesayer;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -12,7 +13,7 @@ import java.util.ResourceBundle;
 
 public class MicTestController extends SideButtons implements Initializable {
 
-	private SwingWorker<Void,Void> _micTestWorker;
+	private Task<Void> _micTestWorker;
 
 	@FXML
 	private ProgressBar _micVolume;
@@ -25,10 +26,10 @@ public class MicTestController extends SideButtons implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// Swing worker used so that the application would be responsive
-		_micTestWorker = new SwingWorker<Void, Void>() {
+		_micTestWorker = new Task <Void>() {
 
 			@Override
-			protected Void doInBackground() throws Exception {
+			protected Void call() throws Exception {
 				TargetDataLine line = null;
 				AudioFormat format = new AudioFormat(AudioFormat.Encoding.PCM_SIGNED, 44100, 16, 2, 4, 44100, false);
 				DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
@@ -53,7 +54,7 @@ public class MicTestController extends SideButtons implements Initializable {
 				}
 			}
 		};
-		_micTestWorker.execute();
+		new Thread(_micTestWorker);
 	}
 
 	/**

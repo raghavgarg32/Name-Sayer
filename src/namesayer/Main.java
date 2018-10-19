@@ -1,7 +1,5 @@
 package namesayer;
 
-import java.io.File;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,21 +16,29 @@ public class Main extends Application {
 
     //add any new scene as a field here
     private static Scene _dataBaseMenu;
-    private static Scene _mainMenu;
     private static Scene _recordMenu;
     private static Scene _practiceMenu;
     private static Scene _confirmMenu;
     private static Scene _micTestMenu;
     private static Scene _rateMenu;
-    private static Scene _saveMenu;
     private static Scene _rewardMenu;
+    private static Scene _helpMenu;
+    private static Scene _userRecordingsMenu;
+    private static Scene _dbRecordingsMenu;
+    private static Scene _addDBRecordingsMenu;
+    private static Scene _confirmDBRecordingsMenu;
+
 
     private static FXMLLoader practiceLoader;
     private static FXMLLoader recordLoader;
-    private static FXMLLoader saveLoader;
     private static FXMLLoader confirmLoader;
     private static FXMLLoader rateLoader;
     private static FXMLLoader rewardLoader;
+    private static FXMLLoader helpLoader;
+    private static FXMLLoader userRecordingsLoader;
+    private static FXMLLoader dbRecordingsLoader;
+    private static FXMLLoader addDBRecordingsLoader;
+    private static FXMLLoader confirmDBRecordingsLoader;
 
 
     /**
@@ -45,13 +51,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         _primaryStage = primaryStage;
 
-
-        File userRecordings = new File(System.getProperty("user.dir")+"/User-Recordings");
-        if (!userRecordings.exists()){
-            userRecordings.mkdir();
-        }
-
-
         practiceLoader = new FXMLLoader();
         practiceLoader.setLocation(getClass().getResource("PracticeMenu.fxml"));
         Parent practiceRoot = practiceLoader.load();
@@ -60,35 +59,55 @@ public class Main extends Application {
         recordLoader.setLocation(getClass().getResource("RecordView.fxml"));
         Parent recordRoot = recordLoader.load();
 
-        saveLoader = new FXMLLoader();
-        saveLoader.setLocation(getClass().getResource("SaveView.fxml"));
-        Parent saveRoot = saveLoader.load();
-
         confirmLoader = new FXMLLoader();
-        confirmLoader.setLocation(getClass().getResource("ConfirmView.fxml"));
+        confirmLoader.setLocation(getClass().getResource("UserRecordingConfirmView.fxml"));
         Parent confirmRoot = confirmLoader.load();
 
         rateLoader = new FXMLLoader();
         rateLoader.setLocation(getClass().getResource("RateView.fxml"));
         Parent rateMenuRoot = rateLoader.load();
 
+        helpLoader = new FXMLLoader();
+        helpLoader.setLocation(getClass().getResource("HelpPage.fxml"));
+        Parent helpMenuRoot = helpLoader.load();
+
         rewardLoader = new FXMLLoader();
         rewardLoader.setLocation(getClass().getResource("RewardMenu.fxml"));
         Parent rewardMenuRoot = rewardLoader.load();
 
-        Parent root = FXMLLoader.load(getClass().getResource("MainMenu.fxml"));
+        userRecordingsLoader = new FXMLLoader();
+        userRecordingsLoader.setLocation(getClass().getResource("UserRecordingsView.fxml"));
+        Parent userRecordingsMenuRoot = userRecordingsLoader.load();
+
+        dbRecordingsLoader = new FXMLLoader();
+        dbRecordingsLoader.setLocation(getClass().getResource("DBRecordingsView.fxml"));
+        Parent dbRecordingsLoaderRoot = dbRecordingsLoader.load();
+
+        addDBRecordingsLoader = new FXMLLoader();
+        addDBRecordingsLoader.setLocation(getClass().getResource("AddDBRecordingsView.fxml"));
+        Parent addDBRecordingsLoaderRoot = addDBRecordingsLoader.load();
+
+        confirmDBRecordingsLoader = new FXMLLoader();
+        confirmDBRecordingsLoader.setLocation(getClass().getResource("DBRecordingConfirmView.fxml"));
+        Parent confirmDBRecordingsLoaderRoot = confirmDBRecordingsLoader.load();
+
+
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
 
-        _mainMenu = new Scene(root,925,634);
-        _dataBaseMenu = new Scene(dataBaseRoot,925,634);
-        _practiceMenu = new Scene(practiceRoot,925,634);
-        _recordMenu = new Scene(recordRoot,925,634);
-        _confirmMenu = new Scene(confirmRoot,925,634);
-        _micTestMenu = new Scene(micTestRoot,925,634);
-        _rateMenu = new Scene(rateMenuRoot,925,634);
-        _saveMenu = new Scene(saveRoot,600,400);
-        _rewardMenu = new Scene(rewardMenuRoot,925,634);
+        _dataBaseMenu = new Scene(dataBaseRoot,1041,767);
+        _practiceMenu = new Scene(practiceRoot,1041,767);
+        _recordMenu = new Scene(recordRoot,1041,767);
+        _confirmMenu = new Scene(confirmRoot,1041,767);
+        _micTestMenu = new Scene(micTestRoot,1041,767);
+        _rateMenu = new Scene(rateMenuRoot,1041,767);
+        _rewardMenu = new Scene(rewardMenuRoot,1041,767);
+        _helpMenu = new Scene(helpMenuRoot,1041,767);
+        _userRecordingsMenu = new Scene(userRecordingsMenuRoot,1041,767);
+        _dbRecordingsMenu = new Scene(dbRecordingsLoaderRoot,1041,767);
+        _addDBRecordingsMenu = new Scene(addDBRecordingsLoaderRoot,1041,767);
+        _confirmDBRecordingsMenu = new Scene(confirmDBRecordingsLoaderRoot,1041,767);
+
 
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_dataBaseMenu);
@@ -112,13 +131,6 @@ public class Main extends Application {
     }
 
     /**
-     * Changes scene to main scene
-     */
-    public static void changeSceneMain() {
-        _primaryStage.setScene(_mainMenu);
-    }
-
-    /**
      * Changes scene to practice scene
      */
     public static void changeScenePractice() {
@@ -133,18 +145,9 @@ public class Main extends Application {
      */
     public static void changeSceneRecord() {
         RecordView controller = recordLoader.getController();
-        controller.getNameForRecording(PracticeMenuController.getCurrentNameWithoutNumber());
+        controller.getNameForRecording(PracticeMenuController.getCurrentNameWithoutNumber(AddDBRecordingsViewController.getRecordingForDB()));
         controller.initScene();
         _primaryStage.setScene(_recordMenu);
-    }
-
-    /**
-     * Changes scene to save scene
-     */
-    public static void changeSceneSave() {
-        SaveViewController controller = saveLoader.getController();
-        controller.setsPromptText();
-        _primaryStage.setScene(_saveMenu);
     }
 
     /**
@@ -158,8 +161,8 @@ public class Main extends Application {
      * Changes scene to Confirm scene
      */
     public static void changeSceneConfirm() {
-        ConfirmView controller = confirmLoader.getController();
-        controller.setNameLabel(PracticeMenuController.getCurrentNameWithoutNumber());
+        UserRecordingConfirmView controller = confirmLoader.getController();
+        controller.setNameLabel(PracticeMenuController.getCurrentNameWithoutNumber(false));
         _primaryStage.setScene(_confirmMenu);
     }
 
@@ -169,6 +172,11 @@ public class Main extends Application {
     public static void changeSceneMicTest() {
         _primaryStage.setScene(_micTestMenu);
     }
+
+    public static void changeSceneHelpMenu() {
+        _primaryStage.setScene(_helpMenu);
+    }
+
 
     /**
      * Changes scene to Rate Menu scene
@@ -185,4 +193,25 @@ public class Main extends Application {
         _primaryStage.setScene(_rewardMenu);
     }
 
+    public static void changeSceneUserRecordingsMenu () {
+        UserRecordingsViewController controller = userRecordingsLoader.getController();
+        controller.settingUserListView();
+        _primaryStage.setScene(_userRecordingsMenu);
+    }
+
+    public static void changeSceneDBRecordingsMenu () {
+        DBRecordingsViewController controller = dbRecordingsLoader.getController();
+        controller.settingDBListView();
+        _primaryStage.setScene(_dbRecordingsMenu);
+    }
+
+    public static void changeSceneAddDBRecordingsMenu () {
+        AddDBRecordingsViewController controller = addDBRecordingsLoader.getController();
+        _primaryStage.setScene(_addDBRecordingsMenu);
+    }
+
+    public static void changeSceneConfrimDBRecordingsMenu () {
+        DBRecordingConfirmView controller = confirmDBRecordingsLoader.getController();
+        _primaryStage.setScene(_confirmDBRecordingsMenu);
+    }
 }

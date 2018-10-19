@@ -12,6 +12,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.SwingWorker;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -21,7 +22,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
     private static int points;
 
-    private SwingWorker<Void,Void> _playWorker;
+    private Task<Void> _playWorker;
+    
+    private Thread playThread;
 
     @FXML
     private Label pointCounter;
@@ -41,10 +44,10 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
         String pathToFile = System.getProperty("user.dir") + "/Rewards/applause_y.wav";
 
-        _playWorker = new SwingWorker<Void, Void>() {
+        _playWorker = new Task<Void>() {
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void call() throws Exception  {
                 AudioInputStream stream;
                 AudioFormat format;
                 DataLine.Info info;
@@ -83,9 +86,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
                 }
                 return null;
             }
-
         };
-        _playWorker.execute();
+        playThread = new Thread(_playWorker);
+        playThread.start();
 
     }
 
@@ -95,10 +98,10 @@ public class RewardMenuController extends SideButtons implements Initializable {
         String pathToFile = System.getProperty("user.dir") + "/Rewards/cheering.wav";
 
 
-        _playWorker = new SwingWorker<Void, Void>() {
+        _playWorker = new Task<Void>() {
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void call() throws Exception {
                 AudioInputStream stream;
                 AudioFormat format;
                 DataLine.Info info;
@@ -139,18 +142,19 @@ public class RewardMenuController extends SideButtons implements Initializable {
             }
 
         };
-        _playWorker.execute();
+        playThread = new Thread(_playWorker);
+        playThread.start();
 
     }
 
     @FXML
     public void handle30PointButton() {
-        String pathToFile = System.getProperty("user.dir") + "/Rewards/come_get_it.wav";
+        String pathToFile = System.getProperty("user.dir") + "/Rewards/car_crash2.wav";
 
-        _playWorker = new SwingWorker<Void, Void>() {
+        _playWorker = new Task<Void>() {
 
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void call() throws Exception {
                 AudioInputStream stream;
                 AudioFormat format;
                 DataLine.Info info;
@@ -191,7 +195,8 @@ public class RewardMenuController extends SideButtons implements Initializable {
             }
 
         };
-        _playWorker.execute();
+        playThread = new Thread(_playWorker);
+        playThread.start();
 
     }
 
@@ -199,7 +204,10 @@ public class RewardMenuController extends SideButtons implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
-        points = userRecordingDir.list().length;
+        if(userRecordingDir.exists()) {
+            points = userRecordingDir.list().length;
+        }
+
 
         updateButtonStatus();
 
@@ -209,8 +217,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
         return points;
     }
 
-    public static void increaseRewardPoint() {
-        points++;
+    public static void getRewardPoint() {
+        File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
+        points = userRecordingDir.list().length;
     }
 
     public void updateButtonStatus() {
