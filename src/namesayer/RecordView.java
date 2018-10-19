@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.Timer;
+import java.util.jar.Pack200;
 
 //COPY PASTE WHOLE CLASS
 
@@ -89,6 +90,7 @@ public class RecordView extends SideButtons implements Initializable {
     @FXML
     public void handleRecordButton() throws IOException {
    
+
     	recordTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
@@ -109,18 +111,19 @@ public class RecordView extends SideButtons implements Initializable {
     	
     	if(this.recordButton.getText() == "Stop") {
     		this.recordButton.setText("Record");
+    		recordBar.setProgress(0.0);
     		stopRecording();
     		Main.changeSceneConfirm();
     		return;
     	}
     	else {
     		recordThread.start();
+            recordBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
     		this.recordButton.setText("Stop");
     	}
     	
         backButton.setVisible(false);
         progressTimer.cancel();
-        recordBar.setProgress(0.0);
         
         gettingNumberOfUserRecordings();
         
@@ -139,7 +142,7 @@ public class RecordView extends SideButtons implements Initializable {
         backButton.setVisible(true);
         progressTimer.cancel();
         recordBar.setProgress(0.0);
-
+        
     }
 
     /**
@@ -154,6 +157,7 @@ public class RecordView extends SideButtons implements Initializable {
             Main.changeScenePractice();
             return;
         }
+        
         //Check if a background thread is running
         if(recordThread.isAlive()) {
             stopRecording();
@@ -232,6 +236,7 @@ public class RecordView extends SideButtons implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         allUserRecordings = new ArrayList<String>();
         currentNameLabel.setText("Name");
+        recordBar.setProgress(0.0);
 
     }
 

@@ -46,6 +46,8 @@ public class DataBaseController extends SideButtons implements Initializable {
 
 	private static HashMap<String, String> Names = new HashMap<>();
 
+	private List<String> nameList;
+
 	@FXML
 	private Button closeButton;
 
@@ -192,8 +194,29 @@ public class DataBaseController extends SideButtons implements Initializable {
 			// Changes the practice view depending on which was the last selected list
 			@Override
 			public void handle(MouseEvent event) {
+				String output;
+				nameList = new ArrayList<String>();
 				currentName = _creationList.getSelectionModel().getSelectedItem();
-				userName.setText((userName.getText() + " " + currentName).trim());
+
+				if (userName.getText().isEmpty() || userName.getText() == null
+						|| userName.getText().charAt(userName.getText().length() - 1) == ' ') {
+					userName.setText(userName.getText() + currentName);
+				}
+
+				String[] namesInTextField = userName.getText().trim().split(" ");
+
+				for (int i = 0; i < namesInTextField.length; i++) {
+					nameList.add(namesInTextField[i]);
+				}
+
+				if (!nameArrayList.contains(nameList.get(nameList.size() - 1))) {
+					nameList.remove(nameList.size() - 1);
+					nameList.add(currentName);
+				}
+
+				output = String.join(" ", nameList) + " ";
+
+				userName.setText(output);
 				System.out.println("This is the name of the customer " + currentName);
 			}
 		});
@@ -202,7 +225,15 @@ public class DataBaseController extends SideButtons implements Initializable {
 
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				search((String) userName.getText());
+
+				if (userName.getText() == null || userName.getText().isEmpty() || !userName.getText().contains(" ")) {
+					search((String) userName.getText().trim());
+				} else {
+					System.out.println(userName.getText().substring(userName.getText().lastIndexOf(" "),
+							userName.getText().length()));
+					search((String) userName.getText()
+							.substring(userName.getText().lastIndexOf(" "), userName.getText().length()).trim());
+				}
 
 			}
 
@@ -333,7 +364,6 @@ public class DataBaseController extends SideButtons implements Initializable {
 				noiseProcess = noiseBuilder.start();
 				noiseProcess.waitFor();
 			} catch (IOException | InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -353,7 +383,6 @@ public class DataBaseController extends SideButtons implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -368,32 +397,39 @@ public class DataBaseController extends SideButtons implements Initializable {
 			Process whitenoiseProcess = whitenoiseBuilder.start();
 			whitenoiseProcess.waitFor();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	@FXML
 	public void search(String nameToSearch) {
+		List<String> foundList = new ArrayList<String>();
+		List<String> notFoundList = new ArrayList<String>();
 
 		if (userName.getText() != null && (nameToSearch.isEmpty())) {
 			_creationList.setItems(list);
 		}
+		
 		nameToSearch = nameToSearch.toLowerCase();
-		ObservableList<String> newList = FXCollections.observableArrayList();
+		ObservableList<String> finalList = FXCollections.observableArrayList();
+		
 		for (String name : nameArrayList) {
 			boolean match = true;
 			if (!(name.contains(nameToSearch))) {
 				match = false;
+				notFoundList.add(name);
 			}
 			if (match) {
-				newList.add(name);
+				foundList.add(name);
 			}
 		}
-		_creationList.setItems(newList);
+
+		finalList.addAll(foundList);
+		finalList.addAll(notFoundList);
+
+		_creationList.setItems(finalList);
 	}
 
 }
