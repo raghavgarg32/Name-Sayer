@@ -41,6 +41,12 @@ public class RecordView extends SideButtons implements Initializable {
     @FXML
     public Button backButton;
 
+    private Thread recordThread;
+
+    private Task<Void> recordTask;
+
+    @FXML
+    public Button recordButton;
 
     @FXML
     private ProgressBar recordBar;
@@ -69,9 +75,6 @@ public class RecordView extends SideButtons implements Initializable {
         recordingLocation = "./User-Recordings/";
     }
 
-    /**
-     * Callback function for the Mic test button, it changes the scene
-     */
     @FXML
     public void handleMicTestButton() {
         Main.changeSceneMicTest();
@@ -96,68 +99,49 @@ public class RecordView extends SideButtons implements Initializable {
      */
     @FXML
     public void handleRecordButton() throws IOException {
-        backButton.setVisible(false);
-        progressTimer.cancel();
-        recordBar.setProgress(0.0);
-        recordLabel.setText("Audio is currently being recorded 5 seconds now");
 
-        //Create a timer task for the progress bar
-        TimerTask timerTask = new TimerTask() {
+
+        recordTask = new Task<Void>() {
             @Override
-            public void run() {
-                double progress = recordBar.getProgress();
-                if (progress == 1) {
-                    recordBar.setProgress(0);
-                    progressTimer.cancel();
-                    return;
-                }
+            protected Void call() throws Exception {
+                ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
+                        ,"-ar","44100","-i","default","./User-Recordings/temp.wav");
+                try {
+                    Process recordProcess = recordBuilder.start();
 
-                recordBar.setProgress(progress + 0.01);
+                } catch (IOException e1) {
+
+                    e1.printStackTrace();
+                }
+                return null;
             }
         };
 
-        progressTimer = new Timer();
-        progressTimer.scheduleAtFixedRate(timerTask, 0, 50);
+        recordThread = new Thread(recordTask);
+
+        if(this.recordButton.getText() == "Stop") {
+            this.recordButton.setText("Record");
+            recordBar.setProgress(0.0);
+            stopRecording();
+            Main.changeSceneConfirm();
+            return;
+        }
+        else {
+            recordThread.start();
+            recordBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            this.recordButton.setText("Stop");
+        }
+
+        backButton.setVisible(false);
+        progressTimer.cancel();
+
+        gettingNumberOfUserRecordings();
 
         if (numberOfRecordings == null){
             numberOfRecordings = "";
         }
-        //Use a background thread for recording
-        _backgroundThread = new Service<Void>() {
-            @Override
-            protected Task<Void> createTask() {
 
-                return new Task<Void>() {
-                    @Override
-                    protected Void call() throws Exception {
-                        ProcessBuilder recordBuilder = new ProcessBuilder("ffmpeg","-y","-f","alsa","-ac","1"
-                                ,"-ar","44100","-i","default","-t", "5",recordingLocation + "temp.wav");
-                        try {
-                            Process p = recordBuilder.start();
-                            p.waitFor();
 
-                        } catch (IOException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        return null;
-                    }
-                };
-            }
-        };
-
-        _backgroundThread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
-            //Change scene when recording is finished
-            @Override
-            public void handle(WorkerStateEvent event) {
-                if (isThisNewDBRecording){
-                    Main.changeSceneConfrimDBRecordingsMenu();
-                } else {
-                    Main.changeSceneConfirm();
-                }
-            }
-        });
-        _backgroundThread.start();
     }
 
     /**
@@ -177,17 +161,16 @@ public class RecordView extends SideButtons implements Initializable {
     @FXML
     public void handleBackBtn() {
 
-        if(_backgroundThread == null) {
+        if(recordThread == null) {
             recordLabel.setText("Press record to have your voice recorded");
             deleteRecording();
             Main.changeScenePractice();
             return;
         }
-        //Check if a background thread is running
-        if(_backgroundThread.isRunning()) {
 
-            progressTimer.cancel();
-            _backgroundThread.cancel();
+        //Check if a background thread is running
+        if(recordThread.isAlive()) {
+            stopRecording();
             deleteRecording();
         }
         recordLabel.setText("Press record to have your voice recorded");
@@ -204,7 +187,7 @@ public class RecordView extends SideButtons implements Initializable {
                 currentName = PracticeMenuController.getCurrentNameWithoutNumber(false);
                 String number = RecordView.getNumberOfRecordings();
                 try {
-                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+recordingLocation + "temp.wav"));
+                    Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/User-Recordings/temp.wav"));
                     Thread.sleep(1000);
                 } catch (Exception e) {
                     // TODO Auto-generated catch block
@@ -216,12 +199,54 @@ public class RecordView extends SideButtons implements Initializable {
         deleteWorker.execute();
     }
 
+    /**
+     * Helper method to get the number of user recordings for a specific database recording
+     */
+    public void gettingNumberOfUserRecordings(){
+        SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
+
+            @Override
+            protected ArrayList<String> doInBackground() throws Exception {
+                ArrayList<String> nameList = new ArrayList<String>();
+
+                try {
+                    ProcessBuilder builder = new ProcessBuilder("/bin/sh", "-c", "cd Database;\n" +
+                            "cd "+currentName+";\n" +
+                            "cd User-Recordings;\n" +
+                            "\n" +
+                            "echo $(ls -l | wc -l)");
+                    Process process = builder.start();
+
+                    InputStream stdout = process.getInputStream();
+                    BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+
+                    String line = null;
+
+                    while ((line = stdoutBuffered.readLine()) != null) {
+                        numberOfRecordings = line;
+
+
+                    }
+                    stdoutBuffered.close();
+                } catch (IOException ioe) {
+                    ioe.printStackTrace();
+                }
+                return null;
+            }
+
+        };
+        gettingRecordingsNumberWorker.execute();
+
+
+    }
+
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allUserRecordings = new ArrayList<String>();
         currentNameLabel.setText("Name");
+        recordBar.setProgress(0.0);
 
     }
 
@@ -231,5 +256,11 @@ public class RecordView extends SideButtons implements Initializable {
      */
     public static String getNumberOfRecordings() {
         return numberOfRecordings;
+    }
+
+    public void stopRecording() {
+        BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");
+        recordThread.interrupt();
+        recordTask.cancel();
     }
 }

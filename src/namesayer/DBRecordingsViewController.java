@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Region;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,7 +32,8 @@ public class DBRecordingsViewController extends SideButtons {
     public void handlePlayDBRecordingButton() throws IOException {
         // Check which if neither list has been selected
         if (databaseRecordings.getSelectionModel().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.NONE, "Please make a selection " + "to play", ButtonType.OK);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Please make a selection " + "to play", ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
             alert.showAndWait();
             if (alert.getResult() == ButtonType.OK) {
                 alert.close();

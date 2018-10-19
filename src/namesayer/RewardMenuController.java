@@ -212,8 +212,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
         return points;
     }
 
-    public static void increaseRewardPoint() {
-        points++;
+    public static void getRewardPoint() {
+        File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
+        points = userRecordingDir.list().length;
     }
 
     public void updateButtonStatus() {

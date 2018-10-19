@@ -95,18 +95,18 @@ public class Main extends Application {
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
         Parent micTestRoot = FXMLLoader.load(getClass().getResource("TestMic.fxml"));
 
-        _dataBaseMenu = new Scene(dataBaseRoot,959,773);
-        _practiceMenu = new Scene(practiceRoot,925,634);
-        _recordMenu = new Scene(recordRoot,925,634);
-        _confirmMenu = new Scene(confirmRoot,925,634);
-        _micTestMenu = new Scene(micTestRoot,925,634);
-        _rateMenu = new Scene(rateMenuRoot,925,634);
-        _rewardMenu = new Scene(rewardMenuRoot,925,634);
-        _helpMenu = new Scene(helpMenuRoot,925,634);
-        _userRecordingsMenu = new Scene(userRecordingsMenuRoot,925,634);
-        _dbRecordingsMenu = new Scene(dbRecordingsLoaderRoot,925,634);
-        _addDBRecordingsMenu = new Scene(addDBRecordingsLoaderRoot,925,634);
-        _confirmDBRecordingsMenu = new Scene(confirmDBRecordingsLoaderRoot,925,634);
+        _dataBaseMenu = new Scene(dataBaseRoot,1041,767);
+        _practiceMenu = new Scene(practiceRoot,1041,767);
+        _recordMenu = new Scene(recordRoot,1041,767);
+        _confirmMenu = new Scene(confirmRoot,1041,767);
+        _micTestMenu = new Scene(micTestRoot,1041,767);
+        _rateMenu = new Scene(rateMenuRoot,1041,767);
+        _rewardMenu = new Scene(rewardMenuRoot,1041,767);
+        _helpMenu = new Scene(helpMenuRoot,1041,767);
+        _userRecordingsMenu = new Scene(userRecordingsMenuRoot,1041,767);
+        _dbRecordingsMenu = new Scene(dbRecordingsLoaderRoot,1041,767);
+        _addDBRecordingsMenu = new Scene(addDBRecordingsLoaderRoot,1041,767);
+        _confirmDBRecordingsMenu = new Scene(confirmDBRecordingsLoaderRoot,1041,767);
 
 
         primaryStage.setTitle("Namesayer");

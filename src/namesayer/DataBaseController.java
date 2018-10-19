@@ -1,5 +1,7 @@
 package namesayer;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -9,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -50,6 +53,9 @@ public class DataBaseController extends SideButtons implements Initializable {
 
     ArrayList<String> actualNamesBadRecordings = new ArrayList<>();
 
+    private List<String> nameList;
+
+
 
     @FXML
     private Button closeButton;
@@ -67,9 +73,18 @@ public class DataBaseController extends SideButtons implements Initializable {
      */
     @FXML
     public void handlePracticeBtn() {
-        getDatabaseList();
+        if (!_practiceSelection.isEmpty()) {
+            getDatabaseList();
 
-        Main.changeScenePractice();
+            Main.changeScenePractice();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "Plesase add names to your playlist.", ButtonType.OK);
+            alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+            alert.showAndWait();
+            if (alert.getResult() == ButtonType.OK) {
+                alert.close();
+            }
+        }
     }
 
 
@@ -93,22 +108,25 @@ public class DataBaseController extends SideButtons implements Initializable {
                 }
                 fileReader.close();
                 if (!list.containsAll(fileNames)){
-                    Alert alert = new Alert(Alert.AlertType.NONE, "This text file contains names that aren't in the database, those names will not be added" + "to review", ButtonType.OK);
+
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION, "This text file contains names that aren't in the database, those names will not be added" + "to review", ButtonType.OK);
+                    alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+
                     alert.showAndWait();
                     if (alert.getResult() == ButtonType.OK) {
                         alert.close();
                     }
                 }
-                    for (String name : fileNames) {
-                        String[] individualNames = name.split(" ");
-                        ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(individualNames));
-                        if (list.containsAll(arrayList)) {
-                            playList.getItems().add(name);
-                            _practiceSelection.add(name);
+                for (String name : fileNames) {
+                    String[] individualNames = name.split(" ");
+                    ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(individualNames));
+                    if (list.containsAll(arrayList)) {
+                        playList.getItems().add(name);
+                        _practiceSelection.add(name);
 
 
-                        }
                     }
+                }
 //                } else {
 
 //                    }
@@ -162,7 +180,8 @@ public class DataBaseController extends SideButtons implements Initializable {
                 playList.getItems().add(userName.getText());
                 _practiceSelection.add(userName.getText());
             } else {
-                Alert alert = new Alert(Alert.AlertType.NONE, "This name doesn't exist in our database, please add another name.", ButtonType.OK);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "This name doesn't exist in our database, please add another name.", ButtonType.OK);
+                alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
                 alert.showAndWait();
                 if (alert.getResult() == ButtonType.OK) {
                     alert.close();
@@ -193,7 +212,8 @@ public class DataBaseController extends SideButtons implements Initializable {
                     "fi");
         }
 
-        Alert alert = new Alert(Alert.AlertType.NONE, "DONE! - check in local folder", ButtonType.OK);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, "DONE! - check in local folder", ButtonType.OK);
+        alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
         alert.showAndWait();
         if (alert.getResult() == ButtonType.OK) {
             alert.close();
@@ -203,34 +223,16 @@ public class DataBaseController extends SideButtons implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         databaseNames = new ArrayList<String>();
-        BashCommandWorker settingUpDatabaseWorker = new BashCommandWorker("mkdir User-Recordings;\n" +
-                "mkdir Concat-Recordings;\n" +
-                "cd Database;\n" +
-                "rename 'y/A-Z/a-z/' *\n" +
-                "\n" +
-                "for i in $(ls); do\n" +
-                "\n" +
-                "names=$(echo $i | awk -F\"_\" '{print $NF}')\n" +
-                "nameWithourExtension=\"${names%.*}\"\n" +
-                "    echo \"This is i $i \"\n" +
-                "    mkdir \"$nameWithourExtension\"\n" +
-                "    \n" +
-                "    cd \"$nameWithourExtension\"\n" +
-                "    \n" +
-                "    mkdir \"Database-Recordings\"\n" +
-                "    \n" +
-                "    mkdir \"User-Recordings\"\n" +
-                "\n" +
-                "    mkdir \"Ratings\"\n" +
-                "    \n" +
-                "    mv \"../$i\" \"./Database-Recordings\"\n" +
-                "\n" +
-                "    cd ..\n" +
-                "\n" +
-                "done\n");
+        BashCommandWorker settingUpDatabaseWorker = new BashCommandWorker(
+                "mkdir User-Recordings;\n" + "mkdir Concat-Recordings;\n" + "cd Database;\n" + "rename 'y/A-Z/a-z/' *\n"
+                        + "\n" + "for i in $(ls); do\n" + "\n" + "names=$(echo $i | awk -F\"_\" '{print $NF}')\n"
+                        + "nameWithourExtension=\"${names%.*}\"\n" + "    echo \"This is i $i \"\n"
+                        + "    mkdir \"$nameWithourExtension\"\n" + "    \n" + "    cd \"$nameWithourExtension\"\n"
+                        + "    \n" + "    mkdir \"Database-Recordings\"\n" + "    \n"
+                        + "    mkdir \"User-Recordings\"\n" + "\n" + "    mkdir \"Ratings\"\n" + "    \n"
+                        + "    mv \"../$i\" \"./Database-Recordings\"\n" + "\n" + "    cd ..\n" + "\n" + "done\n");
 
         _creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
 
         // This is just test data for the list
         list = FXCollections.observableArrayList();
@@ -240,16 +242,135 @@ public class DataBaseController extends SideButtons implements Initializable {
 
 
         _creationList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            //Changes the practice view depending on which was the last selected list
+            // Changes the practice view depending on which was the last selected list
             @Override
             public void handle(MouseEvent event) {
+                String output;
+                nameList = new ArrayList<String>();
                 currentName = _creationList.getSelectionModel().getSelectedItem();
-                userName.setText((userName.getText()+ " " + currentName).trim());
+
+                if (userName.getText().isEmpty() || userName.getText() == null
+                        || userName.getText().charAt(userName.getText().length() - 1) == ' ') {
+                    userName.setText(userName.getText() + currentName);
+                }
+
+                String[] namesInTextField = userName.getText().trim().split(" ");
+
+                for (int i = 0; i < namesInTextField.length; i++) {
+                    nameList.add(namesInTextField[i]);
+                }
+
+                if (!nameArrayList.contains(nameList.get(nameList.size() - 1))) {
+                    nameList.remove(nameList.size() - 1);
+                    nameList.add(currentName);
+                }
+
+                output = String.join(" ", nameList) + " ";
+
+                userName.setText(output);
                 System.out.println("This is the name of the customer " + currentName);
             }
         });
 
+        userName.textProperty().addListener(new ChangeListener<Object>() {
+
+            @Override
+            public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+
+                if (userName.getText() == null || userName.getText().isEmpty() || !userName.getText().contains(" ")) {
+                    search((String) userName.getText().trim());
+                } else {
+                    System.out.println(userName.getText().substring(userName.getText().lastIndexOf(" "),
+                            userName.getText().length()));
+                    search((String) userName.getText()
+                            .substring(userName.getText().lastIndexOf(" "), userName.getText().length()).trim());
+                }
+
+            }
+
+        });
     }
+
+    @FXML
+    public void search(String nameToSearch) {
+        List<String> foundList = new ArrayList<String>();
+        List<String> notFoundList = new ArrayList<String>();
+
+        if (userName.getText() != null && (nameToSearch.isEmpty())) {
+            _creationList.setItems(list);
+        }
+
+        nameToSearch = nameToSearch.toLowerCase();
+        ObservableList<String> finalList = FXCollections.observableArrayList();
+
+        for (String name : nameArrayList) {
+            boolean match = true;
+            if (!(name.contains(nameToSearch))) {
+                match = false;
+                notFoundList.add(name);
+            }
+            if (match) {
+                foundList.add(name);
+            }
+        }
+
+        finalList.addAll(foundList);
+        finalList.addAll(notFoundList);
+
+        _creationList.setItems(finalList);
+    }
+
+
+//    @Override
+//    public void initialize(URL location, ResourceBundle resources) {
+//        databaseNames = new ArrayList<String>();
+//        BashCommandWorker settingUpDatabaseWorker = new BashCommandWorker("mkdir User-Recordings;\n" +
+//                "mkdir Concat-Recordings;\n" +
+//                "cd Database;\n" +
+//                "rename 'y/A-Z/a-z/' *\n" +
+//                "\n" +
+//                "for i in $(ls); do\n" +
+//                "\n" +
+//                "names=$(echo $i | awk -F\"_\" '{print $NF}')\n" +
+//                "nameWithourExtension=\"${names%.*}\"\n" +
+//                "    echo \"This is i $i \"\n" +
+//                "    mkdir \"$nameWithourExtension\"\n" +
+//                "    \n" +
+//                "    cd \"$nameWithourExtension\"\n" +
+//                "    \n" +
+//                "    mkdir \"Database-Recordings\"\n" +
+//                "    \n" +
+//                "    mkdir \"User-Recordings\"\n" +
+//                "\n" +
+//                "    mkdir \"Ratings\"\n" +
+//                "    \n" +
+//                "    mv \"../$i\" \"./Database-Recordings\"\n" +
+//                "\n" +
+//                "    cd ..\n" +
+//                "\n" +
+//                "done\n");
+//
+//        _creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//
+//
+//        // This is just test data for the list
+//        list = FXCollections.observableArrayList();
+//        _creationList.setItems(list);
+//        gettingRecordings();
+//        selectGoodRecordings();
+//
+//
+//        _creationList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+//            //Changes the practice view depending on which was the last selected list
+//            @Override
+//            public void handle(MouseEvent event) {
+//                currentName = _creationList.getSelectionModel().getSelectedItem();
+//                userName.setText((userName.getText()+ " " + currentName).trim());
+//                System.out.println("This is the name of the customer " + currentName);
+//            }
+//        });
+//
+//    }
 
 
 
@@ -292,13 +413,39 @@ public class DataBaseController extends SideButtons implements Initializable {
                         nameArrayList.add(line);
 //                        System.out.println("This is the ds file " +line);
                         list.add(line);
-                        Names.put(line, databaseName);
 
 
 
                     }
                     stdoutBuffered.close();
-                    selectGoodRecordings();
+                    ArrayList<String> namesBadRecordings = new ArrayList<>();
+                    System.out.println("This is the database list ");
+                    for (String actualName : getBadRecordings()){
+                        actualName = actualName.substring(0,actualName.length()-4);
+                        actualName = actualName.substring(actualName.lastIndexOf('_') + 1);
+                        namesBadRecordings.add(actualName);
+                        System.out.println("acsdfdsfastas " + actualName);
+                    }
+                    System.out.println(namesBadRecordings);
+
+                    for (String databaseName : databaseList){
+//            System.out.println("This is the database list " + databaseName);
+                        String actualName = databaseName.substring(0,databaseName.length()-4);
+                        actualName = actualName.substring(actualName.lastIndexOf('_') + 1);
+//            System.out.println("This is the actual name " + actualName);
+                        int occurrences = Collections.frequency(nameArrayList, actualName);
+                        System.out.println("Occurence " + occurrences);
+                        System.out.println("actas " + Collections.frequency(namesBadRecordings, actualName));
+
+                        if (occurrences > 1 && (occurrences != Collections.frequency(namesBadRecordings, actualName))){
+                            if (!getBadRecordings().contains(databaseName)){
+                                Names.put(actualName, databaseName);
+                            }
+                        } else {
+                            Names.put(actualName, databaseName);
+
+                        }
+                    }
                 } catch (IOException ioe) {
                     ioe.printStackTrace();
                 }
@@ -437,16 +584,16 @@ public class DataBaseController extends SideButtons implements Initializable {
             removeWhiteNoise(file);
             String filename = file.getPath().substring(0, file.getPath().lastIndexOf('.'));
             System.out.println(filename);
-            ProcessBuilder noiseBuilder = new ProcessBuilder("/bin/bash","-c","ffmpeg -y -i "+file.getPath() + " -filter:a \"volume=0.5\" " +
-                    file.getPath());
-            Process noiseProcess;
-            try {
-                noiseProcess = noiseBuilder.start();
-                noiseProcess.waitFor();
-            } catch (IOException | InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+//            ProcessBuilder noiseBuilder = new ProcessBuilder("/bin/bash","-c","ffmpeg -y -i "+file.getPath() + " -filter:a \"volume=0.5\" " +
+//                    file.getPath());
+//            Process noiseProcess;
+//            try {
+//                noiseProcess = noiseBuilder.start();
+//                noiseProcess.waitFor();
+//            } catch (IOException | InterruptedException e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
 
             command =  command + " -i " + file.getPath();
         }
