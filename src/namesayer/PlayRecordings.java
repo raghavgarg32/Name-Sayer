@@ -13,7 +13,7 @@ public class PlayRecordings {
     private static Thread playThread;
 
     public static void handlingPlayingRecordings(String ...pathToFile){
-
+    	
         _playWorker = new Task<Void>() {
 
             @Override
@@ -63,5 +63,12 @@ public class PlayRecordings {
         };
         playThread = new Thread(_playWorker);
         playThread.start();
+    }
+    
+    public static void stopPlayRecording() {
+    	if(_playWorker != null) {
+        	_playWorker.cancel();
+        	playThread.interrupt();
+    	}
     }
 }

@@ -100,6 +100,7 @@ public class RecordView extends SideButtons implements Initializable {
     @FXML
     public void handleRecordButton() throws IOException {
 
+    	micTestBtn.setVisible(false);
 
         recordTask = new Task<Void>() {
             @Override
@@ -149,10 +150,10 @@ public class RecordView extends SideButtons implements Initializable {
      */
     public void initScene(){
         recordLabel.setText("Press record to have your voice recorded");
+        recordButton.setText("Record");
         backButton.setVisible(true);
-        progressTimer.cancel();
+        micTestBtn.setVisible(true);
         recordBar.setProgress(0.0);
-
     }
 
     /**
@@ -236,7 +237,6 @@ public class RecordView extends SideButtons implements Initializable {
 
         };
         new Thread(gettingRecordingsNumberWorker).start();
-
     }
 
 
@@ -246,6 +246,7 @@ public class RecordView extends SideButtons implements Initializable {
         allUserRecordings = new ArrayList<String>();
         currentNameLabel.setText("Name");
         recordBar.setProgress(0.0);
+        
 
     }
 

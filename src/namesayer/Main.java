@@ -1,5 +1,7 @@
 package namesayer;
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -51,6 +53,18 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         _primaryStage = primaryStage;
 
+        File userRecordDir = new File(System.getProperty("user.dir")+"/User-Recordings");
+		if (!userRecordDir.exists()){
+			userRecordDir.mkdir();
+		} 
+		
+
+        File conctCatRecordDir = new File(System.getProperty("user.dir")+"/Concat-Recordings");
+		if (!conctCatRecordDir.exists()){
+			conctCatRecordDir.mkdir();
+		} 
+        
+        
         practiceLoader = new FXMLLoader();
         practiceLoader.setLocation(getClass().getResource("PracticeMenu.fxml"));
         Parent practiceRoot = practiceLoader.load();
@@ -112,6 +126,9 @@ public class Main extends Application {
         primaryStage.setTitle("Namesayer");
         primaryStage.setScene(_dataBaseMenu);
         primaryStage.show();
+        
+        
+       
 
 
     }
@@ -170,10 +187,14 @@ public class Main extends Application {
      * Changes scene to Mic Test scene
      */
     public static void changeSceneMicTest() {
+    	RecordView controller = recordLoader.getController();
+    	controller.stopRecording();
+    	controller.initScene();
         _primaryStage.setScene(_micTestMenu);
     }
 
     public static void changeSceneHelpMenu() {
+    	PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_helpMenu);
     }
 
@@ -184,34 +205,40 @@ public class Main extends Application {
     public static void changeSceneRateMenu() {
         RateViewController controller = rateLoader.getController();
         controller.setlabel();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_rateMenu);
     }
 
     public static void changeSceneRewardMenu() {
         RewardMenuController controller = rewardLoader.getController();
         controller.updateButtonStatus();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_rewardMenu);
     }
 
     public static void changeSceneUserRecordingsMenu () {
         UserRecordingsViewController controller = userRecordingsLoader.getController();
         controller.settingUserListView();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_userRecordingsMenu);
     }
 
     public static void changeSceneDBRecordingsMenu () {
         DBRecordingsViewController controller = dbRecordingsLoader.getController();
         controller.settingDBListView();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_dbRecordingsMenu);
     }
 
     public static void changeSceneAddDBRecordingsMenu () {
         AddDBRecordingsViewController controller = addDBRecordingsLoader.getController();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_addDBRecordingsMenu);
     }
 
     public static void changeSceneConfrimDBRecordingsMenu () {
         DBRecordingConfirmView controller = confirmDBRecordingsLoader.getController();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_confirmDBRecordingsMenu);
     }
 }

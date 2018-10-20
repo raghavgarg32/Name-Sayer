@@ -436,7 +436,6 @@ public class PracticeMenuController extends SideButtons implements Initializable
 			// Changes the practice view depending on which was the last selected list
 			@Override
 			public void handle(MouseEvent event) {
-				userCreations.getSelectionModel().clearSelection();
 				System.out.println(practiceList.getSelectionModel().getSelectedItem());
 				currentName = practiceList.getSelectionModel().getSelectedItem();
 				String tempCurrentName = currentName;
@@ -459,8 +458,6 @@ public class PracticeMenuController extends SideButtons implements Initializable
 	 */
 	@FXML
 	public void userCreationsListClicked() {
-
-		practiceList.getSelectionModel().clearSelection();
 	}
 
 	/**

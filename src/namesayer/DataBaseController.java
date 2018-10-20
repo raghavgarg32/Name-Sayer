@@ -125,10 +125,6 @@ public class DataBaseController extends SideButtons implements Initializable {
 
 					}
 				}
-				// } else {
-
-				// }
-				// }
 
 				System.out.println("Contents of file:");
 				System.out.println(stringBuffer.toString());
@@ -157,14 +153,16 @@ public class DataBaseController extends SideButtons implements Initializable {
 
 	@FXML
 	public void addToPlayList() {
-		if (userName.getText().length() > 0) {
-			String[] singleName = userName.getText().split(" ");
-			String tempDatabaseName = "";
+		String name = userName.getText();
+		if (name.length() > 0) {
+			name = name.replace("-", " ");
+			String[] singleName = name.split(" ");
 
 			Boolean nameExists = true;
 
 			for (String ss : singleName) {
 				System.out.println("SSSSS  " + ss);
+
 				for (String database : databaseList) {
 					if (!nameArrayList.contains(ss)) {
 
@@ -240,15 +238,25 @@ public class DataBaseController extends SideButtons implements Initializable {
 			@Override
 			public void handle(MouseEvent event) {
 				String output;
+				List<Integer> indexOfDashes = new ArrayList<Integer>();
 				nameList = new ArrayList<String>();
 				currentName = _creationList.getSelectionModel().getSelectedItem();
 
-				if (userName.getText().isEmpty() || userName.getText() == null
-						|| userName.getText().charAt(userName.getText().length() - 1) == ' ') {
+				if (userName.getText().isEmpty() || userName.getText() == null || userName.getText().charAt(userName.getText().length() - 1) == ' '
+						|| userName.getText().trim().charAt(userName.getText().length() - 1) == '-') {
 					userName.setText(userName.getText() + currentName);
 				}
 
-				String[] namesInTextField = userName.getText().trim().split(" ");
+				String name = userName.getText();
+				for(int i = 0;i<name.length();i++) {
+					if(name.charAt(i) == '-') {
+						indexOfDashes.add(i);
+					}
+				}
+				
+				name = name.replace("-", " ");
+				
+				String[] namesInTextField = name.trim().split(" ");
 
 				for (int i = 0; i < namesInTextField.length; i++) {
 					nameList.add(namesInTextField[i]);
@@ -260,8 +268,13 @@ public class DataBaseController extends SideButtons implements Initializable {
 				}
 
 				output = String.join(" ", nameList) + " ";
-
-				userName.setText(output);
+				StringBuilder finalOutput = new StringBuilder(output);
+				
+				for(Integer index: indexOfDashes) {
+					finalOutput.setCharAt(index.intValue(), '-');
+				}
+				
+				userName.setText(finalOutput.toString());
 				System.out.println("This is the name of the customer " + currentName);
 			}
 		});
@@ -271,13 +284,19 @@ public class DataBaseController extends SideButtons implements Initializable {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 
-				if (userName.getText() == null || userName.getText().isEmpty() || !userName.getText().contains(" ")) {
-					search((String) userName.getText().trim());
+				String name = userName.getText().trim();
+				name = name.replace("-", " ");
+				System.out.println(name);
+
+				if (name == null || name.isEmpty() || !name.contains(" ")) {
+					search((String) name);
 				} else {
-					System.out.println(userName.getText().substring(userName.getText().lastIndexOf(" "),
-							userName.getText().length()));
-					search((String) userName.getText()
-							.substring(userName.getText().lastIndexOf(" "), userName.getText().length()).trim());
+					// System.out.println(userName.getText().substring(userName.getText().lastIndexOf("
+					// "),
+					// userName.getText().length()));
+					search((String) name.substring(name.lastIndexOf(" "), name.length()).trim());
+					System.out.println(
+							"We're searching for " + name.substring(name.lastIndexOf(" "), name.length()).trim());
 				}
 
 			}
@@ -512,7 +531,8 @@ public class DataBaseController extends SideButtons implements Initializable {
 					listOfFiles.add(file);
 
 				}
-//				createConcatFile(listOfFiles, "./Concat-Recordings/" + name.replaceAll(" ", "_"));
+				// createConcatFile(listOfFiles, "./Concat-Recordings/" + name.replaceAll(" ",
+				// "_"));
 			}
 			items.add(name);
 			System.out.println("Items " + items);
@@ -546,7 +566,7 @@ public class DataBaseController extends SideButtons implements Initializable {
 	 */
 
 	public static List<String> getDatabaseList() {
-
+		
 		return databaseList;
 	}
 
@@ -562,20 +582,9 @@ public class DataBaseController extends SideButtons implements Initializable {
 		String command = "ffmpeg -y";
 
 		for (File file : listOfFiles) {
-			removeWhiteNoise(file);
+			removeSilence(file);
 			String filename = file.getPath().substring(0, file.getPath().lastIndexOf('.'));
 			System.out.println(filename);
-			// ProcessBuilder noiseBuilder = new ProcessBuilder("/bin/bash","-c","ffmpeg -y
-			// -i "+file.getPath() + " -filter:a \"volume=0.5\" " +
-			// file.getPath());
-			// Process noiseProcess;
-			// try {
-			// noiseProcess = noiseBuilder.start();
-			// noiseProcess.waitFor();
-			// } catch (IOException | InterruptedException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
-			// }
 
 			command = command + " -i " + file.getPath();
 		}
@@ -593,27 +602,40 @@ public class DataBaseController extends SideButtons implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		normalizeAudio(new File("Concat-Recordings/" + name + ".wav"));
 
 		return new File(name + ".wav");
 	}
 
-	public static void removeWhiteNoise(File file) {
+	public static void removeSilence(File file) {
 		ProcessBuilder whitenoiseBuilder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -hide_banner -i "
-				+ file.getPath() + " -af " + "silenceremove=1:0:-35dB:1:5:-35dB:0" + file.getPath());
+				+ file.getPath() + " -af " + "silenceremove=1:0:-35dB:1:5:-35dB:0 " + file.getPath());
 
 		try {
 			Process whitenoiseProcess = whitenoiseBuilder.start();
 			whitenoiseProcess.waitFor();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	public static void normalizeAudio(File file) {
+		ProcessBuilder normalizeBuilder = new ProcessBuilder("/bin/bash", "-c",
+				"ffmpeg -y -i " + file.getPath() + " -af dynaudnorm " + file.getPath());
+		Process normalize;
+		try {
+			normalize = normalizeBuilder.start();
+			normalize.waitFor();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+	}
 }
