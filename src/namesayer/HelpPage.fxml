@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
@@ -9,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="636.0" prefWidth="934.0" styleClass="content-area" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.HelpMenuController">
+<AnchorPane prefHeight="636.0" prefWidth="934.0" styleClass="content-area" stylesheets="@material.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="namesayer.HelpMenuController">
    <children>
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="78.0" onMouseClicked="#handleHomeIcon" radius="50.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="224.0" onMouseClicked="#handleUserRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
@@ -21,9 +27,9 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <ScrollPane layoutX="181.0" layoutY="172.0" prefHeight="434.0" prefWidth="731.0">
+      <ScrollPane layoutX="174.0" layoutY="149.0" prefHeight="565.0" prefWidth="731.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1458.0" prefWidth="654.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="2071.0" prefWidth="691.0">
                <children>
                   <Text layoutX="14.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Namesayer is an application that helps you learn how to pronouce people's names." />
                   <ImageView fx:id="tabMenuPicture" fitHeight="187.0" fitWidth="200.0" layoutX="14.0" layoutY="132.0" pickOnBounds="true" preserveRatio="true">
@@ -75,7 +81,7 @@
                   </ImageView>
                   <Text layoutX="225.0" layoutY="1015.0" strokeType="OUTSIDE" strokeWidth="0.0" text="After you've hit the create name recording button you'll be brought " />
                   <Text layoutX="226.0" layoutY="1043.0" strokeType="OUTSIDE" strokeWidth="0.0" text="to the record menu. Here you can either test your microphone or" />
-                  <Text layoutX="226.0" layoutY="1076.0" strokeType="OUTSIDE" strokeWidth="0.0" text="start a recording. A recording will last 5 seconds." />
+                  <Text layoutX="226.0" layoutY="1076.0" strokeType="OUTSIDE" strokeWidth="0.0" text="start a recording. A recording will continue until you hit the stop button." />
                   <ImageView fx:id="confirmMenuPic" fitHeight="141.0" fitWidth="200.0" layoutX="14.0" layoutY="1188.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../HelpPictures/ConfirmMenu.png" />
@@ -100,6 +106,18 @@
                         <Font name="System Italic" size="26.0" />
                      </font>
                   </Text>
+                  <ImageView fx:id="userRecordingPic" fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="1580.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../HelpPictures/userRecording.png" />
+                     </image>
+                  </ImageView>
+                  <TextArea layoutX="241.0" layoutY="1582.0" prefHeight="143.0" prefWidth="440.0" text="If you want to check all the recordings you've made. Navigate&#10;over to your recordings by clicking the 'Your recording' icon&#10;on the side. In this menu you can either listen to your &#10;recordings, and if you'd like, you also have the option to &#10;delete recordings. " />
+                  <ImageView fx:id="databaseRecordingPic" fitHeight="150.0" fitWidth="200.0" layoutX="14.0" layoutY="1792.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../HelpPictures/databaseRecordings.png" />
+                     </image>
+                  </ImageView>
+                  <TextArea layoutX="241.0" layoutY="1794.0" prefHeight="143.0" prefWidth="440.0" text="If you would like to hear database recordings, but don't want&#10;to head into the practice menu. Click the 'Database Recording'&#10;icon side button. This will take you to the database recordings&#10;scene as seen on the left image. Here you can either listen to &#10;database recordings or you can even add names to the &#10;database. To do this simply hit the 'add button' and follow &#10;the normal procedure to record and add.&#10;" />
                   
                         
                   

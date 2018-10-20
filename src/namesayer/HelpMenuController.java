@@ -11,7 +11,8 @@ import javafx.scene.image.ImageView;
 public class HelpMenuController extends SideButtons implements Initializable {
 
 	@FXML
-	private ImageView tabMenuPicture,dataBasePic,practiceMenuPic,rateMenuPic,recordMenuPic,confirmMenuPic,rewardMenuPic;
+	private ImageView tabMenuPicture,dataBasePic,practiceMenuPic,rateMenuPic,
+					  recordMenuPic,confirmMenuPic,rewardMenuPic,userRecordingPic,databaseRecordingPic;
 	
 	
 	
@@ -25,6 +26,8 @@ public class HelpMenuController extends SideButtons implements Initializable {
 		Image recordMenu = new Image("/HelpPictures/RecordMenu.png");
 		Image confirmMenu = new Image("/HelpPictures/ConfirmMenu.png");
 		Image rewardMenu = new Image("/HelpPictures/RewardMenu.png");
+		Image userRecordingMenu = new Image("/HelpPictures/userRecording.png");
+		Image databaseRecordingMenu = new Image("/HelpPictures/databaseRecordings.png");
 		
 		
 		tabMenuPicture.setImage(sideButtons);
@@ -34,6 +37,8 @@ public class HelpMenuController extends SideButtons implements Initializable {
 		recordMenuPic.setImage(recordMenu);
 		confirmMenuPic.setImage(confirmMenu);
 		rewardMenuPic.setImage(rewardMenu);
+		userRecordingPic.setImage(userRecordingMenu);
+		databaseRecordingPic.setImage(databaseRecordingMenu);
 	}
 	
 	
