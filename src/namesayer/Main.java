@@ -29,6 +29,7 @@ public class Main extends Application {
     private static Scene _dbRecordingsMenu;
     private static Scene _addDBRecordingsMenu;
     private static Scene _confirmDBRecordingsMenu;
+    private static Scene _loadingMenu;
 
 
     private static FXMLLoader practiceLoader;
@@ -41,6 +42,7 @@ public class Main extends Application {
     private static FXMLLoader dbRecordingsLoader;
     private static FXMLLoader addDBRecordingsLoader;
     private static FXMLLoader confirmDBRecordingsLoader;
+    private static FXMLLoader loadingLoader;
 
 
     /**
@@ -52,6 +54,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         _primaryStage = primaryStage;
+        _primaryStage.setResizable(false);
 
         File userRecordDir = new File(System.getProperty("user.dir")+"/User-Recordings");
 		if (!userRecordDir.exists()){
@@ -104,6 +107,10 @@ public class Main extends Application {
         confirmDBRecordingsLoader = new FXMLLoader();
         confirmDBRecordingsLoader.setLocation(getClass().getResource("DBRecordingConfirmView.fxml"));
         Parent confirmDBRecordingsLoaderRoot = confirmDBRecordingsLoader.load();
+        
+        loadingLoader = new FXMLLoader();
+        loadingLoader.setLocation(getClass().getResource("LoadingMenu.fxml"));
+        Parent loadingRoot = loadingLoader.load();
 
 
         Parent dataBaseRoot = FXMLLoader.load(getClass().getResource("DataBase.fxml"));
@@ -121,10 +128,13 @@ public class Main extends Application {
         _dbRecordingsMenu = new Scene(dbRecordingsLoaderRoot,1041,767);
         _addDBRecordingsMenu = new Scene(addDBRecordingsLoaderRoot,1041,767);
         _confirmDBRecordingsMenu = new Scene(confirmDBRecordingsLoaderRoot,1041,767);
+        _loadingMenu = new Scene(loadingRoot,1041,767);
 
 
         primaryStage.setTitle("Namesayer");
-        primaryStage.setScene(_dataBaseMenu);
+        primaryStage.setScene(_loadingMenu);
+        LoadingMenuController controller = loadingLoader.getController();
+        controller.load();
         primaryStage.show();
         
         

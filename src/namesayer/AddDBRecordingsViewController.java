@@ -21,6 +21,7 @@ public class AddDBRecordingsViewController extends SideButtons {
 	@FXML
 	private ListView<String> databaseRecordings; // List of user attempt at recording themeselves saying the name
 
+	
 	public void settingDBListView() {
 		databaseRecordings.setItems(DataBaseController.getNames());
 

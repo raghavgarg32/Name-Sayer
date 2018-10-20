@@ -216,22 +216,12 @@ public class DataBaseController extends SideButtons implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		databaseNames = new ArrayList<String>();
-		BashCommandWorker settingUpDatabaseWorker = new BashCommandWorker(
-				"mkdir User-Recordings;\n" + "mkdir Concat-Recordings;\n" + "cd Database;\n" + "rename 'y/A-Z/a-z/' *\n"
-						+ "\n" + "for i in $(ls); do\n" + "\n" + "names=$(echo $i | awk -F\"_\" '{print $NF}')\n"
-						+ "nameWithourExtension=\"${names%.*}\"\n" + "    echo \"This is i $i \"\n"
-						+ "    mkdir \"$nameWithourExtension\"\n" + "    \n" + "    cd \"$nameWithourExtension\"\n"
-						+ "    \n" + "    mkdir \"Database-Recordings\"\n" + "    \n"
-						+ "    mkdir \"User-Recordings\"\n" + "\n" + "    mkdir \"Ratings\"\n" + "    \n"
-						+ "    mv \"../$i\" \"./Database-Recordings\"\n" + "\n" + "    cd ..\n" + "\n" + "done\n");
 
 		_creationList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 		// This is just test data for the list
 		list = FXCollections.observableArrayList();
 		_creationList.setItems(list);
-		gettingRecordings();
-		selectGoodRecordings();
 
 		_creationList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			// Changes the practice view depending on which was the last selected list
@@ -390,10 +380,10 @@ public class DataBaseController extends SideButtons implements Initializable {
 	 */
 	public void gettingRecordings() {
 		// This swingworker gets all of the creations from the NameSayer directory
-		Task<Void> gettingRecordingsWorker = new Task<Void>() {
+//		Task<Void> gettingRecordingsWorker = new Task<Void>() {
 
-			@Override
-			protected Void call() throws Exception {
+//			@Override
+//			protected Void call() throws Exception {
 				ArrayList<String> nameList = new ArrayList<String>();
 
 				try {
@@ -402,6 +392,12 @@ public class DataBaseController extends SideButtons implements Initializable {
 									+ "cd Database-Recordings\n" + "ls -1 *.wav\n" + "cd ..\n" + "cd ..\n" + "\n"
 									+ "done");
 					Process process = builder.start();
+					try {
+						process.waitFor();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 
 					InputStream stdout = process.getInputStream();
 					BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
@@ -451,11 +447,11 @@ public class DataBaseController extends SideButtons implements Initializable {
 				} catch (IOException ioe) {
 					ioe.printStackTrace();
 				}
-				return null;
+//				return null;
 			}
-		};
-		new Thread(gettingRecordingsWorker).start();
-	}
+//		};
+//		new Thread(gettingRecordingsWorker).start();
+	//}
 
 	public ArrayList<String> actualNamesInBadRecordings() {
 		for (String actualName : getBadRecordings()) {
@@ -582,7 +578,7 @@ public class DataBaseController extends SideButtons implements Initializable {
 		String command = "ffmpeg -y";
 
 		for (File file : listOfFiles) {
-			removeSilence(file);
+		//	removeSilence(file);
 			String filename = file.getPath().substring(0, file.getPath().lastIndexOf('.'));
 			System.out.println(filename);
 
@@ -604,7 +600,8 @@ public class DataBaseController extends SideButtons implements Initializable {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		
+		removeSilence(new File("Concat-Recordings/" + name + ".wav"));
 		normalizeAudio(new File("Concat-Recordings/" + name + ".wav"));
 
 		return new File(name + ".wav");

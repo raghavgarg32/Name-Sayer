@@ -13,6 +13,9 @@ public class PlayRecordings {
     private static Thread playThread;
 
     public static void handlingPlayingRecordings(String ...pathToFile){
+
+   
+    	
     	
         _playWorker = new Task<Void>() {
 
@@ -61,13 +64,14 @@ public class PlayRecordings {
             }
 
         };
+        
         playThread = new Thread(_playWorker);
         playThread.start();
     }
     
     public static void stopPlayRecording() {
     	if(_playWorker != null) {
-        	_playWorker.cancel();
+        	_playWorker.cancel(true);
         	playThread.interrupt();
     	}
     }

@@ -54,7 +54,7 @@ public class MicTestController extends SideButtons implements Initializable {
 				}
 			}
 		};
-		new Thread(_micTestWorker);
+		new Thread(_micTestWorker).start();;
 	}
 
 	/**

@@ -246,8 +246,6 @@ public class RecordView extends SideButtons implements Initializable {
         allUserRecordings = new ArrayList<String>();
         currentNameLabel.setText("Name");
         recordBar.setProgress(0.0);
-        
-
     }
 
     /**
