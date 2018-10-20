@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="769.0" prefWidth="1157.0" stylesheets="@../Controllers/material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.PracticeMenuController">
+   <children>
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="78.0" onMouseClicked="#handleHomeIcon" radius="50.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="224.0" onMouseClicked="#handleUserRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="519.0" onMouseClicked="#handleDBRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="369.0" onMouseClicked="#handleRewardIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="84.0" layoutY="134.0" onMouseClicked="#handleHomeIcon" text="Home" />
+      <Label layoutX="50.0" layoutY="281.0" onMouseClicked="#handleUserRecordingsIcon" text="Your Recordings" />
+      <Label layoutX="36.0" layoutY="429.0" onMouseClicked="#handleDBRecordingsIcon" text="Database Recordings" />
+      <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
+      <Label layoutX="227.0" layoutY="150.0" text="Enter in a Name to practice or select name from the list below:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ListView fx:id="userCreations" layoutX="667.0" layoutY="298.0" onMouseClicked="#userCreationsListClicked" prefHeight="345.0" prefWidth="344.0" />
+      <Button layoutX="705.0" layoutY="661.0" mnemonicParsing="false" onAction="#handlePlayUserRecordingButton" prefHeight="44.0" prefWidth="268.0" text="Play Selected Recoding" />
+      <Button layoutX="696.0" layoutY="212.0" mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="44.0" prefWidth="268.0" text="Create Name Recording" />
+      <Button layoutX="311.0" layoutY="661.0" mnemonicParsing="false" onAction="#handlePlayDBRecordingButton" prefHeight="44.0" prefWidth="287.0" text="Play Name Recording" />
+      <Label layoutX="691.0" layoutY="265.0" text="Select your recoding to play:" />
+      <Button layoutX="923.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleRateButton" prefHeight="44.0" prefWidth="83.0" text="Rate" />
+      <ListView fx:id="practiceList" layoutX="282.0" layoutY="212.0" prefHeight="431.0" prefWidth="344.0" />
+      <Label fx:id="names" layoutX="227.0" layoutY="66.0" text="Select Name">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label fx:id="nameLabel" layoutX="86.0" layoutY="629.0" onMouseClicked="#handleHelpIcon" text="?">
+         <font>
+            <Font size="68.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="69.0" fitWidth="78.0" layoutX="71.0" layoutY="44.0" onMouseClicked="#handleHomeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/home.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="69.0" layoutX="75.0" layoutY="194.0" onMouseClicked="#handleUserRecordingsIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/mic.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="44.0" fitWidth="61.0" layoutX="75.0" layoutY="348.0" onMouseClicked="#handleDBRecordingsIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/database.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="78.0" layoutX="71.0" layoutY="489.0" onMouseClicked="#handleRewardIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../HelpPictures/star.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>
