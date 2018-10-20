@@ -13,16 +13,19 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 
 import javax.swing.*;
 
 /**
  * Sets up the rating system for the database recordings
  */
-public class RateViewController implements Initializable {
+public class RateViewController extends SideButtons implements Initializable {
 	@FXML
 	public Label name;
 
@@ -72,26 +75,24 @@ public class RateViewController implements Initializable {
 	public void handleBadButton() {
 
 		String selectionName = currentName;
-		String path = "./Database/"+selectionName+"/Ratings/userReview.txt";
-		PrintWriter writer;
-		try {
-			// Create a text file and write to it
-			writer = new PrintWriter(path, "UTF-8");
-			writer.println("The recording is of bad quality");
-			writer.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		finally {
-			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+currentName+" has a bad recording'\n" +
+
+			System.out.println(DataBaseController.getNamesHashMap().get(currentName));
+			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("badRecordingMessage='"+DataBaseController.getNamesHashMap().get(currentName)+"'\n" +
 					"\n" +
 					"if ! grep -qF \"$badRecordingMessage\" BadRecordingList.txt ; then " +
 					"echo \"$badRecordingMessage\" >> BadRecordingList.txt ; " +
+					"fi\n" +
+					"if ! grep -qF \"$badRecordingMessage recording for "+ selectionName+ " has a bad quality\" ./Database/"+selectionName+"/Ratings.txt ; then " +
+					"echo \"$badRecordingMessage recording for "+ selectionName+ " has a bad quality\" >> ./Database/"+selectionName+"/Ratings.txt ; " +
 					"fi");
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION,
+				"This recording has been rated as bad, in the future we will try to provide you with better recordings", ButtonType.OK);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+		alert.showAndWait();
+		if (alert.getResult() == ButtonType.OK) {
+			alert.close();
 		}
-		Main.changeScenePractice();
 
 	}
 
@@ -101,20 +102,16 @@ public class RateViewController implements Initializable {
 	@FXML
 	public void handleGoodButton() {
 		String selectionName = currentName;
-		String path = "./Database/"+selectionName+"/Ratings/userReview.txt";
-		PrintWriter writer;
-		try {
-			writer = new PrintWriter(path, "UTF-8");
-			writer.println("The recording is of good quality");
-			writer.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		finally {
-			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("sed -i '/"+currentName+" has a bad recording/d' ./BadRecordingList.txt ");
-			Main.changeScenePractice();
+
+			BashCommandWorker creationDirectoryWorker = new BashCommandWorker("sed -i '/"+DataBaseController.getNamesHashMap().get(currentName)+"/d' ./BadRecordingList.txt; \n" +
+					"sed -i '/"+DataBaseController.getNamesHashMap().get(currentName)+" recording for "+ selectionName+ " has a bad quality/d' ./Database/"+selectionName+"/Ratings.txt ;");
+
+		Alert alert = new Alert(Alert.AlertType.INFORMATION,
+				"This recording has been rated as good. Thank you for your feedback!", ButtonType.OK);
+		alert.getDialogPane().setMinHeight(Region.USE_PREF_SIZE);
+		alert.showAndWait();
+		if (alert.getResult() == ButtonType.OK) {
+			alert.close();
 		}
 	}
 

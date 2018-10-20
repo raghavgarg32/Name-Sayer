@@ -12,227 +12,239 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 import javax.swing.SwingWorker;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class RewardMenuController implements Initializable {
-	
-	private static int points;
-	
-	private SwingWorker<Void,Void> _playWorker;
-	
-	@FXML
-	private Label pointCounter;
-	
-	@FXML
-	private Button tenPointBtn;
-	
-	@FXML
-	private Button twentyPointBtn;
-	
-	@FXML
-	private Button thirtyPointBtn;
-			
-	
-	@FXML
-	public void handle10PointButton() {
-		
-		String pathToFile = System.getProperty("user.dir") + "/Rewards/applause_y.wav";
-		
-		 _playWorker = new SwingWorker<Void, Void>() {
+public class RewardMenuController extends SideButtons implements Initializable {
 
-             @Override
-             protected Void doInBackground() throws Exception {
-                 AudioInputStream stream;
-                 AudioFormat format;
-                 DataLine.Info info;
-                 SourceDataLine sourceLine;
+    private static int points;
 
-                 try {
-                     stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-                     format = stream.getFormat();
+    private Task<Void> _playWorker;
+    
+    private Thread playThread;
 
-                     info = new DataLine.Info(SourceDataLine.class, format);
-                     sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-                     sourceLine.open(format);
+    @FXML
+    private Label pointCounter;
 
-                     sourceLine.start();
+    @FXML
+    private Button tenPointBtn;
 
-                     int nBytesRead = 0;
-                     int BUFFER_SIZE = 128000;
-                     byte[] abData = new byte[BUFFER_SIZE];
-                     while (nBytesRead != -1) {
-                         try {
-                             nBytesRead = stream.read(abData, 0, abData.length);
-                         } catch (IOException e) {
-                             e.printStackTrace();
-                         }
-                         if (nBytesRead >= 0) {
-                             @SuppressWarnings("unused")
-                             int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-                         }
-                     }
+    @FXML
+    private Button twentyPointBtn;
 
-                     sourceLine.drain();
-                     sourceLine.close();
+    @FXML
+    private Button thirtyPointBtn;
 
-                 } catch (Exception e) {
 
-                 }
-                 return null;
-             }
+    @FXML
+    public void handle10PointButton() {
 
-         };
-         _playWorker.execute();
+        String pathToFile = System.getProperty("user.dir") + "/Rewards/applause_y.wav";
 
-	}
-	
-	@FXML
-	public void handle20PointButton() {
-		
-		String pathToFile = System.getProperty("user.dir") + "/Rewards/cheering.wav";
-		
-		
-		 _playWorker = new SwingWorker<Void, Void>() {
+        _playWorker = new Task<Void>() {
 
-             @Override
-             protected Void doInBackground() throws Exception {
-                 AudioInputStream stream;
-                 AudioFormat format;
-                 DataLine.Info info;
-                 SourceDataLine sourceLine;
+            @Override
+            protected Void call() throws Exception  {
+                AudioInputStream stream;
+                AudioFormat format;
+                DataLine.Info info;
+                SourceDataLine sourceLine;
 
-                 try {
-                     stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-                     format = stream.getFormat();
+                try {
+                    stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+                    format = stream.getFormat();
 
-                     info = new DataLine.Info(SourceDataLine.class, format);
-                     sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-                     sourceLine.open(format);
+                    info = new DataLine.Info(SourceDataLine.class, format);
+                    sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+                    sourceLine.open(format);
 
-                     sourceLine.start();
+                    sourceLine.start();
 
-                     int nBytesRead = 0;
-                     int BUFFER_SIZE = 128000;
-                     byte[] abData = new byte[BUFFER_SIZE];
-                     while (nBytesRead != -1) {
-                         try {
-                             nBytesRead = stream.read(abData, 0, abData.length);
-                         } catch (IOException e) {
-                             e.printStackTrace();
-                         }
-                         if (nBytesRead >= 0) {
-                             @SuppressWarnings("unused")
-                             int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-                         }
-                     }
+                    int nBytesRead = 0;
+                    int BUFFER_SIZE = 128000;
+                    byte[] abData = new byte[BUFFER_SIZE];
+                    while (nBytesRead != -1) {
+                        try {
+                            nBytesRead = stream.read(abData, 0, abData.length);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (nBytesRead >= 0) {
+                            @SuppressWarnings("unused")
+                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+                        }
+                    }
 
-                     sourceLine.drain();
-                     sourceLine.close();
+                    sourceLine.drain();
+                    sourceLine.close();
 
-                 } catch (Exception e) {
+                } catch (Exception e) {
 
-                 }
-                 return null;
-             }
+                }
+                return null;
+            }
+        };
+        playThread = new Thread(_playWorker);
+        playThread.start();
 
-         };
-         _playWorker.execute();
+    }
 
-	}
-	
-	@FXML
-	public void handle30PointButton() {	
-		String pathToFile = System.getProperty("user.dir") + "/Rewards/come_get_it.wav";
-		
-		 _playWorker = new SwingWorker<Void, Void>() {
+    @FXML
+    public void handle20PointButton() {
 
-             @Override
-             protected Void doInBackground() throws Exception {
-                 AudioInputStream stream;
-                 AudioFormat format;
-                 DataLine.Info info;
-                 SourceDataLine sourceLine;
+        String pathToFile = System.getProperty("user.dir") + "/Rewards/cheering.wav";
 
-                 try {
-                     stream = AudioSystem.getAudioInputStream(new File(pathToFile));
-                     format = stream.getFormat();
 
-                     info = new DataLine.Info(SourceDataLine.class, format);
-                     sourceLine = (SourceDataLine) AudioSystem.getLine(info);
-                     sourceLine.open(format);
+        _playWorker = new Task<Void>() {
 
-                     sourceLine.start();
+            @Override
+            protected Void call() throws Exception {
+                AudioInputStream stream;
+                AudioFormat format;
+                DataLine.Info info;
+                SourceDataLine sourceLine;
 
-                     int nBytesRead = 0;
-                     int BUFFER_SIZE = 128000;
-                     byte[] abData = new byte[BUFFER_SIZE];
-                     while (nBytesRead != -1) {
-                         try {
-                             nBytesRead = stream.read(abData, 0, abData.length);
-                         } catch (IOException e) {
-                             e.printStackTrace();
-                         }
-                         if (nBytesRead >= 0) {
-                             @SuppressWarnings("unused")
-                             int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
-                         }
-                     }
+                try {
+                    stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+                    format = stream.getFormat();
 
-                     sourceLine.drain();
-                     sourceLine.close();
+                    info = new DataLine.Info(SourceDataLine.class, format);
+                    sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+                    sourceLine.open(format);
 
-                 } catch (Exception e) {
+                    sourceLine.start();
 
-                 }
-                 return null;
-             }
+                    int nBytesRead = 0;
+                    int BUFFER_SIZE = 128000;
+                    byte[] abData = new byte[BUFFER_SIZE];
+                    while (nBytesRead != -1) {
+                        try {
+                            nBytesRead = stream.read(abData, 0, abData.length);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (nBytesRead >= 0) {
+                            @SuppressWarnings("unused")
+                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+                        }
+                    }
 
-         };
-         _playWorker.execute();
+                    sourceLine.drain();
+                    sourceLine.close();
 
-	}
+                } catch (Exception e) {
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		
-		File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
-		points = userRecordingDir.list().length;
-		
-		updateButtonStatus();
-		
-	}
-	
-	public void increaseRewardPoint() {
-		points++;
-		updateButtonStatus();
-	}
-	
-	public void updateButtonStatus() {
-		pointCounter.setText("You have " + points + " number of points");
-		
-		if(points < 10 ) {
-			tenPointBtn.setDisable(true);
-			twentyPointBtn.setDisable(true);
-			thirtyPointBtn.setDisable(true);
-		}
-		else if(points >= 10 && points < 20) {
-			tenPointBtn.setDisable(false);
-			twentyPointBtn.setDisable(true);
-			thirtyPointBtn.setDisable(true);
-		}
-		else if(points >= 20 && points < 30) {
-			tenPointBtn.setDisable(false);
-			twentyPointBtn.setDisable(false);
-			thirtyPointBtn.setDisable(true);
-		}
-		else if(points >= 30) {
-			tenPointBtn.setDisable(false);
-			twentyPointBtn.setDisable(false);
-			thirtyPointBtn.setDisable(false);
-		}
-	}
-	
+                }
+                return null;
+            }
+
+        };
+        playThread = new Thread(_playWorker);
+        playThread.start();
+
+    }
+
+    @FXML
+    public void handle30PointButton() {
+        String pathToFile = System.getProperty("user.dir") + "/Rewards/car_crash2.wav";
+
+        _playWorker = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                AudioInputStream stream;
+                AudioFormat format;
+                DataLine.Info info;
+                SourceDataLine sourceLine;
+
+                try {
+                    stream = AudioSystem.getAudioInputStream(new File(pathToFile));
+                    format = stream.getFormat();
+
+                    info = new DataLine.Info(SourceDataLine.class, format);
+                    sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+                    sourceLine.open(format);
+
+                    sourceLine.start();
+
+                    int nBytesRead = 0;
+                    int BUFFER_SIZE = 128000;
+                    byte[] abData = new byte[BUFFER_SIZE];
+                    while (nBytesRead != -1) {
+                        try {
+                            nBytesRead = stream.read(abData, 0, abData.length);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (nBytesRead >= 0) {
+                            @SuppressWarnings("unused")
+                            int nBytesWritten = sourceLine.write(abData, 0, nBytesRead);
+                        }
+                    }
+
+                    sourceLine.drain();
+                    sourceLine.close();
+
+                } catch (Exception e) {
+
+                }
+                return null;
+            }
+
+        };
+        playThread = new Thread(_playWorker);
+        playThread.start();
+
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+        File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
+        if(userRecordingDir.exists()) {
+            points = userRecordingDir.list().length;
+        }
+
+
+        updateButtonStatus();
+
+    }
+
+    public int getPoints(){
+        return points;
+    }
+
+    public static void getRewardPoint() {
+        File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
+        points = userRecordingDir.list().length;
+    }
+
+    public void updateButtonStatus() {
+        pointCounter.setText("You have " + points + " number of points");
+
+        if(points < 10 ) {
+            tenPointBtn.setDisable(true);
+            twentyPointBtn.setDisable(true);
+            thirtyPointBtn.setDisable(true);
+        }
+        else if(points >= 10 && points < 20) {
+            tenPointBtn.setDisable(false);
+            twentyPointBtn.setDisable(true);
+            thirtyPointBtn.setDisable(true);
+        }
+        else if(points >= 20 && points < 30) {
+            tenPointBtn.setDisable(false);
+            twentyPointBtn.setDisable(false);
+            thirtyPointBtn.setDisable(true);
+        }
+        else if(points >= 30) {
+            tenPointBtn.setDisable(false);
+            twentyPointBtn.setDisable(false);
+            thirtyPointBtn.setDisable(false);
+        }
+    }
+
 }
