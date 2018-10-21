@@ -20,6 +20,7 @@ import java.util.ResourceBundle;
 
 public class UserRecordingsViewController extends SideButtons implements Initializable {
     private ConfirmRecordingsModel confirmRecordingsModel;
+    
     @FXML
     private ListView<String> userRecordingListView; // List of user attempt at recording themeselves saying the name
 

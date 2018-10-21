@@ -167,7 +167,10 @@ public class PracticeMenuController extends SideButtons implements Initializable
 				currentName = practiceList.getSelectionModel().getSelectedItem();
 				String tempCurrentName = currentName;
 				settingUserListView(currentName);
-				names.setText(MakeHeadingNameFit.changeName(tempCurrentName));
+				if(tempCurrentName != null) {
+					names.setText(MakeHeadingNameFit.changeName(tempCurrentName));
+				}
+
 			}
 		});
 	}

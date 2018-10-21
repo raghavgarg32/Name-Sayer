@@ -19,13 +19,6 @@ public class UserRecordingConfirmView extends SideButtons implements Initializab
     @FXML
     private TextField loopNumber;
 
-    private String name;
-
-    private String currentName;
-
-    private String pathToFile;
-
-    private String concatPathToFile;
 
 
     /**
