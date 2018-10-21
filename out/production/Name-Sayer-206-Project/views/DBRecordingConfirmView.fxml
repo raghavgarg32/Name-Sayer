@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="769.0" prefWidth="1157.0" stylesheets="@../css/material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.DBRecordingConfirmView">
+   <children>
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="78.0" onMouseClicked="#handleHomeIcon" radius="50.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="224.0" onMouseClicked="#handleUserRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="519.0" onMouseClicked="#handleRewardIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="369.0" onMouseClicked="#handleDBRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="84.0" layoutY="134.0" onMouseClicked="#handleHomeIcon" text="Home" />
+      <Label layoutX="50.0" layoutY="281.0" onMouseClicked="#handleUserRecordingsIcon" text="Your Recordings" />
+      <Label layoutX="35.0" layoutY="429.0" onMouseClicked="#handleDBRecordingsIcon" text="Database Recordings" />
+      <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
+      <Button fx:id="playUser" layoutX="337.0" layoutY="405.0" mnemonicParsing="false" onAction="#handlePlayButton" prefHeight="49.0" prefWidth="141.0" text="Play" />
+      <Button fx:id="redo" layoutX="506.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleRedoButton" prefHeight="49.0" prefWidth="141.0" text="Redo" />
+      <Button fx:id="save" layoutX="675.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="49.0" prefWidth="141.0" text="Save" />
+      <Button fx:id="delete" layoutX="843.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="49.0" prefWidth="141.0" text="Delete" />
+      <Label fx:id="nameLabel" layoutX="224.0" layoutY="52.0" text="Full Name">
+         <font>
+            <Font size="50.0" />
+         </font>
+      </Label>
+      <Label fx:id="currentNameLabel" layoutX="560.0" layoutY="317.0" text="Your Recording">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Text fill="WHITE" layoutX="224.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Compare your recording or redo, save, delete your recording">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Text>
+      <Label layoutX="86.0" layoutY="629.0" onMouseClicked="#handleHelpIcon" text="?">
+         <font>
+            <Font size="68.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="69.0" fitWidth="78.0" layoutX="71.0" layoutY="44.0" onMouseClicked="#handleHomeIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/home.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="69.0" layoutX="75.0" layoutY="194.0" onMouseClicked="#handleUserRecordingsIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/mic.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="44.0" fitWidth="61.0" layoutX="75.0" layoutY="348.0" onMouseClicked="#handleDBRecordingsIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/database.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="78.0" layoutX="71.0" layoutY="489.0" onMouseClicked="#handleRewardIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/star.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

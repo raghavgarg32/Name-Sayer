@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="769.0" prefWidth="1157.0" stylesheets="@../css/material.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HomeViewController">
+   <children>
+      <Button fx:id="closeButton" layoutX="1032.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleQuitButton" text="Quit" />
+      <Text fill="WHITE" layoutX="227.0" layoutY="112.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Name Sayer">
+         <font>
+            <Font size="48.0" />
+         </font></Text>
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="78.0" onMouseClicked="#handleHomeIcon" radius="50.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="224.0" onMouseClicked="#handleUserRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="519.0" onMouseClicked="#handleRewardIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="369.0" onMouseClicked="#handleDBRecordingsIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="84.0" layoutY="134.0" onMouseClicked="#handleHomeIcon" text="Home" />
+      <Label layoutX="50.0" layoutY="281.0" onMouseClicked="#handleUserRecordingsIcon" text="Your Recordings" />
+      <Label layoutX="35.0" layoutY="429.0" onMouseClicked="#handleDBRecordingsIcon" text="Database Recordings" />
+      <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
+      <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+      <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
+      <TextField fx:id="userNameInput" layoutX="227.0" layoutY="200.0" prefHeight="44.0" prefWidth="544.0" />
+      <Label layoutX="227.0" layoutY="150.0" text="Enter in a Name to practice or select name from the list below:">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ListView fx:id="databaseNameList" layoutX="227.0" layoutY="252.0" onMouseClicked="#handleClickOnCreationList" prefHeight="390.0" prefWidth="385.0" />
+      <Button layoutX="779.0" layoutY="200.0" mnemonicParsing="false" onAction="#addToPlayList" prefHeight="44.0" prefWidth="150.0" text="Add to playlist" />
+      <ListView fx:id="playList" layoutX="621.0" layoutY="252.0" onMouseClicked="#handleClickOnPLayList" prefHeight="390.0" prefWidth="465.0" />
+      <Button layoutX="227.0" layoutY="653.0" mnemonicParsing="false" onAction="#handlePracticeBtn" prefHeight="44.0" prefWidth="385.0" text="Practice Name" />
+      <Button layoutX="936.0" layoutY="200.0" mnemonicParsing="false" onAction="#uploadPlayList" prefHeight="44.0" prefWidth="150.0" text="Upload playlist" />
+      <Button layoutX="621.0" layoutY="653.0" mnemonicParsing="false" onAction="#handleExportPlayListButton" prefHeight="44.0" prefWidth="150.0" text="Save Playlist" />
+      <Label fx:id="nameLabel" layoutX="86.0" layoutY="629.0" onMouseClicked="#handleHelpIcon" text="?">
+         <font>
+            <Font size="68.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="69.0" fitWidth="78.0" layoutX="71.0" layoutY="44.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/home.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="69.0" layoutX="75.0" layoutY="194.0" onMouseClicked="#handleUserRecordingsIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/mic.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="44.0" fitWidth="61.0" layoutX="75.0" layoutY="348.0" onMouseClicked="#handleDBRecordingsIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/database.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="61.0" fitWidth="78.0" layoutX="71.0" layoutY="489.0" onMouseClicked="#handleRewardIcon" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../helpPictures/star.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="779.0" layoutY="653.0" mnemonicParsing="false" onAction="#clearPlayList" prefHeight="44.0" prefWidth="150.0" text="Clear Playlist" />
+      <Button layoutX="936.0" layoutY="653.0" mnemonicParsing="false" onAction="#deleteSelectedPlayListName" prefHeight="44.0" prefWidth="150.0" text="Delete " />
+   </children>
+</AnchorPane>
