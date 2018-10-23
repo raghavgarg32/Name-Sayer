@@ -21,16 +21,16 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <Button fx:id="playUser" layoutX="337.0" layoutY="405.0" mnemonicParsing="false" onAction="#handlePlayButton" prefHeight="49.0" prefWidth="141.0" text="Play" />
-      <Button fx:id="redo" layoutX="506.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleRedoButton" prefHeight="49.0" prefWidth="141.0" text="Redo" />
-      <Button fx:id="save" layoutX="675.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="49.0" prefWidth="141.0" text="Save" />
-      <Button fx:id="delete" layoutX="843.0" layoutY="405.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="49.0" prefWidth="141.0" text="Delete" />
+      <Button fx:id="playUser" layoutX="340.0" layoutY="398.0" mnemonicParsing="false" onAction="#handlePlayButton" prefHeight="49.0" prefWidth="141.0" text="Play" />
+      <Button fx:id="redo" layoutX="509.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleRedoButton" prefHeight="49.0" prefWidth="141.0" text="Redo" />
+      <Button fx:id="save" layoutX="678.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleSaveButton" prefHeight="49.0" prefWidth="141.0" text="Save" />
+      <Button fx:id="delete" layoutX="846.0" layoutY="398.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="49.0" prefWidth="141.0" text="Delete" />
       <Label fx:id="nameLabel" layoutX="224.0" layoutY="52.0" text="Full Name">
          <font>
             <Font size="50.0" />
          </font>
       </Label>
-      <Label fx:id="currentNameLabel" layoutX="560.0" layoutY="317.0" text="Your Recording">
+      <Label fx:id="currentNameLabel" layoutX="563.0" layoutY="312.0" text="Your Recording">
          <font>
             <Font size="26.0" />
          </font>

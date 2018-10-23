@@ -7,13 +7,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import models.ConfirmRecordingsModel;
-
-import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.ResourceBundle;
 
 public class DBRecordingConfirmView extends SideButtons implements Initializable {
@@ -29,7 +23,7 @@ public class DBRecordingConfirmView extends SideButtons implements Initializable
     @FXML
     public void handleDeleteButton() {
         confirmRecordingsModel.deleteRecordings("Database");
-        Main.changeScenePractice();
+        Main.changeSceneDBRecordingsMenu();
 
     }
 
@@ -52,7 +46,7 @@ public class DBRecordingConfirmView extends SideButtons implements Initializable
     @FXML
     public void handlePlayButton() {
 
-        confirmRecordingsModel.playDBRecording();
+        confirmRecordingsModel.playUserRecording("Database");
     }
 
 

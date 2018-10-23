@@ -16,16 +16,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class UserRecordingsViewController extends SideButtons implements Initializable {
-    private ConfirmRecordingsModel confirmRecordingsModel;
-    
     @FXML
     private ListView<String> userRecordingListView; // List of user attempt at recording themeselves saying the name
 
     public void settingUserListView() {
-        String tempName = PracticeMenuController.getCurrentName();
+        String tempName = PracticeMenuController.getCurrentName(false);
 
         ObservableList<String> userRecordings = FXCollections.observableArrayList();
         File folder = new File(System.getProperty("user.dir") + "/User-Recordings");
@@ -33,7 +32,8 @@ public class UserRecordingsViewController extends SideButtons implements Initial
             File[] listOfFiles = folder.listFiles();
 
             for (int i = 0; i < listOfFiles.length; i++) {
-                if (listOfFiles[i].isFile()) {
+                if (listOfFiles[i].isFile() && listOfFiles[i].toString().charAt(0) != '.') {
+
                     String currentFileName = listOfFiles[i].getName().replaceAll("_", " ");
                     System.out.println("This is the current names FILE " + currentFileName);
                     userRecordings.add(listOfFiles[i].getName());
@@ -64,6 +64,7 @@ public class UserRecordingsViewController extends SideButtons implements Initial
     public void handleDeleteButton() {
     	if (userRecordingListView.getSelectionModel().isEmpty()) {
             Alerts.show("Please make a selection to play",ButtonType.OK,null);
+
         }
     	else {
     		try {
@@ -74,11 +75,11 @@ public class UserRecordingsViewController extends SideButtons implements Initial
 				e.printStackTrace();
 			}
     	}
+    	RewardMenuController.getRewardPoint();
     }
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        confirmRecordingsModel = new ConfirmRecordingsModel();
     }
 }

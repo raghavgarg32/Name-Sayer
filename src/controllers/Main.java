@@ -73,47 +73,47 @@ public class Main extends Application {
 
 
         practiceLoader = new FXMLLoader();
-        practiceLoader.setLocation(getClass().getResource("../views/PracticeMenu.fxml"));
+        practiceLoader.setLocation(getClass().getResource("/views/PracticeMenu.fxml"));
         Parent practiceRoot = practiceLoader.load();
 
         recordLoader = new FXMLLoader();
-        recordLoader.setLocation(getClass().getResource("../views/RecordView.fxml"));
+        recordLoader.setLocation(getClass().getResource("/views/RecordView.fxml"));
         Parent recordRoot = recordLoader.load();
 
         confirmLoader = new FXMLLoader();
-        confirmLoader.setLocation(getClass().getResource("../views/UserRecordingConfirmView.fxml"));
+        confirmLoader.setLocation(getClass().getResource("/views/UserRecordingConfirmView.fxml"));
         Parent confirmRoot = confirmLoader.load();
 
         rateLoader = new FXMLLoader();
-        rateLoader.setLocation(getClass().getResource("../views/RateView.fxml"));
+        rateLoader.setLocation(getClass().getResource("/views/RateView.fxml"));
         Parent rateMenuRoot = rateLoader.load();
 
         helpLoader = new FXMLLoader();
-        helpLoader.setLocation(getClass().getResource("../views/HelpPage.fxml"));
+        helpLoader.setLocation(getClass().getResource("/views/HelpPage.fxml"));
         Parent helpMenuRoot = helpLoader.load();
 
         rewardLoader = new FXMLLoader();
-        rewardLoader.setLocation(getClass().getResource("../views/RewardMenu.fxml"));
+        rewardLoader.setLocation(getClass().getResource("/views/RewardMenu.fxml"));
         Parent rewardMenuRoot = rewardLoader.load();
 
         userRecordingsLoader = new FXMLLoader();
-        userRecordingsLoader.setLocation(getClass().getResource("../views/UserRecordingsView.fxml"));
+        userRecordingsLoader.setLocation(getClass().getResource("/views/UserRecordingsView.fxml"));
         Parent userRecordingsMenuRoot = userRecordingsLoader.load();
 
         dbRecordingsLoader = new FXMLLoader();
-        dbRecordingsLoader.setLocation(getClass().getResource("../views/DBRecordingsView.fxml"));
+        dbRecordingsLoader.setLocation(getClass().getResource("/views/DBRecordingsView.fxml"));
         Parent dbRecordingsLoaderRoot = dbRecordingsLoader.load();
 
         addDBRecordingsLoader = new FXMLLoader();
-        addDBRecordingsLoader.setLocation(getClass().getResource("../views/AddDBRecordingsView.fxml"));
+        addDBRecordingsLoader.setLocation(getClass().getResource("/views/AddDBRecordingsView.fxml"));
         Parent addDBRecordingsLoaderRoot = addDBRecordingsLoader.load();
 
         confirmDBRecordingsLoader = new FXMLLoader();
-        confirmDBRecordingsLoader.setLocation(getClass().getResource("../views/DBRecordingConfirmView.fxml"));
+        confirmDBRecordingsLoader.setLocation(getClass().getResource("/views/DBRecordingConfirmView.fxml"));
         Parent confirmDBRecordingsLoaderRoot = confirmDBRecordingsLoader.load();
 
         loadingLoader = new FXMLLoader();
-        loadingLoader.setLocation(getClass().getResource("../views/LoadingView.fxml"));
+        loadingLoader.setLocation(getClass().getResource("/views/LoadingView.fxml"));
         Parent loadingRoot = loadingLoader.load();
 
 
@@ -167,6 +167,7 @@ public class Main extends Application {
         PracticeMenuController controller = practiceLoader.getController();
         controller.names(HomeViewController.getNamesForPracticeObservableList());
         controller.settingUserListView(PracticeMenuController.getSelectedName());
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_practiceMenu);
     }
 
@@ -175,7 +176,7 @@ public class Main extends Application {
      */
     public static void changeSceneRecord() {
         RecordView controller = recordLoader.getController();
-        controller.getNameForRecording(PracticeMenuController.getCurrentNameWithoutNumber(AddDBRecordingsViewController.getIsRecordingForDB()));
+        controller.getNameForRecording(PracticeMenuController.getCurrentName(AddDBRecordingsViewController.getIsRecordingForDB()));
         controller.initScene();
         PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_recordMenu);
@@ -195,7 +196,7 @@ public class Main extends Application {
      */
     public static void changeSceneConfirm() {
         UserRecordingConfirmView controller = confirmLoader.getController();
-        controller.setNameLabel(PracticeMenuController.getCurrentNameWithoutNumber(false));
+        controller.setNameLabel(PracticeMenuController.getCurrentName(false));
         controller.setLoopNumber();
         _primaryStage.setScene(_confirmMenu);
         PlayRecordings.stopPlayRecording();

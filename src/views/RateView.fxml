@@ -21,7 +21,7 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <Label layoutX="222.0" layoutY="140.0" text="Record yourself saying the name and then compare.">
+      <Label layoutX="231.0" layoutY="139.0" text="Rate the selected Name(s)">
          <font>
             <Font size="20.0" />
          </font>
@@ -29,7 +29,7 @@
       <Button layoutX="402.0" layoutY="638.0" mnemonicParsing="false" onAction="#handleGoodButton" prefHeight="44.0" prefWidth="168.0" text="Good" />
       <Button layoutX="925.0" layoutY="66.0" mnemonicParsing="false" onAction="#handleBackButton" prefHeight="44.0" prefWidth="83.0" text="Back" />
       <ListView fx:id="selectedNames" layoutX="277.0" layoutY="204.0" prefHeight="396.0" prefWidth="731.0" />
-      <Label fx:id="name" layoutX="222.0" layoutY="57.0" text="Rate Names">
+      <Label fx:id="name" layoutX="223.0" layoutY="66.0" text="Rate Names">
          <font>
             <Font size="50.0" />
          </font>

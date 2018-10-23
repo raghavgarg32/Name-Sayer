@@ -16,6 +16,10 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
     private static int points;
 
+    private Task<Void> _playWorker;
+    
+    private Thread playThread;
+
     @FXML
     private Label pointCounter;
 

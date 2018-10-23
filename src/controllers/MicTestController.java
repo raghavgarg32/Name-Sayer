@@ -13,10 +13,10 @@ import java.util.ResourceBundle;
 
 public class MicTestController extends SideButtons implements Initializable {
 
-	private Task<Void> _micTestWorker;
+	private Task<Void> micTestWorker;
 
 	@FXML
-	private ProgressBar _micVolume;
+	private ProgressBar micVolume;
 
 	@FXML
 	private Button backBtn;
@@ -25,7 +25,8 @@ public class MicTestController extends SideButtons implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		_micTestWorker = new Task <Void>() {
+		// Swing worker used so that the application would be responsive
+		micTestWorker = new Task <Void>() {
 
 			@Override
 			protected Void call() throws Exception {
@@ -48,11 +49,11 @@ public class MicTestController extends SideButtons implements Initializable {
 					byte[] bytes = new byte[line.getBufferSize() / 5];
 					line.read(bytes, 0, bytes.length);
 					double output = (double) calculateRMSLevel(bytes);
-					_micVolume.setProgress((double)output / 100);
+					micVolume.setProgress((double)output / 100);
 				}
 			}
 		};
-		new Thread(_micTestWorker).start();
+		new Thread(micTestWorker).start();
 	}
 
 	/**
@@ -81,7 +82,7 @@ public class MicTestController extends SideButtons implements Initializable {
 	 */
 	@FXML
 	public void handleBackButton() {
-		_micTestWorker.cancel(true);
+		micTestWorker.cancel(true);
 		Main.changeSceneRecord();
 	}
 

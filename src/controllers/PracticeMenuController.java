@@ -120,7 +120,7 @@ public class PracticeMenuController extends SideButtons implements Initializable
 
 
 	public void settingUserListView(String currentName) {
-		String tempName = PracticeMenuController.getCurrentName();
+		String tempName = getCurrentName(false);
 
 		ObservableList<String> items = FXCollections.observableArrayList();
 		File folder = new File(System.getProperty("user.dir") + "/User-Recordings");
@@ -167,10 +167,7 @@ public class PracticeMenuController extends SideButtons implements Initializable
 				currentName = practiceList.getSelectionModel().getSelectedItem();
 				String tempCurrentName = currentName;
 				settingUserListView(currentName);
-				if(tempCurrentName != null) {
-					names.setText(MakeHeadingNameFit.changeName(tempCurrentName));
-				}
-
+				names.setText(MakeHeadingNameFit.changeName(tempCurrentName));
 			}
 		});
 	}
@@ -180,27 +177,12 @@ public class PracticeMenuController extends SideButtons implements Initializable
 	}
 
 
-
-	/**
-	 * Getter method to get the current name
-	 *
-	 * @return
-	 */
-	public static String getCurrentName() {
-		System.out.println(currentName);
-		return currentName;
-	}
-
 	/**
 	 * getter method to get the current name but with the number removed
 	 *
 	 * @return
 	 */
-	public static String getCurrentNameWithoutNumber(Boolean addDBRecording) {
-		if (currentName.contains("-")) {
-			currentName = currentName.substring(0, currentName.lastIndexOf("-"));
-		}
-
+	public static String getCurrentName(Boolean addDBRecording) {
 		if (addDBRecording) {
 			return AddDBRecordingsViewController.getCurrentDBName();
 		}

@@ -24,17 +24,17 @@
         <Button fx:id="tenPointBtn" layoutX="539.0" layoutY="325.0" mnemonicParsing="false" onAction="#handle10PointButton" prefHeight="49.0" prefWidth="268.0" text="Bronze Reward - 10 recordings" />
         <Button fx:id="thirtyPointBtn" layoutX="539.0" layoutY="520.0" mnemonicParsing="false" onAction="#handle30PointButton" prefHeight="49.0" prefWidth="268.0" text="Gold Reward - 30 recordings" />
         <Button fx:id="twentyPointBtn" layoutX="539.0" layoutY="424.0" mnemonicParsing="false" onAction="#handle20PointButton" prefHeight="49.0" prefWidth="268.0" text="Silver Reward - 20 recordings" />
-        <Label fx:id="nameLabel" layoutX="204.0" layoutY="48.0" text="Claim your Rewards">
+        <Label layoutX="226.0" layoutY="52.0" text="Claim your Rewards">
             <font>
                 <Font size="50.0" />
             </font>
         </Label>
-        <Label fx:id="pointCounter" layoutX="510.0" layoutY="250.0" text="You have WW recordings">
+        <Label fx:id="pointCounter" layoutX="539.0" layoutY="259.0" text="You have WW points">
             <font>
                 <Font size="26.0" />
             </font>
         </Label>
-        <Text fill="WHITE" layoutX="216.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Unlock special recordings by creating your own recordings">
+        <Text fill="WHITE" layoutX="226.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Unlock special recordings by creating your own recordings">
             <font>
                 <Font size="22.0" />
             </font>

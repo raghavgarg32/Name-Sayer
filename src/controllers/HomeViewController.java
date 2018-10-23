@@ -64,8 +64,7 @@ public class HomeViewController extends SideButtons implements Initializable {
 		if (!selectionForPractice.isEmpty()) {
 			getDatabaseList();
 			Main.changeScenePractice();
-		}
-		else {
+		} else {
             Alerts.show("Plesase add names to your playlist.",ButtonType.OK,null);
         }
 	}
@@ -94,18 +93,16 @@ public class HomeViewController extends SideButtons implements Initializable {
 
 	@FXML
 	public void addToPlayList() {
-		String name = userNameInput.getText();
-		
+		String name = userNameInput.getText().toLowerCase();
 		if(name.length() > 50) {
 			Alerts.show("Please enter names less than 50 characters long", ButtonType.OK, null);
 		}
 		else if (name.length() > 0 && name.length() < 50) {
-			
+
 			if(name.lastIndexOf('-') == name.trim().length() - 1) {
-				 Alerts.show("This name doesn't exist in our database, please add another name.",ButtonType.OK,null);
-				 return;
+				Alerts.show("This name doesn't exist in our database, please add another name.",ButtonType.OK,null);
+				return;
 			}
-			
 			name = name.replace("-", " ");
 			String[] singleNamesArray = name.split(" ");
 
@@ -120,14 +117,13 @@ public class HomeViewController extends SideButtons implements Initializable {
 				}
 			}
 			if (nameExists) {
-				playList.getItems().add(userNameInput.getText());
-				selectionForPractice.add(userNameInput.getText());
+				playList.getItems().add(userNameInput.getText().toLowerCase());
+				selectionForPractice.add(userNameInput.getText().toLowerCase());
 			} else {
                 Alerts.show("This name doesn't exist in our database, please add another name.",ButtonType.OK,null);
             }
 			userNameInput.clear();
 		}
-
 
 	}
 
@@ -362,7 +358,6 @@ public class HomeViewController extends SideButtons implements Initializable {
 	 * Helper method to read recordings from the database folder
 	 */
 	public void gettingRecordings() {
-		// This swingworker gets all of the creations from the NameSayer directory
 		Task<Void> gettingRecordingsWorker = new Task<Void>() {
 
 			@Override

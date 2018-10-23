@@ -30,7 +30,7 @@ public class ConfirmRecordingsModel {
 
     private String pathToFile;
 
-   // private String concatPathToFile;
+    private String concatPathToFile;
 
     private String currentNameAsAudioName;
 
@@ -42,13 +42,14 @@ public class ConfirmRecordingsModel {
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/"+fileLocation+"/temp.wav"));
         } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     public void saveUserRecordings(){
         handleRewards();
-        settingPartsOfNameForAudio(PracticeMenuController.getCurrentNameWithoutNumber(false));
+        settingPartsOfNameForAudio(PracticeMenuController.getCurrentName(false));
 
         timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
 
@@ -110,7 +111,7 @@ public class ConfirmRecordingsModel {
 
     public void handleRewards(){
         FXMLLoader rewardLoader = new FXMLLoader();
-        rewardLoader.setLocation(getClass().getResource("../views/RewardMenu.fxml"));
+        rewardLoader.setLocation(getClass().getResource("/views/RewardMenu.fxml"));
         try {
             rewardLoader.load();
         } catch (IOException e1) {
@@ -148,6 +149,7 @@ public class ConfirmRecordingsModel {
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/"+fileLocation+"/temp.wav"));
         } catch (IOException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
 
@@ -162,9 +164,9 @@ public class ConfirmRecordingsModel {
      */
     @FXML
     public void playDBRecording() {
-    	
-    	String name = PracticeMenuController.getCurrentName().trim();
-    	
+
+        String name = PracticeMenuController.getCurrentName(false).trim();
+
         if (name.contains(" ")|| name.contains("-")) {
             System.out.println("this si sitehgwefh rsejgyft rejfd " + name + "asdada" );
             name = name.replace(" ", "_");
@@ -199,37 +201,37 @@ public class ConfirmRecordingsModel {
 
     @FXML
     public void compareUserRecordingsWithDB() {
-    	boolean isConcatFile = false;
-    	String name = PracticeMenuController.getCurrentName().trim();
-    	
-    	if(name.contains(" ") || name.contains("-")) {
-    		isConcatFile = true;
-    	}
-    	else {
-    		isConcatFile = false;
-    	}
-    	
-    	name = name.replace(" ", "_");
-    	name = name.replace("-", "_");
-    		
+        boolean isConcatFile = false;
+        String name = PracticeMenuController.getCurrentName(false).trim();
+
+        if(name.contains(" ") || name.contains("-")) {
+            isConcatFile = true;
+        }
+        else {
+            isConcatFile = false;
+        }
+
+        name = name.replace(" ", "_");
+        name = name.replace("-", "_");
+
         try{
             System.out.println("this is the name " + currentName + "This is the end");
-      //      String concatNewNameFile = currentName.trim().replace(" ", "_");
+            //      String concatNewNameFile = currentName.trim().replace(" ", "_");
             System.out.println("Loops " + Integer.parseInt(loopNumber.getText()));
-      //      concatPathToFile = "Concat-Recordings/" + concatNewNameFile + ".wav";
-            
+            //      concatPathToFile = "Concat-Recordings/" + concatNewNameFile + ".wav";
+
             if(isConcatFile) {
-            	pathToFile = "Concat-Recordings/" + name + ".wav";
-            	System.out.println("path to file is " + pathToFile);
+                pathToFile = "Concat-Recordings/" + name + ".wav";
+                System.out.println("path to file is " + pathToFile);
             }
             else if(!isConcatFile) {
-            	 List<String> databaseList = HomeViewController.getDatabaseList();
-                 List<String> nameList = HomeViewController.getAllNamesOfDatabaseRecording();
-                 String path = databaseList.get(nameList.indexOf(name));
-                 pathToFile = "Database/" + name + "/Database-Recordings/" + path;
-            } 
-            
-            
+                List<String> databaseList = HomeViewController.getDatabaseList();
+                List<String> nameList = HomeViewController.getAllNamesOfDatabaseRecording();
+                String path = databaseList.get(nameList.indexOf(name));
+                pathToFile = "Database/" + name + "/Database-Recordings/" + path;
+            }
+
+
             ArrayList<String> namesToPlay = new ArrayList<>();
             for (int i = 0; i < Integer.parseInt(loopNumber.getText()); i++) {
                 namesToPlay.add(pathToFile);

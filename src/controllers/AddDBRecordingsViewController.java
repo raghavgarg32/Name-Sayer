@@ -19,7 +19,6 @@ public class AddDBRecordingsViewController extends SideButtons {
 
     @FXML
     public void handleAddRecordingButton() throws IOException {
-        // Check which if neither list has been selected
         if ((userName.getText().matches("[a-zA-Z]+")) && !(HomeViewController.getNamesWithoutNumbers().contains(userName.getText().toLowerCase()))) {
         isRecordingForDB = true;
         currentDBName = userName.getText().toLowerCase();
@@ -32,6 +31,10 @@ public class AddDBRecordingsViewController extends SideButtons {
     }
     }
 
+    @FXML
+    public void handleCancelButton(){
+        Main.changeSceneDBRecordingsMenu();
+    }
 
 
     public static String getCurrentDBName(){

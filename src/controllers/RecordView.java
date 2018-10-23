@@ -3,7 +3,6 @@ package controllers;
 import helpers.BashCommandWorker;
 import helpers.MakeHeadingNameFit;
 import helpers.SideButtons;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -11,7 +10,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 
-import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,12 +18,12 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.Timer;
 
 /**
  * Controller for the recording scene
  */
 public class RecordView extends SideButtons implements Initializable {
+
 
     @FXML
     private Button micTestButton;
@@ -60,6 +58,7 @@ public class RecordView extends SideButtons implements Initializable {
     public static void recordingForNewDBRecording(){
         isThisNewDBRecording = true;
         recordingLocation = "Database";
+
     }
 
     public static void recordingForUserRecording(){
@@ -140,63 +139,65 @@ public class RecordView extends SideButtons implements Initializable {
      * Helper method for initializing the record view scene
      */
     public void initScene(){
-        recordLabel.setText("Press record to have your voice recorded");
         backButton.setVisible(true);
+        if (isThisNewDBRecording){
+            backButton.setText("Back");
+        } else {
+            backButton.setText("Practice Menu");
+
+        }
+        recordLabel.setText("Press record to have your voice recorded");
         recordBar.setProgress(0.0);
         micTestButton.setVisible(true);
+
     }
-    
+
     /**
      * Callback function for the back button which changes the scene back to the practice menu
      */
     @FXML
     public void handleBackBtn() {
 
-        if(recordThread == null) {
-            recordLabel.setText("Press record to have your voice recorded");
-            deleteRecording();
-            Main.changeScenePractice();
-            return;
-        }
-
-        //Check if a background thread is running
-        if(recordThread.isAlive()) {
-            stopRecording();
-            deleteRecording();
-        }
         recordLabel.setText("Press record to have your voice recorded");
-        Main.changeScenePractice();
+        deleteRecording();
+        if (isThisNewDBRecording) {
+            Main.changeSceneAddDBRecordingsMenu();
+        } else {
+            Main.changeScenePractice();
+        }
     }
 
     /**
      * Help method to delete the temp recordings
      */
     public void deleteRecording(){
-        SwingWorker<Void,Void> deleteWorker = new SwingWorker<Void,Void>() {
+        Task<Void> deleteWorker = new Task<Void>() {
+
             @Override
-            protected Void doInBackground() throws Exception {
-                currentName = PracticeMenuController.getCurrentNameWithoutNumber(false);
+            protected Void call() throws Exception{
+                currentName = PracticeMenuController.getCurrentName(false);
                 String number = RecordView.getNumberOfRecordings();
                 try {
                     Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/"+recordingLocation+"/temp.wav"));
                     Thread.sleep(1000);
                 } catch (Exception e) {
+                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 return null;
             }
         };
-        deleteWorker.execute();
+        new Thread(deleteWorker).start();;
     }
 
     /**
      * Helper method to get the number of user recordings for a specific database recording
      */
     public void gettingNumberOfUserRecordings(){
-        SwingWorker gettingRecordingsNumberWorker = new SwingWorker<ArrayList<String>, Integer>() {
+        Task<Void> gettingRecordingsNumberWorker = new Task<Void>() {
 
             @Override
-            protected ArrayList<String> doInBackground() throws Exception {
+            protected Void call() throws Exception {
                 ArrayList<String> nameList = new ArrayList<String>();
 
                 try {
@@ -214,6 +215,8 @@ public class RecordView extends SideButtons implements Initializable {
 
                     while ((line = stdoutBuffered.readLine()) != null) {
                         numberOfRecordings = line;
+
+
                     }
                     stdoutBuffered.close();
                 } catch (IOException ioe) {
@@ -223,7 +226,7 @@ public class RecordView extends SideButtons implements Initializable {
             }
 
         };
-        gettingRecordingsNumberWorker.execute();
+        new Thread(gettingRecordingsNumberWorker).start();
 
 
     }
@@ -234,6 +237,7 @@ public class RecordView extends SideButtons implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         currentNameLabel.setText("Name");
         recordBar.setProgress(0.0);
+
     }
 
     /**
@@ -250,6 +254,5 @@ public class RecordView extends SideButtons implements Initializable {
             recordThread.interrupt();
             recordTask.cancel();
         }
-
     }
 }

@@ -21,18 +21,18 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <Label layoutX="207.0" layoutY="140.0" text="Play your recorded recordings">
+      <Label layoutX="227.0" layoutY="139.0" text="Play your recorded recordings">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <ListView fx:id="userRecordingListView" layoutX="328.0" layoutY="224.0" prefHeight="360.0" prefWidth="636.0" />
-      <Label fx:id="name" layoutX="199.0" layoutY="52.0" text="Your Recordings">
+      <Label fx:id="name" layoutX="227.0" layoutY="56.0" text="Your Recordings">
          <font>
             <Font size="50.0" />
          </font>
       </Label>
-      <Button layoutX="425.0" layoutY="620.0" mnemonicParsing="false" onAction="#handlePlayUserRecordingButton" prefHeight="44.0" prefWidth="168.0" text="Play" />
+      <Button layoutX="378.0" layoutY="620.0" mnemonicParsing="false" onAction="#handlePlayUserRecordingButton" prefHeight="44.0" prefWidth="168.0" text="Play" />
       <Label fx:id="nameLabel" layoutX="86.0" layoutY="629.0" onMouseClicked="#handleHelpIcon" text="?">
          <font>
             <Font size="68.0" />
@@ -58,6 +58,6 @@
             <Image url="@../helpPictures/star.png" />
          </image>
       </ImageView>
-      <Button layoutX="739.0" layoutY="620.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="44.0" prefWidth="168.0" text="Delete" />
+      <Button layoutX="753.0" layoutY="620.0" mnemonicParsing="false" onAction="#handleDeleteButton" prefHeight="44.0" prefWidth="168.0" text="Delete" />
    </children>
 </AnchorPane>

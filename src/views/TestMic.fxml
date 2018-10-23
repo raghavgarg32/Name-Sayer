@@ -21,13 +21,13 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <Label fx:id="recordLabel" layoutX="199.0" layoutY="139.0" text="Check status of mic by using different sound levels">
+      <Label layoutX="227.0" layoutY="139.0" text="Check status of mic by using different sound levels">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <ProgressBar fx:id="_micVolume" layoutX="407.0" layoutY="385.0" prefHeight="52.0" prefWidth="457.0" progress="0.0" />
-      <Label fx:id="currentNameLabel" layoutX="199.0" layoutY="47.0" text="Mic Test">
+      <ProgressBar fx:id="micVolume" layoutX="407.0" layoutY="385.0" prefHeight="52.0" prefWidth="457.0" progress="0.0" />
+      <Label layoutX="227.0" layoutY="56.0" text="Mic Test">
          <font>
             <Font size="50.0" />
          </font>

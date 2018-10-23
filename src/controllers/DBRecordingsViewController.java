@@ -10,6 +10,10 @@ import javafx.scene.control.ListView;
 import java.io.IOException;
 
 public class DBRecordingsViewController extends SideButtons {
+    private static String currentDBName = null;
+
+    private static boolean recordingForDB = false;
+
 
     @FXML
     private ListView<String> databaseRecordings; // List of user attempt at recording themeselves saying the name

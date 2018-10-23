@@ -21,13 +21,13 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <Label layoutX="215.0" layoutY="140.0" text="Add or play database recordings">
+      <Label layoutX="234.0" layoutY="139.0" text="Add or play database recordings">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
       <ListView fx:id="databaseRecordings" layoutX="343.0" layoutY="242.0" prefHeight="344.0" prefWidth="629.0" />
-      <Label fx:id="name" layoutX="203.0" layoutY="59.0" text="Database Recordings">
+      <Label fx:id="name" layoutX="228.0" layoutY="52.0" text="Database Recordings">
          <font>
             <Font size="50.0" />
          </font>

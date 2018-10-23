@@ -21,19 +21,19 @@
       <Label layoutX="74.0" layoutY="578.0" onMouseClicked="#handleRewardIcon" text="Rewards" />
       <Circle fill="DODGERBLUE" layoutX="105.0" layoutY="670.0" onMouseClicked="#handleHelpIcon" radius="50.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
       <Label layoutX="89.0" layoutY="727.0" onMouseClicked="#handleHelpIcon" text="Help" />
-      <Label layoutX="227.0" layoutY="150.0" text="Enter in a Name to practice or select name from the list below:">
+      <Label layoutX="231.0" layoutY="139.0" text="Enter in a Name to practice or select name from the list below:">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <ListView fx:id="userRecordingCreations" layoutX="667.0" layoutY="298.0" prefHeight="345.0" prefWidth="344.0" />
-      <Button layoutX="705.0" layoutY="661.0" mnemonicParsing="false" onAction="#handlePlayUserRecordingButton" prefHeight="44.0" prefWidth="268.0" text="Play Selected Recoding" />
-      <Button layoutX="696.0" layoutY="212.0" mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="44.0" prefWidth="268.0" text="Create Name Recording" />
-      <Button layoutX="311.0" layoutY="661.0" mnemonicParsing="false" onAction="#handlePlayDBRecordingButton" prefHeight="44.0" prefWidth="287.0" text="Play Name Recording" />
-      <Label layoutX="691.0" layoutY="265.0" text="Select your recoding to play:" />
+      <ListView fx:id="userRecordingCreations" layoutX="667.0" layoutY="290.0" prefHeight="353.0" prefWidth="344.0" />
+      <Button layoutX="706.0" layoutY="661.0" mnemonicParsing="false" onAction="#handlePlayUserRecordingButton" prefHeight="44.0" prefWidth="268.0" text="Play Your Recording" />
+      <Button layoutX="705.0" layoutY="212.0" mnemonicParsing="false" onAction="#handleCreateButton" prefHeight="44.0" prefWidth="268.0" text="Create Name Recording" />
+      <Button layoutX="311.0" layoutY="661.0" mnemonicParsing="false" onAction="#handlePlayDBRecordingButton" prefHeight="44.0" prefWidth="287.0" text="Play Playlist Recording" />
+      <Label layoutX="784.0" layoutY="265.0" text="Your recordings" />
       <Button layoutX="923.0" layoutY="76.0" mnemonicParsing="false" onAction="#handleRateButton" prefHeight="44.0" prefWidth="83.0" text="Rate" />
-      <ListView fx:id="practiceList" layoutX="282.0" layoutY="212.0" prefHeight="431.0" prefWidth="344.0" />
-      <Label fx:id="names" layoutX="227.0" layoutY="66.0" text="Select Name">
+      <ListView fx:id="practiceList" layoutX="282.0" layoutY="242.0" prefHeight="401.0" prefWidth="344.0" />
+      <Label fx:id="names" layoutX="229.0" layoutY="59.0" text="Select Name">
          <font>
             <Font size="50.0" />
          </font>
@@ -63,5 +63,6 @@
             <Image url="@../helpPictures/star.png" />
          </image>
       </ImageView>
+      <Label layoutX="429.0" layoutY="215.0" text="Playlist" />
    </children>
 </AnchorPane>

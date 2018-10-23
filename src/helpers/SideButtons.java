@@ -1,3 +1,4 @@
+
 package helpers;
 
 import controllers.Main;
@@ -10,17 +11,17 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public abstract class SideButtons {
-		
+
     @FXML
     public void handleRewardIcon() {
-    	RecordView.stopRecording();
+        RecordView.stopRecording();
         deleteTempFile();
         Main.changeSceneRewardMenu();
     }
 
     @FXML
     public void handleHomeIcon() {
-    	RecordView.stopRecording();
+        RecordView.stopRecording();
         deleteTempFile();
         BashCommandWorker removeConcatRecordings = new BashCommandWorker("rm ./Concat-Recordings/* ;");
         Main.changeSceneDataBase();
@@ -28,21 +29,21 @@ public abstract class SideButtons {
 
     @FXML
     public void handleHelpIcon() {
-    	RecordView.stopRecording();
+        RecordView.stopRecording();
         deleteTempFile();
         Main.changeSceneHelpMenu();
     }
 
     @FXML
     public void handleUserRecordingsIcon() {
-    	RecordView.stopRecording();
+        RecordView.stopRecording();
         deleteTempFile();
         Main.changeSceneUserRecordingsMenu();
     }
 
     @FXML
     public void handleDBRecordingsIcon() {
-    	RecordView.stopRecording();	
+        RecordView.stopRecording();
         deleteTempFile();
         Main.changeSceneDBRecordingsMenu();
     }

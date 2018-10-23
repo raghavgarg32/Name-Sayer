@@ -22,7 +22,7 @@ import java.util.*;
 
 public class HomeViewModel {
 
-   public void upload(List list, List _practiceSelection, ListView playList) {
+   public void upload(List list, List practiceSelection, ListView playList) {
        List<String> fileNames = new ArrayList<>();
        FileChooser fileChooser = new FileChooser();
        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("TXT files", "*.txt"));
@@ -39,18 +39,20 @@ public class HomeViewModel {
                    fileNames.add(line.toLowerCase());
                }
                fileReader.close();
-               if (!list.containsAll(fileNames)) {
+               System.out.println("These are the list of all of the names " + list);
+               System.out.println("These are the file names " + fileNames);
 
-                   Alerts.show("This text file contains names that aren't in the database, those names will not be added to review", ButtonType.OK, null);
-
-               }
                for (String name : fileNames) {
-                   String[] individualNames = name.split(" ");
-                   ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(individualNames));
-                   if (list.containsAll(arrayList)) {
-                       playList.getItems().add(name);
-                       _practiceSelection.add(name);
+                   if (!name.trim().equals("")) {
+                       String[] individualNames = name.split("[-\\s]");
 
+                       ArrayList<String> arrayList = new ArrayList<String>(Arrays.asList(individualNames));
+                       if (list.containsAll(arrayList)) {
+                           playList.getItems().add(name);
+                           practiceSelection.add(name);
+                       } else {
+                           Alerts.show("This text file contains names that aren't in the database, those names will not be added to review", ButtonType.OK, null);
+                       }
                    }
                }
 
@@ -63,26 +65,9 @@ public class HomeViewModel {
    }
 
 
+    public void ExportPlayListButton(List<String> practiceSelection) {
 
-    public ArrayList<String> getBadRecordings() {
-        Scanner s = null;
-        try {
-            s = new Scanner(new File("BadRecordingList.txt"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        ArrayList<String> badlist = new ArrayList<String>();
-        while (s.hasNext()) {
-            badlist.add(s.next());
-        }
-        s.close();
-
-        return badlist;
-    }
-
-    public void ExportPlayListButton(List<String> _practiceSelection) {
-
-        for (String name : _practiceSelection) {
+        for (String name : practiceSelection) {
             BashCommandWorker creationDirectoryWorker = new BashCommandWorker(
                     "name='" + name + "'\n" + "\n" + "if ! grep -qF \"$name\" UserPlayList.txt ; then "
                             + "echo \"$name\" >> UserPlayList.txt ; " + "fi");
