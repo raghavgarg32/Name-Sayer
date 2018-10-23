@@ -52,7 +52,7 @@ public class UserRecordingsViewController extends SideButtons implements Initial
             Alerts.show("Please make a selection to play",ButtonType.OK,null);
 
         }
-        // Check which list has been selected
+	        // Check which list has been selected
         else if (!(userRecordingListView.getSelectionModel().isEmpty())) {
             String name = userRecordingListView.getSelectionModel().getSelectedItem();
             String pathToFile = "User-Recordings/" + name;
@@ -63,8 +63,8 @@ public class UserRecordingsViewController extends SideButtons implements Initial
     @FXML
     public void handleDeleteButton() {
     	if (userRecordingListView.getSelectionModel().isEmpty()) {
-            Alerts.show("Please make a selection to play",ButtonType.OK,null);
-
+            Alerts.show("Please make a selection to delete",ButtonType.OK,null);
+            
         }
     	else {
     		try {

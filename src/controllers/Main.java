@@ -70,6 +70,11 @@ public class Main extends Application {
         if (!conctCatRecordDir.exists()){
             conctCatRecordDir.mkdir();
         }
+        
+        File badRecordingList = new File(System.getProperty("user.dir")+"/BadRecordingList.txt");
+        if(!badRecordingList.exists()) {
+        	badRecordingList.createNewFile();
+        }
 
 
         practiceLoader = new FXMLLoader();
