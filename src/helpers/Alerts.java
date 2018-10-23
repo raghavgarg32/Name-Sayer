@@ -4,8 +4,18 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Region;
 
+/**
+ * This is a helper class that shows user appropiate alerts
+ */
 public class Alerts {
 
+    /**
+     * This method shows the user alert depending on the inputs
+     * @param alertText
+     * @param firstButton
+     * @param secondButton
+     * @return
+     */
     public static Alert show(String alertText, ButtonType firstButton, ButtonType secondButton) {
         Alert alert = null;
         if (secondButton == null) {

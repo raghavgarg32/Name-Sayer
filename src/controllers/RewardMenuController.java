@@ -12,13 +12,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+/**
+ * This is the controller for the Reward scene and handles the reward system
+ */
 public class RewardMenuController extends SideButtons implements Initializable {
 
     private static int points;
-
-    private Task<Void> _playWorker;
-    
-    private Thread playThread;
 
     @FXML
     private Label pointCounter;
@@ -32,7 +31,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
     @FXML
     private Button thirtyPointBtn;
 
-
+    /**
+     * Callback function for the 10 point button, will play a special .wav file
+     */
     @FXML
     public void handle10PointButton() {
 
@@ -42,6 +43,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
     }
 
+    /**
+     * Callback function for the 20 point button, will play a special .wav file
+     */
     @FXML
     public void handle20PointButton() {
 
@@ -51,6 +55,9 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
     }
 
+    /**
+     * Callback function for the 30 point button, will play a special .wav file
+     */
     @FXML
     public void handle30PointButton() {
         String pathToFile = System.getProperty("user.dir") + "/Rewards/car_crash2.wav";
@@ -73,15 +80,25 @@ public class RewardMenuController extends SideButtons implements Initializable {
 
     }
 
+    /**
+     * Returns the number of points
+     * @return
+     */
     public int getPoints(){
         return points;
     }
 
+    /**
+     * Reads how many recordings the user has created and then allocates them points accordingly
+     */
     public static void getRewardPoint() {
         File userRecordingDir = new File(System.getProperty("user.dir") + "/User-Recordings");
         points = userRecordingDir.list().length;
     }
 
+    /**
+     * Update the label and button statuses of the scene depending on the number of points the user has
+     */
     public void updateButtonStatus() {
         pointCounter.setText("You have " + points + " points");
 

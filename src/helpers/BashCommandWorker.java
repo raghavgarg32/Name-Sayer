@@ -1,13 +1,10 @@
 package helpers;
 
 import javafx.concurrent.Task;
-
 import java.util.List;
 
 /**
  * Runs bash commands on the swing worker so the UI doesn't crash
- * @author rgar969
- *
  */
 public class BashCommandWorker extends Task<List<Integer>> {
     private String command;

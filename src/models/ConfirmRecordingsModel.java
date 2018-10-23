@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/**
+ * This is the model for the different confirm record controllers, they both use code from this class
+ */
 public class ConfirmRecordingsModel {
     @FXML
     private Label nameLabel;
@@ -24,32 +27,35 @@ public class ConfirmRecordingsModel {
     @FXML
     private TextField loopNumber;
 
-    private String name;
-
     private String currentName;
 
     private String pathToFile;
-
-    private String concatPathToFile;
 
     private String currentNameAsAudioName;
 
     private String timeStamp;
 
 
-
+    /**
+     * This method deletes the users recording if the decide to delete it
+     * @param fileLocation
+     */
     public void deleteRecordings(String fileLocation){
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/"+fileLocation+"/temp.wav"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+
         }
     }
 
+    /**
+     * This method saves users recordings which they recorded to practice if the decide to save it. This is done using the
+     * saveRecording method
+     * */
     public void saveUserRecordings(){
         handleRewards();
-        settingPartsOfNameForAudio(PracticeMenuController.getCurrentName(false));
+        settingPartsOfNameForAudio(PracticeViewController.getCurrentName(false));
 
         timeStamp = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(Calendar.getInstance().getTime());
 
@@ -63,6 +69,10 @@ public class ConfirmRecordingsModel {
 
     }
 
+    /**
+     * This method saves users recordings which they recorded to put in the database if the decide to save it.This is done using the
+     * saveRecording method
+     * */
     public void saveDBRecordings() {
         settingPartsOfNameForAudio(AddDBRecordingsViewController.getCurrentDBName().toLowerCase());
 
@@ -77,6 +87,10 @@ public class ConfirmRecordingsModel {
 
     }
 
+    /**
+     * This method sets up the different parts of the name under which they will save the new recording
+     * @param currentNameToSave
+     */
     public void settingPartsOfNameForAudio(String currentNameToSave){
         currentNameAsAudioName = currentNameToSave;
         if (currentNameAsAudioName.contains(" ")) {
@@ -88,12 +102,15 @@ public class ConfirmRecordingsModel {
     }
 
 
-
+    /**
+     * This method saves the recording no matter what the user's intentions are
+     * @param processBuilder
+     */
     public void saveRecordings(ProcessBuilder processBuilder){
 
-        System.out.println(timeStamp);
+        
 
-        System.out.println(currentNameAsAudioName);
+        
 
         ProcessBuilder saveBuilder = processBuilder;
         try {
@@ -101,14 +118,16 @@ public class ConfirmRecordingsModel {
             saveProcess.waitFor();
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+
         }
     }
 
-
+    /**
+     * This method handles the rewards after the user saves their recordings and provides them appropiate alert
+     */
     public void handleRewards(){
         FXMLLoader rewardLoader = new FXMLLoader();
         rewardLoader.setLocation(getClass().getResource("/views/RewardMenu.fxml"));
@@ -116,12 +135,12 @@ public class ConfirmRecordingsModel {
             rewardLoader.load();
         } catch (IOException e1) {
             // TODO Auto-generated catch block
-            e1.printStackTrace();
+
         }
         RewardMenuController rewardController = rewardLoader.getController();
-        System.out.println("This is reward " + rewardController.getPoints());
+        
         RewardMenuController.getRewardPoint();
-        System.out.println("This is reward " + rewardController.getPoints());
+        
 
         if (rewardController.getPoints() == 10 || rewardController.getPoints() == 20
                 || rewardController.getPoints() == 30) {
@@ -150,7 +169,7 @@ public class ConfirmRecordingsModel {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/"+fileLocation+"/temp.wav"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+
         } finally {
 
             Main.changeSceneRecord();
@@ -165,44 +184,54 @@ public class ConfirmRecordingsModel {
     @FXML
     public void playDBRecording() {
 
-        String name = PracticeMenuController.getCurrentName(false).trim();
+        String name = PracticeViewController.getCurrentName(false).trim();
 
         if (name.contains(" ")|| name.contains("-")) {
-            System.out.println("this si sitehgwefh rsejgyft rejfd " + name + "asdada" );
+            
             name = name.replace(" ", "_");
             name = name.replace("-", "_");
 
             pathToFile = "Concat-Recordings/" + name + ".wav";
-            System.out.println(pathToFile);
+            
             PlayRecordings.handlingPlayingRecordings(pathToFile);
         } else {
 
             List<String> databaseList = HomeViewController.getDatabaseList();
-            List<String> nameList = HomeViewController.getAllNamesOfDatabaseRecording();
+            List<String> nameList = HomeViewController.getNamesObservableList();
 
             String path = databaseList.get(nameList.indexOf(name));
             pathToFile = "Database/" + name + "/Database-Recordings/" + path;
-            System.out.println(pathToFile);
+            
             PlayRecordings.handlingPlayingRecordings(pathToFile);
 
         }
 
     }
 
+    /**
+     * This sets the heading of the scene as the user's selected name
+     * @param name
+     */
     public void setCurrentName(String name){
         currentName = name;
     }
 
+    /*
+     * This sets the number of time the user wants to loop through their recording and the database recording together
+     */
     public void setLoopNumber(TextField loopNumberTextField){
         loopNumber = loopNumberTextField;
 
     }
 
-
+    /**
+     * Callback function for the 'Compare' button, this will play the audio of the user recording and the corresponding database recording as
+     * many times as the user specficies.
+     */
     @FXML
     public void compareUserRecordingsWithDB() {
         boolean isConcatFile = false;
-        String name = PracticeMenuController.getCurrentName(false).trim();
+        String name = PracticeViewController.getCurrentName(false).trim();
 
         if(name.contains(" ") || name.contains("-")) {
             isConcatFile = true;
@@ -215,18 +244,18 @@ public class ConfirmRecordingsModel {
         name = name.replace("-", "_");
 
         try{
-            System.out.println("this is the name " + currentName + "This is the end");
+            
             //      String concatNewNameFile = currentName.trim().replace(" ", "_");
-            System.out.println("Loops " + Integer.parseInt(loopNumber.getText()));
+            
             //      concatPathToFile = "Concat-Recordings/" + concatNewNameFile + ".wav";
 
             if(isConcatFile) {
                 pathToFile = "Concat-Recordings/" + name + ".wav";
-                System.out.println("path to file is " + pathToFile);
+                
             }
             else if(!isConcatFile) {
                 List<String> databaseList = HomeViewController.getDatabaseList();
-                List<String> nameList = HomeViewController.getAllNamesOfDatabaseRecording();
+                List<String> nameList = HomeViewController.getNamesObservableList();
                 String path = databaseList.get(nameList.indexOf(name));
                 pathToFile = "Database/" + name + "/Database-Recordings/" + path;
             }
