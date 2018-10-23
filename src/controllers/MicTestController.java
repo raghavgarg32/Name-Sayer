@@ -25,7 +25,6 @@ public class MicTestController extends SideButtons implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// Swing worker used so that the application would be responsive
 		_micTestWorker = new Task <Void>() {
 
 			@Override

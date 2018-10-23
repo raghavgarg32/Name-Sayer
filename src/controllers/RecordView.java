@@ -27,16 +27,15 @@ import java.util.Timer;
  */
 public class RecordView extends SideButtons implements Initializable {
 
-
     @FXML
     private Button micTestButton;
 
     @FXML
     public Button backButton;
 
-    private Thread recordThread;
+    private static Thread recordThread;
 
-    private Task<Void> recordTask;
+    private static Task<Void> recordTask;
 
     @FXML
     public Button recordButton;
@@ -145,9 +144,8 @@ public class RecordView extends SideButtons implements Initializable {
         backButton.setVisible(true);
         recordBar.setProgress(0.0);
         micTestButton.setVisible(true);
-
     }
-
+    
     /**
      * Callback function for the back button which changes the scene back to the practice menu
      */
@@ -183,7 +181,6 @@ public class RecordView extends SideButtons implements Initializable {
                     Files.deleteIfExists(Paths.get(System.getProperty("user.dir")+"/"+recordingLocation+"/temp.wav"));
                     Thread.sleep(1000);
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 return null;
@@ -217,8 +214,6 @@ public class RecordView extends SideButtons implements Initializable {
 
                     while ((line = stdoutBuffered.readLine()) != null) {
                         numberOfRecordings = line;
-
-
                     }
                     stdoutBuffered.close();
                 } catch (IOException ioe) {
@@ -239,7 +234,6 @@ public class RecordView extends SideButtons implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         currentNameLabel.setText("Name");
         recordBar.setProgress(0.0);
-
     }
 
     /**
@@ -250,9 +244,12 @@ public class RecordView extends SideButtons implements Initializable {
         return numberOfRecordings;
     }
 
-    public void stopRecording() {
+    public static void stopRecording() {
         BashCommandWorker stopBuilder = new BashCommandWorker("killall ffmpeg");
-        recordThread.interrupt();
-        recordTask.cancel();
+        if(recordThread != null && recordTask != null) {
+            recordThread.interrupt();
+            recordTask.cancel();
+        }
+
     }
 }

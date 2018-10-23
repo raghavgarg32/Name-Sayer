@@ -64,7 +64,8 @@ public class HomeViewController extends SideButtons implements Initializable {
 		if (!selectionForPractice.isEmpty()) {
 			getDatabaseList();
 			Main.changeScenePractice();
-		} else {
+		}
+		else {
             Alerts.show("Plesase add names to your playlist.",ButtonType.OK,null);
         }
 	}
@@ -94,7 +95,17 @@ public class HomeViewController extends SideButtons implements Initializable {
 	@FXML
 	public void addToPlayList() {
 		String name = userNameInput.getText();
-		if (name.length() > 0) {
+		
+		if(name.length() > 50) {
+			Alerts.show("Please enter names less than 50 characters long", ButtonType.OK, null);
+		}
+		else if (name.length() > 0 && name.length() < 50) {
+			
+			if(name.lastIndexOf('-') == name.trim().length() - 1) {
+				 Alerts.show("This name doesn't exist in our database, please add another name.",ButtonType.OK,null);
+				 return;
+			}
+			
 			name = name.replace("-", " ");
 			String[] singleNamesArray = name.split(" ");
 
@@ -116,6 +127,7 @@ public class HomeViewController extends SideButtons implements Initializable {
             }
 			userNameInput.clear();
 		}
+
 
 	}
 

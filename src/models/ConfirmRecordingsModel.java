@@ -30,7 +30,7 @@ public class ConfirmRecordingsModel {
 
     private String pathToFile;
 
-    private String concatPathToFile;
+   // private String concatPathToFile;
 
     private String currentNameAsAudioName;
 
@@ -42,7 +42,6 @@ public class ConfirmRecordingsModel {
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/"+fileLocation+"/temp.wav"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -149,7 +148,6 @@ public class ConfirmRecordingsModel {
         try {
             Files.deleteIfExists(Paths.get(System.getProperty("user.dir") + "/"+fileLocation+"/temp.wav"));
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } finally {
 
@@ -164,11 +162,11 @@ public class ConfirmRecordingsModel {
      */
     @FXML
     public void playDBRecording() {
-
-        if (PracticeMenuController.getCurrentName().contains(" ")
-                || PracticeMenuController.getCurrentName().contains("-")) {
-            String name = PracticeMenuController.getCurrentName().trim();
-            System.out.println("this si sitehgwefh rsejgyft rejfd " + name );
+    	
+    	String name = PracticeMenuController.getCurrentName().trim();
+    	
+        if (name.contains(" ")|| name.contains("-")) {
+            System.out.println("this si sitehgwefh rsejgyft rejfd " + name + "asdada" );
             name = name.replace(" ", "_");
             name = name.replace("-", "_");
 
@@ -176,8 +174,6 @@ public class ConfirmRecordingsModel {
             System.out.println(pathToFile);
             PlayRecordings.handlingPlayingRecordings(pathToFile);
         } else {
-            // swingworker used to add an element of concurrency
-            name = PracticeMenuController.getSelectedName();
 
             List<String> databaseList = HomeViewController.getDatabaseList();
             List<String> nameList = HomeViewController.getAllNamesOfDatabaseRecording();
@@ -203,19 +199,43 @@ public class ConfirmRecordingsModel {
 
     @FXML
     public void compareUserRecordingsWithDB() {
+    	boolean isConcatFile = false;
+    	String name = PracticeMenuController.getCurrentName().trim();
+    	
+    	if(name.contains(" ") || name.contains("-")) {
+    		isConcatFile = true;
+    	}
+    	else {
+    		isConcatFile = false;
+    	}
+    	
+    	name = name.replace(" ", "_");
+    	name = name.replace("-", "_");
+    		
         try{
             System.out.println("this is the name " + currentName + "This is the end");
-            String concatNewNameFile = currentName.trim().replace(" ", "_");
+      //      String concatNewNameFile = currentName.trim().replace(" ", "_");
             System.out.println("Loops " + Integer.parseInt(loopNumber.getText()));
-            concatPathToFile = "Concat-Recordings/" + concatNewNameFile + ".wav";
+      //      concatPathToFile = "Concat-Recordings/" + concatNewNameFile + ".wav";
+            
+            if(isConcatFile) {
+            	pathToFile = "Concat-Recordings/" + name + ".wav";
+            	System.out.println("path to file is " + pathToFile);
+            }
+            else if(!isConcatFile) {
+            	 List<String> databaseList = HomeViewController.getDatabaseList();
+                 List<String> nameList = HomeViewController.getAllNamesOfDatabaseRecording();
+                 String path = databaseList.get(nameList.indexOf(name));
+                 pathToFile = "Database/" + name + "/Database-Recordings/" + path;
+            } 
+            
+            
             ArrayList<String> namesToPlay = new ArrayList<>();
             for (int i = 0; i < Integer.parseInt(loopNumber.getText()); i++) {
-                namesToPlay.add(concatPathToFile);
+                namesToPlay.add(pathToFile);
                 namesToPlay.add("User-Recordings/temp.wav");
             }
             String[] namesToPlayArray = namesToPlay.toArray(new String[namesToPlay.size()]);
-
-
             PlayRecordings.handlingPlayingRecordings(namesToPlayArray);
         }catch (NumberFormatException ex) {
             Alerts.show("Please enter in a valid integer",ButtonType.OK,null);

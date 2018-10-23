@@ -64,7 +64,6 @@ public class UserRecordingsViewController extends SideButtons implements Initial
     public void handleDeleteButton() {
     	if (userRecordingListView.getSelectionModel().isEmpty()) {
             Alerts.show("Please make a selection to play",ButtonType.OK,null);
-
         }
     	else {
     		try {

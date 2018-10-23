@@ -177,13 +177,16 @@ public class Main extends Application {
         RecordView controller = recordLoader.getController();
         controller.getNameForRecording(PracticeMenuController.getCurrentNameWithoutNumber(AddDBRecordingsViewController.getIsRecordingForDB()));
         controller.initScene();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_recordMenu);
+
     }
 
     /**
      * Changes scene to Database scene
      */
     public static void changeSceneDataBase() {
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_dataBaseMenu);
     }
 
@@ -195,6 +198,7 @@ public class Main extends Application {
         controller.setNameLabel(PracticeMenuController.getCurrentNameWithoutNumber(false));
         controller.setLoopNumber();
         _primaryStage.setScene(_confirmMenu);
+        PlayRecordings.stopPlayRecording();
     }
 
     /**
@@ -202,8 +206,8 @@ public class Main extends Application {
      */
     public static void changeSceneMicTest() {
         RecordView controller = recordLoader.getController();
-//        controller.stopRecording();
         controller.initScene();
+        PlayRecordings.stopPlayRecording();
         _primaryStage.setScene(_micTestMenu);
     }
 

@@ -79,7 +79,7 @@ public class RewardMenuController extends SideButtons implements Initializable {
     }
 
     public void updateButtonStatus() {
-        pointCounter.setText("You have " + points + " number of points");
+        pointCounter.setText("You have " + points + " points");
 
         if(points < 10 ) {
             tenPointBtn.setDisable(true);

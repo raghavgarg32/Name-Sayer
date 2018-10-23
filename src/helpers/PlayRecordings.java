@@ -12,7 +12,11 @@ public class PlayRecordings {
     private static Thread playThread;
 
     public static void handlingPlayingRecordings(String ...pathToFile){
-
+    	
+    	if(_playWorker != null) {
+    		stopPlayRecording();
+    	}
+    	
         _playWorker = new Task<Void>() {
 
             @Override
@@ -38,6 +42,12 @@ public class PlayRecordings {
                         int BUFFER_SIZE = 128000;
                         byte[] abData = new byte[BUFFER_SIZE];
                         while (nBytesRead != -1) {
+                        	
+                        	if(isCancelled()) {
+                                sourceLine.close();
+                        		return null;
+                        	}
+                        	
                             try {
                                 nBytesRead = stream.read(abData, 0, abData.length);
                             } catch (IOException e) {
